@@ -1,3 +1,0 @@
-displayName = Terrahearts kingdom
-author = Pronoespro
-version = 1.0.2
