@@ -37,14 +37,21 @@ namespace KingdomTerrahearts.Projectiles
 
         public override void AI()
         {
+
             npc.immortal = false;
             npc.damage = 25;
             Target();
-            Player p = Main.player[npc.target];
+            Player p;
+            if(!npc.friendly)
+                p = Main.player[npc.target];
 
+            if (DespawnHandler())
+            {
+                return;
+            }
             Move(new Vector2(0, 0));
-            DespawnHandler();
             npc.rotation = (float)Math.Atan2((double)npc.velocity.Y, (double)npc.velocity.X) + 1.57f;
+
         }
 
         public override void FindFrame(int frameHeight)
@@ -65,7 +72,12 @@ namespace KingdomTerrahearts.Projectiles
             else
             {
                 int boss = NPC.FindFirstNPC(mod.NPCType("Darkside"));
-                target = Main.npc[boss];
+                if (boss > 0)
+                {
+                    target = Main.npc[boss];
+                }
+                else
+                    target = null;
             }
         }
 
@@ -96,17 +108,42 @@ namespace KingdomTerrahearts.Projectiles
             return (float)Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y);
         }
 
-        void DespawnHandler()
+        bool DespawnHandler()
         {
-            if (!player.active || player.dead)
+            if (npc.friendly)
             {
-                npc.TargetClosest(false);
-                player = Main.player[npc.target];
-                if (!player.active || player.dead)
+                if (target == null)
                 {
                     npc.timeLeft = 0;
+                    npc.position += new Vector2(0, 10000);
+                    return true;
+                }
+                else
+                {
+                    if (Vector2.Distance(target.Center, npc.Center) < 50)
+                    {
+                        target.life -= npc.damage;
+                        if (target.life <= 0) target.life = 1;
+                        npc.life = 0;
+                        npc.timeLeft = 0;
+                    }
                 }
             }
+            else
+            {
+                if (!player.active || player.dead)
+                {
+                    npc.TargetClosest(false);
+                    player = Main.player[npc.target];
+                    if (!player.active || player.dead)
+                    {
+                        npc.timeLeft = 0;
+                        npc.position += new Vector2(0, 10000);
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         public override void DrawEffects(ref Color drawColor)
@@ -121,38 +158,35 @@ namespace KingdomTerrahearts.Projectiles
             HitPlayerInAnyWay();
         }
 
-        public override void HitEffect(int hitDirection, double damage)
-        {
-            HitPlayerInAnyWay();
-            base.HitEffect(hitDirection, damage);
-        }
-
         void HitPlayerInAnyWay()
         {
             if (npc.timeLeft > 10)
-                npc.timeLeft = 10;
+                npc.timeLeft = 1;
             for (int i = 0; i < 15; i++)
             {
                 int dust = Dust.NewDust(npc.position, npc.width, npc.height, 200, Main.rand.Next(-2, 2), Main.rand.Next(-2, 2));
                 Main.dust[dust].color = Color.Black;
                 Main.dust[dust].noGravity = true;
             }
-            if (npc.friendly)
-                npc.damage = 0;
         }
 
-        public override void ModifyHitByItem(Player player, Item item, ref int damage, ref float knockback, ref bool crit)
+        public override bool CheckDead()
         {
-            npc.friendly = true;
-            npc.velocity = new Vector2(0, -5);
-            damage = 0;
-        }
 
-        public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)
-        {
-            npc.friendly = true;
-            npc.velocity = new Vector2(0, -5);
-            npc.immortal = true;
+            if (npc.timeLeft == 0)
+            {
+                return true;
+            }
+
+            if (!npc.friendly)
+            {
+                npc.friendly = true;
+                npc.velocity = new Vector2(0, -5);
+                npc.lifeMax *= 5;
+                npc.life = npc.lifeMax;
+            }
+            npc.life = npc.lifeMax / 2;
+            return false;
         }
 
     }

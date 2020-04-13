@@ -162,12 +162,10 @@ namespace KingdomTerrahearts.NPCs
         public override void NPCLoot()
         {
             Random r = new Random();
-            if (r.Next(100) < 5)
+            if (r.Next(10) <= 1)
             {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("lucidShard"), Main.rand.Next(5));
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("lucidShard"), Main.rand.Next(5)+1);
             }
-
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.CorruptSeeds, Main.rand.Next(1));
         }
 
     }

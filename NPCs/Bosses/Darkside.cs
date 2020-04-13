@@ -13,6 +13,8 @@ namespace KingdomTerrahearts.NPCs.Bosses
         Player player;
         public float speed;
         public int bossAttackType = 0;
+        public int shootAttackTimes = 2;
+        public int shootAttacksUsed = 0;
 
         void Target()
         {
@@ -22,7 +24,7 @@ namespace KingdomTerrahearts.NPCs.Bosses
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Darkside");
-            Main.npcFrameCount[npc.type] = 3;
+            Main.npcFrameCount[npc.type] = 5;
         }
 
         public override void SetDefaults()
@@ -32,8 +34,8 @@ namespace KingdomTerrahearts.NPCs.Bosses
             npc.damage = 0;
             npc.defense = 15;
             npc.knockBackResist = 0;
-            npc.width = 190;
-            npc.height = 200;
+            npc.width = 190/2;
+            npc.height = 200/2;
             npc.alpha = 255;
             npc.scale = 1.5f;
             npc.value = 5000;
@@ -65,12 +67,6 @@ namespace KingdomTerrahearts.NPCs.Bosses
             {
                 Teleport();
             }
-            else
-            {
-                npc.alpha -= 5;
-                if (npc.alpha <= 0)
-                    npc.alpha = 0;
-            }
 
             DespawnHandler();
 
@@ -89,7 +85,7 @@ namespace KingdomTerrahearts.NPCs.Bosses
 
         void Teleport()
         {
-            if (Magnitude(player.Center - npc.Center) > npc.width*2)
+            if (Magnitude(player.Center - npc.Center) > npc.width*4)
             {
                 npc.alpha += 5;
                 if (npc.alpha >= 255)
@@ -99,6 +95,12 @@ namespace KingdomTerrahearts.NPCs.Bosses
                         npc.Center = player.Center + new Vector2(0, -150);
                     npc.ai[2] = 50;
                 }
+            }
+            else
+            {
+                npc.alpha -= 5;
+                if (npc.alpha <= 0)
+                    npc.alpha = 0;
             }
         }
         float Magnitude(Vector2 vector)
@@ -132,9 +134,20 @@ namespace KingdomTerrahearts.NPCs.Bosses
                 npc.frameCounter %= 100;
                 frame = (int)(npc.frameCounter / 50);
             }
-            else
+            else if(bossAttackType==1)
             {
                 frame = 2;
+            }
+            else
+            {
+                if (npc.ai[1] < -125)
+                {
+                    frame = 4;
+                }
+                else
+                {
+                    frame = 3;
+                }
             }
             if (frame >= Main.npcFrameCount[npc.type]) frame = 0;
             npc.frame.Y = frame * frameHeight;
@@ -155,26 +168,62 @@ namespace KingdomTerrahearts.NPCs.Bosses
         {
             if (attackType == 1)
             {
-                if (npc.ai[1] < -250)
+                int projectile = mod.ProjectileType("DarksideMissileOrb");
+                if (npc.ai[1] < -100)
                 {
-                    int missile = mod.NPCType("darksideMagicMissiles");
+                    if (shootAttacksUsed < shootAttackTimes)
+                    {
+                        int missile = mod.NPCType("darksideMagicMissiles");
 
-                    NPC.NewNPC((int)npc.Center.X + 15, (int)npc.Center.Y, missile);
-                    NPC.NewNPC((int)npc.Center.X - 15, (int)npc.Center.Y, missile);
-                    NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y + 15, missile);
-                    NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y - 15, missile);
-                    npc.ai[1] = 200 + Main.rand.Next(200);
-                    bossAttackType = 0;
+
+                        NPC.NewNPC((int)npc.Center.X + 15, (int)npc.Center.Y, missile);
+                        NPC.NewNPC((int)npc.Center.X - 15, (int)npc.Center.Y, missile);
+                        //NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y + 15, missile);
+                        //NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y - 15, missile);
+
+                        shootAttacksUsed++;
+                        npc.ai[1]=0;
+                    }
+                    else
+                    {
+                        for (int i = 0; i < 1000; i++)
+                        {
+                            if (Main.projectile[i].type == projectile)
+                            {
+                                Main.projectile[i].timeLeft = 1;
+                            }
+                        }
+                        shootAttacksUsed = 0;
+                        npc.ai[1] = 200 + Main.rand.Next(200);
+                        bossAttackType = 0;
+                    }
+                }
+                else
+                {
+                    bool projectileExists = false;
+                    for (int i = 0; i < 1000; i++)
+                    {
+                        if (Main.projectile[i].type==projectile) {
+                            Main.projectile[i].Center = npc.Center;
+                            Main.projectile[i].timeLeft = 15;
+                            projectileExists = true;
+                        }
+                    }
+                    if(!projectileExists)
+                        Projectile.NewProjectile(npc.Center, Vector2.Zero, projectile, 0, 0);
                 }
             }
             else if(attackType==2)
             {
-                int missile = mod.NPCType("shadowHeartless");
+                if (npc.ai[1] < -250)
+                {
+                    int missile = mod.NPCType("shadowHeartless");
 
-                NPC.NewNPC((int)npc.Center.X + 15, (int)npc.Center.Y, missile);
-                NPC.NewNPC((int)npc.Center.X - 15, (int)npc.Center.Y, missile);
-                npc.ai[1] = 200 + Main.rand.Next(200);
-                bossAttackType = 0;
+                    NPC.NewNPC((int)npc.Center.X + 15, (int)npc.Center.Y, missile);
+                    NPC.NewNPC((int)npc.Center.X - 15, (int)npc.Center.Y, missile);
+                    npc.ai[1] = 200 + Main.rand.Next(200);
+                    bossAttackType = 0;
+                }
             }
         }
 
