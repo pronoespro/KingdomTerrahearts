@@ -17,13 +17,13 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public override void SetDefaults() 
 		{
-			item.damage = 5;
+			item.damage = 7;
 			item.melee = true;
 			item.width = 50;
 			item.height = 50;
 			item.scale = 0.75f;
-			item.useTime = 50;
-			item.useAnimation = 50;
+			item.useTime = 25;
+			item.useAnimation = 25;
 			item.useStyle = 1;
 			item.knockBack = 3;
 			item.value = 100;

@@ -23,7 +23,7 @@ namespace KingdomTerrahearts.NPCs
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Shadow heartless");
-            Main.npcFrameCount[npc.type] = 4;
+            Main.npcFrameCount[npc.type] = 5;
         }
 
         public override void SetDefaults()
@@ -105,8 +105,17 @@ namespace KingdomTerrahearts.NPCs
 
 
                 }
-
-                curFrame = (npc.velocity.Y != 0) ? 3 : (curFrame<3)?curFrame:0;
+                if (npc.velocity.Y > 0)
+                {
+                    curFrame = 3;
+                }else if (npc.velocity.Y < 0)
+                {
+                    curFrame = 4;
+                }
+                else
+                {
+                    curFrame = (curFrame < 3) ? curFrame : 0;
+                }
 
                 lastPos = npc.Center;
 

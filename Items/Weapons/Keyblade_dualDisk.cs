@@ -17,7 +17,7 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 39;
+			item.damage = 75;
 			item.melee = true;
 			item.width = 80;
 			item.height = 80;
