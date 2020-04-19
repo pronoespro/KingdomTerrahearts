@@ -51,6 +51,7 @@ namespace KingdomTerrahearts.Items.Weapons
 		{
 			keybladeElement = keyType.light;
 			comboMax = 4;
+			projectileTime = 10000;
 			return base.CanUseItem(player);
 		}
 

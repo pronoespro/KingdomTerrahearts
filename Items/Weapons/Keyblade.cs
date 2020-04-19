@@ -7,6 +7,12 @@ namespace KingdomTerrahearts.Items.Weapons
 {
     public abstract class Keyblade : ModItem
     {
+
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("No help available yet");
+		}
+
 		public enum keyType
 		{
 			light,

@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items
 {
-    class doubleJump : HabilityBase
+    class doubleJump : AbilityBase
     {
 
         float jumpHeight = 5;
@@ -35,7 +35,7 @@ namespace KingdomTerrahearts.Items
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
             sp.canDoubleJump = true;
             sp.doubleJumpHeight += jumpHeight;
-            sp.doubleJumpQuantity++;
+            sp.doubleJumpQuantity += jumpCount;
             base.UpdateInventory(player);
         }
 

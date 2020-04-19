@@ -20,8 +20,8 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.width = 50;
 			item.height = 50;
 			item.scale = 0.75f;
-			item.useTime = 30;
-			item.useAnimation = 30;
+			item.useTime = 27;
+			item.useAnimation = 27;
 			item.useStyle = 1;
 			item.knockBack = 3;
 			item.value = 100;

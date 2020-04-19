@@ -10,6 +10,8 @@ namespace KingdomTerrahearts.Tiles
     public class savepoint:ModTile
     {
 
+		Player player;
+
 		public override void SetDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
@@ -56,7 +58,8 @@ namespace KingdomTerrahearts.Tiles
 
 		public override bool NewRightClick(int i, int j)
 		{
-			Player player = Main.LocalPlayer;
+			player = Main.LocalPlayer;
+			SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
 			Tile tile = Main.tile[i, j];
 			int spawnX = i - tile.frameX / 18;
 			int spawnY = j + 2;
@@ -80,6 +83,8 @@ namespace KingdomTerrahearts.Tiles
 			{
 				player.statLife = player.statLifeMax;
 				player.statMana = player.statManaMax;
+				sp.ResetTimers();
+				sp.AddInvulnerability(10000);
 			}
 
 			/*
@@ -105,6 +110,40 @@ namespace KingdomTerrahearts.Tiles
 			player.noThrow = 2;
 			player.showItemIcon = true;
 			player.showItemIcon2 = ItemType<Items.Placeable.savePoint_Item>();
+		}
+
+		public override void NearbyEffects(int i, int j, bool closer)
+		{
+			SoraPlayer sp= new SoraPlayer();
+			if (player == null)
+			{
+				player = Main.LocalPlayer;
+				sp = player.GetModPlayer<SoraPlayer>();
+			}
+
+			Tile tile = Main.tile[i, j];
+			float reallyClose = Vector2.Distance(player.position, new Vector2(i * 16, j * 16));
+
+			if (reallyClose < 50 && player!=null)
+			{
+				bool healPlayer = true;
+				foreach (NPC npc in Main.npc)
+				{
+					if (!npc.friendly && Vector2.Distance(player.Center, npc.Center) < 250)
+					{
+						healPlayer = false;
+						break;
+					}
+				}
+				if (healPlayer)
+				{
+					player.statLife = player.statLifeMax;
+					player.statMana = player.statManaMax;
+					sp.ResetTimers();
+				}
+			}
+
+			base.NearbyEffects(i, j, closer);
 		}
 
 	}

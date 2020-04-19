@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items
 {
-    class glide:HabilityBase
+    class glide:AbilityBase
     {
 
         float glideTime = 120;

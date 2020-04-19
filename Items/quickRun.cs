@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items
 {
-    class quickRun : HabilityBase
+    class quickRun : AbilityBase
     {
 
         float dashSpeed = 7.5f;

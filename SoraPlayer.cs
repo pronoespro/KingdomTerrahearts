@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -26,7 +27,23 @@ namespace KingdomTerrahearts
         public float doubleJumpHeight = 0;
         public int doubleJumpQuantity = 0;
 
+        public bool hasSecondChance = false;
+        public int secondChanceInvulnerability = 0;
+        public int secondChanceReload = 1000;
+        public bool hasAutoHP = false;
+        public int autoHPReload = 1000;
+        public int autoHPRecover = 0;
+
         public int tpFallImmunity = 0;
+
+        public bool orgCoatAccesory=false;
+        public bool orgCoatHideVanity = false;
+        public bool orgCoatForceBanity = false;
+
+        public bool canCastHeal = false;
+        public int castHealInvulnerabilityTime = 0;
+        public int castHealAmount = 0;
+        public int castHealCost = 1000;
 
         float curGlideTime = 0;
         bool tapped = false;
@@ -36,6 +53,21 @@ namespace KingdomTerrahearts
         bool jumped = false;
         int jumpCount = 0;
         int curDashReload = 100;
+        int SCcurReload = 0;
+        int AHPcurReload = 0;
+        int curInvulnerabilityFrames = 0;
+
+        public void AddInvulnerability(int time)
+        {
+            curInvulnerabilityFrames += (curInvulnerabilityFrames > time) ? 0 : time;
+        }
+
+        public void ResetTimers()
+        {
+            SCcurReload = 0;
+            AHPcurReload = 0;
+            curInvulnerabilityFrames = 0;
+        }
 
         public override void ResetEffects()
         {
@@ -50,10 +82,39 @@ namespace KingdomTerrahearts
             canDoubleJump = false;
             doubleJumpHeight = 0;
             doubleJumpQuantity = 0;
+            
+            hasSecondChance = false;
+            secondChanceReload = 1000;
+            hasAutoHP = false;
+            autoHPReload = 1000;
+            autoHPRecover = 0;
+
+            canCastHeal = false;
+            castHealInvulnerabilityTime = 0;
+            castHealAmount = 0;
+            castHealCost = 1000;
+
+            orgCoatAccesory = false;
+            orgCoatHideVanity = false;
+            orgCoatForceBanity = false;
         }
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
+
+            if (canCastHeal && castHealAmount>0)
+            {
+
+                if(triggersSet.QuickHeal && player.HasBuff(BuffID.PotionSickness) && player.statMana-player.statManaMax>castHealCost)
+                {
+
+                    player.statMana = 0;
+                    player.statLife = castHealAmount / 100 * player.statLifeMax;
+                    curInvulnerabilityFrames = (curInvulnerabilityFrames <castHealInvulnerabilityTime) ? castHealInvulnerabilityTime : curInvulnerabilityFrames;
+
+                }
+
+            }
 
             if (canGlide)
             {
@@ -187,6 +248,13 @@ namespace KingdomTerrahearts
 
         public override void PreUpdate()
         {
+
+            if (curInvulnerabilityFrames > 0)
+            {
+                player.immune = true;
+                curInvulnerabilityFrames--;
+            }
+
             curDashReload--;
             curDashReload = (curDashReload > dashReloadSpeed) ? dashReloadSpeed : curDashReload;
             if (player.velocity.Y == 0)
@@ -205,6 +273,58 @@ namespace KingdomTerrahearts
         public void ChangeDashReload(int reload)
         {
             dashReloadSpeed = (dashReloadSpeed < reload) ? reload : dashReloadSpeed;
+        }
+
+        public override void UpdateVanityAccessories()
+        {
+            for (int n = 13; n < 18 + player.extraAccessorySlots; n++)
+            {
+                Item item = player.armor[n];
+                if (item.type == mod.ItemType("orgCoat"))
+                {
+                    orgCoatHideVanity = false;
+                    orgCoatForceBanity = true;
+                }
+            }
+        }
+
+        public override void FrameEffects()
+        {
+            if ((orgCoatForceBanity) && !orgCoatHideVanity)
+            {
+                player.legs = mod.GetEquipSlot("orgCoatLegs", EquipType.Legs);
+                player.body = mod.GetEquipSlot("orgCoatBody", EquipType.Body);
+                player.head = mod.GetEquipSlot("orgCoatHead", EquipType.Head);
+            }
+        }
+
+        public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        {
+
+            if (SCcurReload == 0 && hasSecondChance && secondChanceReload!=1000 && player.statLife!=1)
+            {
+
+                if(AHPcurReload==0 && hasAutoHP && autoHPRecover!=0)
+                {
+                    player.statLife += autoHPRecover;
+                    player.HealEffect(autoHPRecover);
+
+                    AHPcurReload = player.statLifeMax / autoHPReload;
+                }
+                else
+                {
+                    player.statLife += 1;
+                }
+
+                SCcurReload = secondChanceReload;
+                curInvulnerabilityFrames = secondChanceInvulnerability;
+
+                return false;
+
+            }
+
+            return base.PreKill(damage, hitDirection, pvp,ref playSound,ref genGore,ref damageSource);
+
         }
 
     }

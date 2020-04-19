@@ -11,7 +11,6 @@ namespace KingdomTerrahearts.NPCs.Bosses
     {
 
         Player player;
-        public float speed;
         public int bossAttackType = 0;
         public int shootAttackTimes = 2;
         public int shootAttacksUsed = 0;
