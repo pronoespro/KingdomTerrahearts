@@ -4,9 +4,17 @@ Kingdom Terrahearts introduces the world of Kingdom Hearts to Terraria.
 
 -A custom bed based on save spots in the KH franchise
 -1 new prehardmode boss
--3 new habilities
--8 new weapons (all Keyblades for now)
+-6 new habilities
+-1 new "grappling hook"
+-9 new weapons
+-1 new huge tile (dive to heart)
+-1 new block with a workbench (twilight town based)
 -1 new enemy (more to come)
+-1 new vanity item
+-1 new material
+-1 new "anti-death" item (Kupo coin)
+
+DISCLAIMER: This mod has an error that closes terraria and says "Begin cannot be called before end", I'm working to find a solution, but it is not easy.
 
 Link to the wiki: https://terrariamods.gamepedia.com/Kingdom_Terrahearts
 Link to the forum: https://forums.terraria.org/index.php?threads/kingdom-terraheart-mod-for-tmodloader.87391/#post-1935075
