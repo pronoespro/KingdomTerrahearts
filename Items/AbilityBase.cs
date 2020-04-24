@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using System.Collections.Generic;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -8,7 +9,14 @@ namespace KingdomTerrahearts.Items
     {
 
         public int level = 0;
-        public string habilityName;
+        public string abilityName;
+        int tooltipStart = 4;
+        public string[] abilityTooltips = new string[]
+        {
+            "this is a tooltip",
+            "Tooltip level 2"
+        };
+        public int initLvl = 0;
 
         public override void SetStaticDefaults()
         {
@@ -22,6 +30,7 @@ namespace KingdomTerrahearts.Items
             item.accessory = true;
             item.width = 10;
             item.height = 10;
+            item.scale = 0.1f;
 
         }
 
@@ -37,7 +46,7 @@ namespace KingdomTerrahearts.Items
 
         public virtual void CheckLevel()
         {
-            level = 0;
+            level = initLvl;
             ResetLevelEffects();
             if (NPC.downedBoss1)
                 RaiseLevel();
@@ -61,10 +70,21 @@ namespace KingdomTerrahearts.Items
             level++;
             ChangeNameByLevel();
         }
+        
+        /*
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            int lvl = (level >= abilityTooltips.Length) ? abilityTooltips.Length-1 : level;
+            TooltipLine line = new TooltipLine(mod, "level tooltip", abilityTooltips[lvl]);
+
+            tooltips.Remove(line);
+            tooltips.Insert(tooltipStart, line);
+        }
+        */
 
         public virtual void ChangeNameByLevel()
         {
-            item.SetNameOverride(habilityName + " level " + (level+1));
+            item.SetNameOverride(abilityName + " level " + (level+1));
         }
 
     }

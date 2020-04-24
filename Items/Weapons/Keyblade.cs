@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -240,8 +241,14 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.useStyle = 5;
 		}
 
+		public override void ModifyTooltips(List<TooltipLine> tooltips)
+		{
+			tooltips.Insert(1,new TooltipLine(mod,"transformation","This Keyblade can't transform itself or you"));
+		}
+
 		public override void UpdateInventory(Player player)
 		{
+
 			if (!(player.inventory[player.selectedItem] == item))
 			{
 				combo = 0;

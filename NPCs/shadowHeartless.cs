@@ -107,10 +107,10 @@ namespace KingdomTerrahearts.NPCs
                 }
                 if (npc.velocity.Y > 0)
                 {
-                    curFrame = 3;
+                    curFrame = 4;
                 }else if (npc.velocity.Y < 0)
                 {
-                    curFrame = 4;
+                    curFrame = 3;
                 }
                 else
                 {

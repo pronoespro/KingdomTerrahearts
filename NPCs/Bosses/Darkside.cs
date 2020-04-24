@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace KingdomTerrahearts.NPCs.Bosses
 {
     [AutoloadBossHead]
-    class Darkside:ModNPC
+    public class Darkside :ModNPC
     {
 
         Player player;

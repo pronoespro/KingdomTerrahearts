@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items
 {
-    class athleticFlowHook:ModItem
+    public class athleticFlowHook :ModItem
     {
         int level=1;
         string hoolName = "Athletic Flow";
@@ -18,6 +18,9 @@ namespace KingdomTerrahearts.Items
 
         public override void SetDefaults()
         {
+            item.width = 10;
+            item.height = 10;
+            item.scale = 0.1f;
             item.shootSpeed = 20;
             item.shoot = mod.ProjectileType("athleticFlowShotLock");
         }

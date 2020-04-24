@@ -84,7 +84,6 @@ namespace KingdomTerrahearts.Tiles
 				player.statLife = player.statLifeMax;
 				player.statMana = player.statManaMax;
 				sp.ResetTimers();
-				sp.AddInvulnerability(10000);
 			}
 
 			/*

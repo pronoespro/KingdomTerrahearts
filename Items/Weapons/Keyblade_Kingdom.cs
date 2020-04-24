@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items.Weapons
 {
-    class Keyblade_Kingdom:Keyblade
+	public class Keyblade_Kingdom :Keyblade
     {
 
 		public override void SetStaticDefaults()
@@ -22,8 +22,8 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.width = 80;
 			item.height = 80;
 			item.scale = 0.75f;
-			item.useTime = 13;
-			item.useAnimation = 13;
+			item.useTime = 16;
+			item.useAnimation = 16;
 			item.useStyle = 1;
 			item.knockBack = 3;
 			item.value = 100;

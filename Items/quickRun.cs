@@ -13,8 +13,8 @@ namespace KingdomTerrahearts.Items
         
         public override void SetStaticDefaults()
         {
-            habilityName = "Quick Run";
-            DisplayName.SetDefault(habilityName+" level " + (level+1).ToString());
+            abilityName = "Quick Run";
+            DisplayName.SetDefault(abilityName+" level " + (level+1).ToString());
             Tooltip.SetDefault("An ability that gives you a quick dash" +
                 "\nAllows you to avoid attacks, no invulnerability" +
                 "\nVery low speed" +
@@ -23,7 +23,7 @@ namespace KingdomTerrahearts.Items
 
         public override void UpdateEquip(Player player)
         {
-            habilityName = "Quick Run";
+            abilityName = "Quick Run";
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
             sp.dashSpeed += dashSpeed;
             sp.canDash = true;
@@ -32,7 +32,7 @@ namespace KingdomTerrahearts.Items
 
         public override void UpdateInventory(Player player)
         {
-            habilityName = "Quick Run";
+            abilityName = "Quick Run";
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
             sp.dashSpeed += dashSpeed;
             sp.canDash = true;

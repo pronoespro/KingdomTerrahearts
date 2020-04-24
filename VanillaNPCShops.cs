@@ -19,7 +19,20 @@ namespace KingdomTerrahearts
 
                     shop.item[nextSlot].SetDefaults(mod.ItemType("Keyblade_witchDoctor"));
                     nextSlot++;
+                    break;
+                case NPCID.Merchant:
+                    shop.item[nextSlot].SetDefaults(mod.ItemType("KupoCoin"));
+                    nextSlot++;
+                    break;
+            }
+        }
 
+        public override void NPCLoot(NPC npc)
+        {
+            switch (npc.type)
+            {
+                case NPCID.QueenBee:
+                    Item.NewItem(npc.frame, ItemID.HoneyBalloon);
                     break;
             }
         }

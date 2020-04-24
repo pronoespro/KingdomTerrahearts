@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items
 {
-    class MaxMobility:AbilityBase
+    public class MaxMobility :AbilityBase
     {
 
 
@@ -20,8 +20,8 @@ namespace KingdomTerrahearts.Items
 
         public override void SetStaticDefaults()
         {
-            habilityName = "Max Mobility";
-            DisplayName.SetDefault(habilityName + " level " + (level + 1).ToString());
+            abilityName = "Max Mobility";
+            DisplayName.SetDefault(abilityName + " level " + (level + 1).ToString());
             Tooltip.SetDefault("An ability that combines all previous ones" +
                 "\nAllows you to jump again in midair" +
                 "\nAllows you to dash" +
@@ -30,7 +30,7 @@ namespace KingdomTerrahearts.Items
 
         public override void UpdateEquip(Player player)
         {
-            habilityName = "Max Mobility";
+            abilityName = "Max Mobility";
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
             sp.canDoubleJump = true;
             sp.doubleJumpHeight += jumpHeight;
@@ -49,7 +49,8 @@ namespace KingdomTerrahearts.Items
 
         public override void UpdateInventory(Player player)
         {
-            habilityName = "Max Mobility";
+            initLvl = 3;
+            abilityName = "Max Mobility";
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
             sp.canDoubleJump = true;
             sp.doubleJumpHeight += jumpHeight;
@@ -84,6 +85,7 @@ namespace KingdomTerrahearts.Items
 
         public override void RaiseLevel()
         {
+            base.RaiseLevel();
             jumpHeight += 2.5f;
             if (level > 2)
             {
@@ -106,7 +108,6 @@ namespace KingdomTerrahearts.Items
             {
                 canDashMidair = true;
             }
-            base.RaiseLevel();
         }
 
         public override void ResetLevelEffects()

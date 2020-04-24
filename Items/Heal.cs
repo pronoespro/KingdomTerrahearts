@@ -7,14 +7,15 @@ namespace KingdomTerrahearts.Items
     class Heal:AbilityBase
     {
 
-        int healAmmount = 10;
+        int healAmmount = 30;
         int invulnerability = 0;
         int minManaCost = 40;
 
         public override void SetStaticDefaults()
         {
-            habilityName = "Heal";
-            DisplayName.SetDefault(habilityName + " level " + (level + 1).ToString());
+            abilityName = "Heal";
+
+            DisplayName.SetDefault(abilityName + " level " + (level + 1).ToString());
             Tooltip.SetDefault("An ability that lets you use magic to heal" +
                 "\nOnly activates if you already used a potion" +
                 "\nWastes all MP");
@@ -22,7 +23,11 @@ namespace KingdomTerrahearts.Items
 
         public override void UpdateEquip(Player player)
         {
-            habilityName = "Heal";
+            abilityName = "Heal";
+            abilityTooltips = new string[]
+            {
+                "Heals "+(int)((float)healAmmount / 100f * (float)player.statLifeMax)+" hp"
+            };
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
             sp.canCastHeal = true;
             sp.castHealAmount=healAmmount;
@@ -33,7 +38,7 @@ namespace KingdomTerrahearts.Items
 
         public override void UpdateInventory(Player player)
         {
-            habilityName = "Heal";
+            abilityName = "Heal";
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
             sp.canCastHeal = true;
             sp.castHealAmount = healAmmount;

@@ -14,7 +14,7 @@ using static Terraria.ModLoader.ModContent;
 
 namespace KingdomTerrahearts.Tiles
 {
-    class TheBattleground:ModTile
+    public class TheBattleground :ModTile
     {
 
         public override void SetDefaults()
@@ -34,12 +34,12 @@ namespace KingdomTerrahearts.Tiles
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinatePadding = 2;
             TileObjectData.newTile.CoordinateHeights = new int[28];
-            for(int i = 0; i < TileObjectData.newTile.Width;i++)
+            for(int i = 0; i < TileObjectData.newTile.Height;i++)
             {
                 TileObjectData.newTile.CoordinateHeights[i] = 16;
             }
-            TileObjectData.newTile.Origin = new Point16(9, 28);
-            TileObjectData.newTile.AnchorBottom= new AnchorData(AnchorType.EmptyTile,4, TileObjectData.newTile.Width / 2 -2);
+            TileObjectData.newTile.Origin = new Point16(9, 27);
+            TileObjectData.newTile.AnchorBottom= new AnchorData(AnchorType.SolidWithTop,4, TileObjectData.newTile.Width / 2 -2);
             TileObjectData.newTile.AnchorTop = AnchorData.Empty;
             TileObjectData.newTile.AnchorLeft = AnchorData.Empty;
             TileObjectData.newTile.AnchorRight = AnchorData.Empty;
@@ -48,11 +48,13 @@ namespace KingdomTerrahearts.Tiles
             TileObjectData.newTile.LavaDeath = false;
             TileObjectData.addTile(Type);
             ModTranslation name = CreateMapEntryName();
+
             name.SetDefault("The Battleground");
             AddMapEntry(new Color(255, 255, 255), name);
+
+            animationFrameHeight = 504;
             dustType = 11;
             disableSmartCursor = true;
-            drop = mod.ItemType("TheBattlegroundItem");
             minPick = 2;
             mineResist = 3;
         }

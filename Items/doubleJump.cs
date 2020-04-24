@@ -12,8 +12,8 @@ namespace KingdomTerrahearts.Items
 
         public override void SetStaticDefaults()
         {
-            habilityName = "Double Jump";
-            DisplayName.SetDefault(habilityName+" level " + (level+1).ToString());
+            abilityName = "Double Jump";
+            DisplayName.SetDefault(abilityName+" level " + (level+1).ToString());
             Tooltip.SetDefault("A double jump ability" +
                 "\nAllows you to jump again in midair" +
                 "\nVery low jump height");
@@ -21,7 +21,7 @@ namespace KingdomTerrahearts.Items
 
         public override void UpdateEquip(Player player)
         {
-            habilityName = "Double Jump";
+            abilityName = "Double Jump";
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
             sp.canDoubleJump = true;
             sp.doubleJumpHeight += jumpHeight;
@@ -31,7 +31,7 @@ namespace KingdomTerrahearts.Items
 
         public override void UpdateInventory(Player player)
         {
-            habilityName = "Double Jump";
+            abilityName = "Double Jump";
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
             sp.canDoubleJump = true;
             sp.doubleJumpHeight += jumpHeight;

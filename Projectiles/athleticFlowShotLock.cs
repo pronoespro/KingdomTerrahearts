@@ -84,6 +84,10 @@ namespace KingdomTerrahearts.Projectiles
 
         public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
         {
+
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Immediate,BlendState.AlphaBlend,SamplerState.LinearClamp,DepthStencilState.Default,RasterizerState.CullNone,null,Main.GameViewMatrix.ZoomMatrix);
+
             Texture2D texture = ModContent.GetTexture("KingdomTerrahearts/Projectiles/athleticFlowShotLock_chain");
             Vector2 position = projectile.Center;
             Vector2 mountedCenter = Main.player[projectile.owner].MountedCenter;

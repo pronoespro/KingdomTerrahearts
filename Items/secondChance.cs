@@ -15,15 +15,22 @@ namespace KingdomTerrahearts.Items
 
         public override void SetStaticDefaults()
         {
-            habilityName = "Second Chance";
-            DisplayName.SetDefault(habilityName + " level " + (level + 1).ToString());
-            Tooltip.SetDefault("An ability that lets you keep one hp after a fatal attack" +
-                "\nWorks every three minutes.");
+            abilityName = "Second Chance";
+
+            abilityTooltips = new string[] {
+                "An ability that lets you keep one hp after a fatal attack \nWorks every three minutes.",
+                "An ability that lets you keep one hp after a fatal attack \nWorks every three minutes.",
+                "An ability that lets you keep one hp after a fatal attack \nWorks every two minutes and a half.",
+                "An ability that lets you keep one hp after a fatal attack \nWorks every two minutes."
+
+            };
+
+            DisplayName.SetDefault(abilityName + " level " + (level + 1).ToString());
         }
 
         public override void UpdateEquip(Player player)
         {
-            habilityName = "Second Chance";
+            abilityName = "Second Chance";
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
             sp.hasSecondChance = true;
             sp.secondChanceInvulnerability = invulnerabilityFrames;
@@ -36,7 +43,7 @@ namespace KingdomTerrahearts.Items
 
         public override void UpdateInventory(Player player)
         {
-            habilityName = "Second Chance";
+            abilityName = "Second Chance";
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
             sp.hasSecondChance = true;
             sp.secondChanceInvulnerability = invulnerabilityFrames;
@@ -64,7 +71,7 @@ namespace KingdomTerrahearts.Items
         {
             base.RaiseLevel();
             invulnerabilityFrames += 2;
-            reloadTime += 10;
+            reloadTime -= 10;
             if (level > 5)
             {
                 autoHP = true;
@@ -80,6 +87,9 @@ namespace KingdomTerrahearts.Items
             invulnerabilityFrames = 1;
             recoveredHp = 1;
             reloadTime = 180;
+            autoHP = false;
+            autoHPReload = 180 * 60;
+            recoveredHp = 1;
         }
 
     }

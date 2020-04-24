@@ -17,7 +17,6 @@ namespace KingdomTerrahearts
 		public KingdomTerrahearts()
 		{
 
-			instance = this;
 			
 
 		}
@@ -29,6 +28,9 @@ namespace KingdomTerrahearts
 
 		public override void Load()
 		{
+			instance = this;
+			Logger.InfoFormat("{0} Sora logging", Name);
+
 			if (!Main.dedServ)
 			{
 				AddEquipTexture(null, EquipType.Legs, "orgCoatLegs", "KingdomTerrahearts/Items/Armor/orgCoat_Legs");

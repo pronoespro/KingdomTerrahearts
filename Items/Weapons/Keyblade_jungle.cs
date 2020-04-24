@@ -35,7 +35,19 @@ namespace KingdomTerrahearts.Items.Weapons
 		{
 			keybladeElement = keyType.jungle;
 			comboMax = 4;
+			projectileTime = 60 * 5;
 			return base.CanUseItem(player);
+		}
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.Stinger, 12);
+			recipe.AddIngredient(ItemID.JungleSpores, 12);
+			recipe.AddIngredient(ItemID.Vine);
+			recipe.AddTile(TileID.Anvils);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
 		}
 	}
 }

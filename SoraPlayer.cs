@@ -11,7 +11,7 @@ using Terraria.ModLoader.IO;
 namespace KingdomTerrahearts
 {
 
-    class SoraPlayer:ModPlayer
+    public class SoraPlayer :ModPlayer
     {
 
         public bool canGlide = false;
@@ -44,6 +44,7 @@ namespace KingdomTerrahearts
         public int castHealInvulnerabilityTime = 0;
         public int castHealAmount = 0;
         public int castHealCost = 1000;
+        public int reviveTime = 0;
 
         float curGlideTime = 0;
         bool tapped = false;
@@ -102,14 +103,15 @@ namespace KingdomTerrahearts
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
 
-            if (canCastHeal && castHealAmount>0)
+            if (canCastHeal && castHealAmount>0 && player.statLife<(player.statLifeMax/4*3))
             {
 
-                if(triggersSet.QuickHeal && player.HasBuff(BuffID.PotionSickness) && player.statMana-player.statManaMax>castHealCost)
+                if(triggersSet.QuickHeal && player.HasBuff(BuffID.PotionSickness) && ((player.statManaMax>0)?player.statMana/player.statManaMax*100:1)>castHealCost)
                 {
 
                     player.statMana = 0;
-                    player.statLife = castHealAmount / 100 * player.statLifeMax;
+                    player.HealEffect((int)((float)castHealAmount / 100f * (float)player.statLifeMax));
+                    player.statLife += (int)((float)castHealAmount / 100f * (float)player.statLifeMax);
                     curInvulnerabilityFrames = (curInvulnerabilityFrames <castHealInvulnerabilityTime) ? castHealInvulnerabilityTime : curInvulnerabilityFrames;
 
                 }
@@ -234,6 +236,54 @@ namespace KingdomTerrahearts
             }
 
         }
+        public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        {
+
+            //Second Chance && Auto-HP
+            if (SCcurReload == 0 && hasSecondChance && secondChanceReload != 1000 && player.statLife != 1)
+            {
+
+                if (AHPcurReload == 0 && hasAutoHP && autoHPRecover != 0)
+                {
+                    player.statLife += autoHPRecover;
+                    player.HealEffect(autoHPRecover);
+
+                    AHPcurReload = player.statLifeMax / ((autoHPReload!=0)? autoHPReload : 1 );
+                }
+                else
+                {
+                    player.statLife += 1;
+                }
+
+                SCcurReload = secondChanceReload;
+                curInvulnerabilityFrames = secondChanceInvulnerability;
+
+                return false;
+
+            }
+
+            //Kupo Coin
+            if (player.HasItem(mod.ItemType("KupoCoin")) && reviveTime <= 0)
+            {
+                player.ConsumeItem(mod.ItemType("KupoCoin"));
+                player.statLife = player.statLifeMax2;
+                player.HealEffect(player.statLifeMax2);
+                player.immune = true;
+                player.immuneTime = player.longInvince ? 180 : 120;
+                for (int k = 0; k < player.hurtCooldowns.Length; k++)
+                {
+                    player.hurtCooldowns[k] = player.longInvince ? 180 : 120;
+                }
+                Main.PlaySound(SoundID.Item29, player.position);
+                reviveTime = 60 * 60 * 3;
+                return false;
+            }
+
+
+
+            reviveTime = 0;
+            return base.PreKill(damage, hitDirection, pvp, ref playSound, ref genGore, ref damageSource);
+        }
 
         public override void SetupStartInventory(IList<Item> items, bool mediumcoreDeath)
         {
@@ -249,6 +299,7 @@ namespace KingdomTerrahearts
         public override void PreUpdate()
         {
 
+
             if (curInvulnerabilityFrames > 0)
             {
                 player.immune = true;
@@ -261,8 +312,14 @@ namespace KingdomTerrahearts
             {
                 curGlideTime = glideTime;
             }
+
+            if (--secondChanceReload <= 0) secondChanceReload = 0;
+            if (--autoHPReload <= 0) autoHPReload = 0;
+            
             player.noFallDmg = tpFallImmunity>0;
             tpFallImmunity-=(tpFallImmunity>0)?1:0;
+
+            base.PreUpdate();
         }
 
         public void ChangeGlideFallSpeed(float fallspeed)
@@ -286,6 +343,7 @@ namespace KingdomTerrahearts
                     orgCoatForceBanity = true;
                 }
             }
+            base.UpdateVanityAccessories();
         }
 
         public override void FrameEffects()
@@ -296,35 +354,7 @@ namespace KingdomTerrahearts
                 player.body = mod.GetEquipSlot("orgCoatBody", EquipType.Body);
                 player.head = mod.GetEquipSlot("orgCoatHead", EquipType.Head);
             }
-        }
-
-        public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
-        {
-
-            if (SCcurReload == 0 && hasSecondChance && secondChanceReload!=1000 && player.statLife!=1)
-            {
-
-                if(AHPcurReload==0 && hasAutoHP && autoHPRecover!=0)
-                {
-                    player.statLife += autoHPRecover;
-                    player.HealEffect(autoHPRecover);
-
-                    AHPcurReload = player.statLifeMax / autoHPReload;
-                }
-                else
-                {
-                    player.statLife += 1;
-                }
-
-                SCcurReload = secondChanceReload;
-                curInvulnerabilityFrames = secondChanceInvulnerability;
-
-                return false;
-
-            }
-
-            return base.PreKill(damage, hitDirection, pvp,ref playSound,ref genGore,ref damageSource);
-
+            base.FrameEffects();
         }
 
     }

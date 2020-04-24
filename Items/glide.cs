@@ -15,8 +15,8 @@ namespace KingdomTerrahearts.Items
 
         public override void SetStaticDefaults()
         {
-            habilityName = "Glide";
-            DisplayName.SetDefault(habilityName+" level " + (level + 1).ToString());
+            abilityName = "Glide";
+            DisplayName.SetDefault(abilityName+" level " + (level + 1).ToString());
             Tooltip.SetDefault("A glide ability" +
                 "\nAllows you to fall slowly" +
                 "\nOnly lasts for 2 seconds");
@@ -26,7 +26,7 @@ namespace KingdomTerrahearts.Items
         {
             if (noFallDamage)
                 player.noFallDmg = true;
-            habilityName = "Glide";
+            abilityName = "Glide";
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
             sp.canGlide = true;
             sp.glideTime += glideTime;
@@ -36,7 +36,7 @@ namespace KingdomTerrahearts.Items
 
         public override void UpdateInventory(Player player)
         {
-            habilityName = "Glide";
+            abilityName = "Glide";
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
             sp.canGlide = true;
             sp.glideTime += glideTime;
