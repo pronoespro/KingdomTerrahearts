@@ -25,10 +25,10 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.scale = 0.75f;
 			item.useTime = 24;
 			item.useAnimation = 24;
-			item.useStyle = 1;
+			item.useStyle = ItemUseStyleID.SwingThrow;
 			item.knockBack = 3;
 			item.value = 100;
-			item.rare = 2;
+            item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 		}

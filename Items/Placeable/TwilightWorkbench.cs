@@ -10,7 +10,7 @@ namespace KingdomTerrahearts.Items.Placeable
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Twiligth Night Table");
-			Tooltip.SetDefault("Night Table that you  can use for crafting as well.");
+			Tooltip.SetDefault("Night Table that you can use as a workbench.");
 		}
 
 		public override void SetDefaults()

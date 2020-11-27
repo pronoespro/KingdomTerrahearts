@@ -33,7 +33,6 @@ namespace KingdomTerrahearts.Items
             recipe.SetResult(this);
             recipe.AddRecipe();
         }
-
         public override void UpdateInventory(Player player)
         {
             UpdateLevel();

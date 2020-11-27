@@ -37,6 +37,7 @@ namespace KingdomTerrahearts.Items
                     }
                     else
                     {
+                        Item.NewItem(player.getRect(), ItemID.GoldCoin, 4);
                         player.ConsumeItem(mod.ItemType("KupoCoin"),true);
                     }
                 }

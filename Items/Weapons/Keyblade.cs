@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -55,6 +56,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			ultimate
 		}
 
+		public int initDamage;
 		public int combo = 0;
         public int comboMax = 3;
 		public int projectileTime = 10;
@@ -65,14 +67,18 @@ namespace KingdomTerrahearts.Items.Weapons
 		public bool canShootAgain = true;
 		public int manaConsumed = 0;
 
+		public bool enlightened;
+		public float damageMult = 1;
+
 		Player wielder;
 
 		public override bool CanUseItem(Player player)
 		{
+
 			item.mana = 0;
-			for (int i = 0; i < 1000; ++i)
+			for (int i = 0; i < Main.projectile.Length; ++i)
 			{
-				if (Main.projectile[i].active && Main.projectile[i].owner == Main.myPlayer && Main.projectile[i].type == item.shoot)
+				if (Main.projectile[i].active && Main.projectile[i].owner == Main.myPlayer && Main.projectile[i].type == item.shoot && Main.projectile[i].timeLeft>projectileTime)
 				{
 					if (!canShootAgain)
 						return false;
@@ -87,18 +93,18 @@ namespace KingdomTerrahearts.Items.Weapons
 			{
 				case 0:
 					item.shoot = -1;
-					item.useStyle = 1;
+					item.useStyle = ItemUseStyleID.SwingThrow;
 					break;
 				case 1:
 					item.shoot = -1;
-					item.useStyle = 3;
+					item.useStyle = ItemUseStyleID.Stabbing;
 					break;
 				case 2:
 					ShootmagicProjectile();
 					break;
 				case 3:
 					item.shoot = -1;
-					item.useStyle = 3;
+					item.useStyle = ItemUseStyleID.Stabbing;
 					break;
 				case 4:
 					ComboPlus(combo);
@@ -125,11 +131,11 @@ namespace KingdomTerrahearts.Items.Weapons
 					{
 						case 4:
 							item.shoot = -1;
-							item.useStyle = 1;
+							item.useStyle = ItemUseStyleID.SwingThrow;
 							break;
 						case 5:
 							item.shoot = -1;
-							item.useStyle = 3;
+							item.useStyle = ItemUseStyleID.Stabbing;
 							break;
 					}
 				break;
@@ -141,7 +147,7 @@ namespace KingdomTerrahearts.Items.Weapons
 							break;
 						case 5:
 							item.shoot = -1;
-							item.useStyle = 3;
+							item.useStyle = ItemUseStyleID.Stabbing;
 							break;
 					}
 					break;
@@ -153,7 +159,7 @@ namespace KingdomTerrahearts.Items.Weapons
 							break;
 						case 5:
 							item.shoot = -1;
-							item.useStyle = 3;
+							item.useStyle = ItemUseStyleID.Stabbing;
 							break;
 					}
 					break;
@@ -163,11 +169,11 @@ namespace KingdomTerrahearts.Items.Weapons
 					{
 						case 4:
 							item.shoot = -1;
-							item.useStyle = 3;
+							item.useStyle = ItemUseStyleID.Stabbing;
 							break;
 						case 5:
 							item.shoot = -1;
-							item.useStyle = 3;
+							item.useStyle = ItemUseStyleID.Stabbing;
 							break;
 					}
 					break;
@@ -205,7 +211,7 @@ namespace KingdomTerrahearts.Items.Weapons
 				else
 				{
 					item.shoot = -1;
-					item.useStyle = 3;
+					item.useStyle = ItemUseStyleID.Stabbing;
 					return;
 				}
 			}
@@ -238,30 +244,45 @@ namespace KingdomTerrahearts.Items.Weapons
 					item.shootSpeed = 15;
 					break;
 			}
-			item.useStyle = 5;
+			item.useStyle = ItemUseStyleID.HoldingOut;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			tooltips.Insert(1,new TooltipLine(mod,"transformation","This Keyblade can't transform itself or you"));
+			TooltipLine tooltip = new TooltipLine(mod, "Transformations", "This Keyblade can't transform itself or you");
+			tooltip.overrideColor = Color.LightBlue;
+			tooltips.Add(tooltip);
 		}
 
 		public override void UpdateInventory(Player player)
 		{
 
-			if (!(player.inventory[player.selectedItem] == item))
-			{
-				combo = 0;
-				lastUsedTime = 0;
-			}
-			else
+			enlightened = player.HasBuff(mod.BuffType("EnlightenedBuff"));
+
+			item.damage = (int)(item.damage/damageMult);
+
+			damageMult = 1;
+			damageMult += (enlightened) ? 0.5f : 0;
+
+			item.damage = (int)(item.damage * damageMult);
+
+			if ((player.inventory[player.selectedItem] == item))
 			{
 				lastUsedTime++;
-				if (lastUsedTime > item.useTime * 1.5f && combo>0)
+				if (lastUsedTime > item.useTime * 1.5f && combo > 0)
 				{
 					combo = 0;
 					lastUsedTime = 0;
 				}
+
+				item.color = (enlightened) ? Color.Blue : Color.White;
+
+			}
+			else
+			{
+				combo = 0;
+				lastUsedTime = 0;
+				item.color = Color.White;
 			}
 		}
 

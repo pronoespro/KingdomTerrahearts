@@ -86,7 +86,7 @@ namespace KingdomTerrahearts.Items
         public override void RaiseLevel()
         {
             base.RaiseLevel();
-            jumpHeight += 2.5f;
+            jumpHeight += 1.5f;
             if (level > 2)
             {
                 jumpCount++;
@@ -115,7 +115,7 @@ namespace KingdomTerrahearts.Items
             base.ResetLevelEffects();
             glideTime = 120;
             
-            jumpHeight = 5;
+            jumpHeight = 7;
             jumpCount = 1;
 
             canDashMidair = false;

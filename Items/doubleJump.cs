@@ -53,7 +53,7 @@ namespace KingdomTerrahearts.Items
 
         public override void RaiseLevel()
         {
-            jumpHeight += 2.5f;
+            jumpHeight += 1.5f;
             if (level > 2)
             {
                 jumpCount++;

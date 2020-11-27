@@ -15,7 +15,8 @@ namespace KingdomTerrahearts.Items.Weapons
             DisplayName.SetDefault("Arrowgun");
             Tooltip.SetDefault("A weapon that shoots out dark arrows" +
                 "\nConsumes 1 mana per arrow" +
-                "\nHas combos");
+                "\nHas combos" +
+                "\nCan shoot up to 32 shots before needing to reload");
         }
 
         public override void SetDefaults()
@@ -25,8 +26,8 @@ namespace KingdomTerrahearts.Items.Weapons
             item.mana = 3;
             item.width = 50;
             item.height = 50;
-            item.useTime = 20;
-            item.useAnimation = 20;
+            item.useTime = 30;
+            item.useAnimation = 30;
             item.useStyle = 5;
             item.knockBack = 3;
             item.value = 10000;
@@ -35,6 +36,7 @@ namespace KingdomTerrahearts.Items.Weapons
             item.autoReuse = true;
             item.shoot = ProjectileID.JestersArrow;
             item.shootSpeed = 25;
+            item.noMelee = true;
         }
 
         public override bool CanUseItem(Player player)

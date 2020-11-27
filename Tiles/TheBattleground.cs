@@ -5,12 +5,9 @@ using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
-using Terraria.GameContent.Generation;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using Terraria.World.Generation;
-using static Terraria.ModLoader.ModContent;
 
 namespace KingdomTerrahearts.Tiles
 {
@@ -69,12 +66,55 @@ namespace KingdomTerrahearts.Tiles
             makeDust = false;
         }
 
+        public override void NearbyEffects(int i, int j, bool closer)
+        {
+            Player player = Main.LocalPlayer;
+            SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
+
+            float x = i * 16;
+            float y = j * 16;
+
+            if (player.position.X > x - (16 * 9) && player.position.X < x + (16 * 9) && player.position.Y < y - (16 * 28))
+            {
+                sp.initPosTrap = new Vector2(x - (16 * 9), y - (16 * 29) * 2);
+                sp.endPosTrap = new Vector2(x + (16 * 9) - 9, y - (16 * 29) + 8);
+                bool playerIsTrapped = false;
+                for (int e = 0; e < Main.npc.Length; e++)
+                {
+                    if (Main.npc[e].boss && Main.npc[e].life > 0)
+                    {
+
+                        playerIsTrapped = Main.npc[e].life > Main.npc[e].lifeMax / 2;
+                        player.AddBuff(BuffID.ChaosState, 15, false);
+                        player.AddBuff(BuffID.Darkness, 15, false);
+                        player.AddBuff(BuffID.Blackout, 15, false);
+                        player.AddBuff(BuffID.NoBuilding, 60, false);
+                        if (!player.HasBuff(BuffID.PotionSickness))
+                        {
+                            player.AddBuff(BuffID.PotionSickness, 30, false);
+                        }
+                        break;
+                    }
+                }
+                if (playerIsTrapped)
+                {
+
+                    if (!player.HasBuff(mod.BuffType("EnlightenedBuff")))
+                    {
+                        player.AddBuff(mod.BuffType("EnlightenedBuff"),50,true);
+                    }
+                }
+                sp.fightingInBattleground = (playerIsTrapped || sp.fightingInBattleground)&& !player.dead;
+            }
+
+        }
+
     }
     public class TheBattlegroundItem : ModItem
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Batlling Heart");
+            DisplayName.SetDefault("Battling Heart");
             Tooltip.SetDefault("A heart to call the Battlegrounds");
         }
 

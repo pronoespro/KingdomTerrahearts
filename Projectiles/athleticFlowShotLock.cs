@@ -19,7 +19,19 @@ namespace KingdomTerrahearts.Projectiles
 
         public override void SetDefaults()
         {
-            projectile.CloneDefaults(ProjectileID.GemHookAmethyst);
+            projectile.netImportant = true;
+            projectile.width = 18;
+            projectile.height = 18;
+            projectile.aiStyle = 7;
+            projectile.friendly = true;
+            projectile.penetrate = 1;
+            projectile.tileCollide = false;
+            projectile.timeLeft *= 10;
+        }
+
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+
         }
 
         public override bool? CanUseGrapple(Player player)

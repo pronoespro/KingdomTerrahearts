@@ -10,7 +10,7 @@ namespace KingdomTerrahearts.Items.Placeable
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Twilight Town Fragment");
+			DisplayName.SetDefault("Twilight Town Block Fragment");
 			Tooltip.SetDefault("A pice of a town far away" +
 				"\nThe town is fine, this is just a lost fragment nobody cared about" +
 	"\nThat nobody being Roxas");
@@ -33,7 +33,7 @@ namespace KingdomTerrahearts.Items.Placeable
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.GrayBrick, 99);
+			recipe.AddIngredient(ItemID.GrayBrick, 10);
 			recipe.AddIngredient(mod.ItemType("lucidShard"));
 			recipe.AddTile(TileID.Furnaces);
 			recipe.SetResult(this, 99);

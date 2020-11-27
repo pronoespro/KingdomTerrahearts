@@ -46,6 +46,12 @@ namespace KingdomTerrahearts
         public int castHealCost = 1000;
         public int reviveTime = 0;
 
+        public bool skipToNight = false;
+
+        public bool enlightened = false;
+        public bool fightingInBattleground = false;
+        public Vector2 initPosTrap, endPosTrap;
+
         float curGlideTime = 0;
         bool tapped = false;
         float tapTime = 0;
@@ -98,144 +104,150 @@ namespace KingdomTerrahearts
             orgCoatAccesory = false;
             orgCoatHideVanity = false;
             orgCoatForceBanity = false;
+
+            enlightened = false;
+
         }
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
-
-            if (canCastHeal && castHealAmount>0 && player.statLife<(player.statLifeMax/4*3))
+            if (player.mount.Type == -1)
             {
-
-                if(triggersSet.QuickHeal && player.HasBuff(BuffID.PotionSickness) && ((player.statManaMax>0)?player.statMana/player.statManaMax*100:1)>castHealCost)
+                if (canCastHeal && castHealAmount > 0 && player.statLife < (player.statLifeMax / 4 * 3))
                 {
 
-                    player.statMana = 0;
-                    player.HealEffect((int)((float)castHealAmount / 100f * (float)player.statLifeMax));
-                    player.statLife += (int)((float)castHealAmount / 100f * (float)player.statLifeMax);
-                    curInvulnerabilityFrames = (curInvulnerabilityFrames <castHealInvulnerabilityTime) ? castHealInvulnerabilityTime : curInvulnerabilityFrames;
-
-                }
-
-            }
-
-            if (canGlide)
-            {
-                if (triggersSet.Jump && curGlideTime > 0 && player.velocity.Y > glideFallSpeed)
-                {
-                    curGlideTime--;
-                    player.velocity.Y = (player.velocity.Y > glideFallSpeed) ? glideFallSpeed : player.velocity.Y;
-                    player.slowFall = true;
-                    player.noFallDmg = true;
-                }
-            }
-
-            if (canDash && player.dash<=0 && curDashReload<=0)
-            {
-                if (triggersSet.Left || triggersSet.Right)
-                {
-                    int curPress= (triggersSet.Left) ? -1 : 1;
-                    tapTime++;
-                    if (tapped)
+                    if (triggersSet.QuickHeal && player.HasBuff(BuffID.PotionSickness) && ((player.statManaMax > 0) ? player.statMana / player.statManaMax * 100 : 1) > castHealCost)
                     {
-                        if (lastPress == curPress && (canDashMidAir ||Math.Abs(player.velocity.Y)<0.15f))
+
+                        player.statMana = 0;
+                        player.HealEffect((int)((float)castHealAmount / 100f * (float)player.statLifeMax));
+                        player.statLife += (int)((float)castHealAmount / 100f * (float)player.statLifeMax);
+                        curInvulnerabilityFrames = (curInvulnerabilityFrames < castHealInvulnerabilityTime) ? castHealInvulnerabilityTime : curInvulnerabilityFrames;
+
+                    }
+
+                }
+
+                if (canGlide)
+                {
+                    if (triggersSet.Jump && curGlideTime > 0 && player.velocity.Y > glideFallSpeed)
+                    {
+                        curGlideTime--;
+                        player.velocity.Y = (player.velocity.Y > glideFallSpeed) ? glideFallSpeed : player.velocity.Y;
+                        player.slowFall = true;
+                        player.noFallDmg = true;
+                    }
+                }
+
+                if (canDash && player.dash <= 0 && curDashReload <= 0)
+                {
+                    if (triggersSet.Left || triggersSet.Right)
+                    {
+                        int curPress = (triggersSet.Left) ? -1 : 1;
+                        tapTime++;
+                        if (tapped)
                         {
-                            if (Math.Abs(player.velocity.X) < dashSpeed + player.maxRunSpeed)
+                            if (lastPress == curPress && (canDashMidAir || Math.Abs(player.velocity.Y) < 0.15f))
                             {
-                                player.velocity.X += (triggersSet.Left) ? -dashSpeed : dashSpeed;
-                                curDashReload = dashReloadSpeed;
+                                if (Math.Abs(player.velocity.X) < dashSpeed + player.maxRunSpeed)
+                                {
+                                    player.velocity.X += (triggersSet.Left) ? -dashSpeed : dashSpeed;
+                                    curDashReload = dashReloadSpeed;
+                                }
                             }
+                            tapped = false;
                         }
-                        tapped = false;
-                    }
-                    if (tapTime < 15)
-                    {
-                        lastPress = curPress;
-                    }
-                    else
-                    {
-                        lastPress = 0;
-                    }
-                }
-                else
-                {
-                    if (lastPress!=0)
-                    {
-                        tapTime = 0;
-                        reTapTime++;
-                        tapped = (reTapTime < 15);
+                        if (tapTime < 15)
+                        {
+                            lastPress = curPress;
+                        }
+                        else
+                        {
+                            lastPress = 0;
+                        }
                     }
                     else
                     {
-                        lastPress = 0;
-                        tapTime = 0;
-                        reTapTime = 0;
+                        if (lastPress != 0)
+                        {
+                            tapTime = 0;
+                            reTapTime++;
+                            tapped = (reTapTime < 15);
+                        }
+                        else
+                        {
+                            lastPress = 0;
+                            tapTime = 0;
+                            reTapTime = 0;
+                        }
                     }
                 }
-            }
 
-            if(canDoubleJump && doubleJumpHeight > 0)
-            {
-
-                if (player.velocity.Y == 0)
-                {
-                    jumped = false;
-                    jumpCount = 0;
-                }
-                else
+                if (canDoubleJump && doubleJumpHeight > 0)
                 {
 
-                    if (triggersSet.Jump && player.wingTime<=0)
+                    if (player.velocity.Y == 0)
                     {
-                        int initJump = 0;
-                        int extradoubleJumps = 0;
-                        if (player.doubleJumpBlizzard)
-                        {
-                            extradoubleJumps++;
-                            initJump++;
-                        }
-                        if (player.doubleJumpCloud)
-                        {
-                            extradoubleJumps++;
-                            initJump++;
-                        }
-                        if (player.doubleJumpFart)
-                        {
-                            extradoubleJumps++;
-                            initJump++;
-                        }
-                        if (player.doubleJumpSail)
-                        {
-                            extradoubleJumps++;
-                            initJump++;
-                        }
-                        if (player.doubleJumpSandstorm)
-                        {
-                            extradoubleJumps++;
-                            initJump++;
-                        }
-                        if (player.doubleJumpUnicorn)
-                        {
-                            extradoubleJumps++;
-                            initJump++;
-                        }
-
-                        if (jumped && jumpCount<doubleJumpQuantity+extradoubleJumps)
-                        {
-                            player.velocity.Y = (jumpCount >= initJump ) ?-doubleJumpHeight:player.velocity.Y;
-                            jumpCount++;
-                        }
-
                         jumped = false;
+                        jumpCount = 0;
                     }
                     else
                     {
-                        jumped = true;
-                    }
-                }
 
+                        if (triggersSet.Jump && player.wingTime <= 0)
+                        {
+                            int initJump = 0;
+                            int extradoubleJumps = 0;
+                            if (player.doubleJumpBlizzard)
+                            {
+                                extradoubleJumps++;
+                                initJump++;
+                            }
+                            if (player.doubleJumpCloud)
+                            {
+                                extradoubleJumps++;
+                                initJump++;
+                            }
+                            if (player.doubleJumpFart)
+                            {
+                                extradoubleJumps++;
+                                initJump++;
+                            }
+                            if (player.doubleJumpSail)
+                            {
+                                extradoubleJumps++;
+                                initJump++;
+                            }
+                            if (player.doubleJumpSandstorm)
+                            {
+                                extradoubleJumps++;
+                                initJump++;
+                            }
+                            if (player.doubleJumpUnicorn)
+                            {
+                                extradoubleJumps++;
+                                initJump++;
+                            }
+
+                            if (jumped && jumpCount < doubleJumpQuantity + extradoubleJumps)
+                            {
+                                player.velocity.Y = (jumpCount >= initJump) ? -doubleJumpHeight : player.velocity.Y;
+                                jumpCount++;
+                            }
+
+                            jumped = false;
+                        }
+                        else
+                        {
+                            jumped = true;
+                        }
+                    }
+
+                }
             }
 
         }
+
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
 
@@ -299,6 +311,14 @@ namespace KingdomTerrahearts
         public override void PreUpdate()
         {
 
+            if (skipToNight && Main.dayTime)
+            {
+                Main.time += 50;
+            }
+            else if(!Main.dayTime)
+            {
+                skipToNight = false;
+            }
 
             if (curInvulnerabilityFrames > 0)
             {
@@ -320,6 +340,29 @@ namespace KingdomTerrahearts
             tpFallImmunity-=(tpFallImmunity>0)?1:0;
 
             base.PreUpdate();
+        }
+
+        public override void PostUpdate()
+        {
+
+            base.PostUpdate();
+
+            if (fightingInBattleground)
+            {
+                //check if really trapped
+                bool newTrapped = false;
+                for (int i = 0; i < Main.npc.Length; i++)
+                {
+                    newTrapped = (Main.npc[i].boss && Main.npc[i].life>0) ? true : newTrapped;
+                }
+                fightingInBattleground = newTrapped;
+                //effects
+                player.position.X =  Math.Max(initPosTrap.X, player.position.X);
+                player.position.X = Math.Min(endPosTrap.X, player.position.X);
+                player.position.Y = Math.Max(initPosTrap.Y, player.position.Y);
+                player.position.Y = Math.Min(endPosTrap.Y, player.position.Y);
+            }
+
         }
 
         public void ChangeGlideFallSpeed(float fallspeed)

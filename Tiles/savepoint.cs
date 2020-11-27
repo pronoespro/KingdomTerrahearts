@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -28,6 +29,30 @@ namespace KingdomTerrahearts.Tiles
 			disableSmartCursor = true;
 			adjTiles = new int[] { TileID.Beds };
 			bed = true;
+			animationFrameHeight = 38;
+		}
+		public override void SetSpriteEffects(int i, int j, ref SpriteEffects spriteEffects)
+		{
+			// Flips the sprite if x coord is odd. Makes the tile more interesting.
+			if (j % 4 > 2)
+			{
+				spriteEffects = SpriteEffects.FlipHorizontally;
+			}
+		}
+
+
+		public override void AnimateTile(ref int frame, ref int frameCounter)
+		{
+			frameCounter++;
+			if (frameCounter > 8)
+			{
+				frameCounter = 0;
+				frame++;
+				if (frame >= 4)
+				{
+					frame = 0;
+				}
+			}
 		}
 
 		public override bool HasSmartInteract()
@@ -60,6 +85,7 @@ namespace KingdomTerrahearts.Tiles
 		{
 			player = Main.LocalPlayer;
 			SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
+			sp.skipToNight = true;
 			Tile tile = Main.tile[i, j];
 			int spawnX = i - tile.frameX / 18;
 			int spawnY = j + 2;

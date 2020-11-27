@@ -1,4 +1,5 @@
-using KingdomTerrahearts.Items.Weapons;
+using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -8,11 +9,11 @@ namespace KingdomTerrahearts.Items.Weapons
 	public class Keyblade_wood : Keyblade
 	{
 
-
 		public override void SetStaticDefaults() 
 		{
 			DisplayName.SetDefault("Toy Keyblade");
-			Tooltip.SetDefault("A keyblade made out of wood, very basic");
+			Tooltip.SetDefault("A keyblade made out of wood" +
+				"\nvery basic");
 		}
 
 		public override void SetDefaults() 
@@ -23,11 +24,11 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.height = 50;
 			item.scale = 0.75f;
 			item.useTime = 30;
-			item.useAnimation = 30;
-			item.useStyle = 1;
+			item.useAnimation = 16;
+			item.useStyle = ItemUseStyleID.SwingThrow;
 			item.knockBack = 3;
 			item.value = 100;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 		}
@@ -43,8 +44,12 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public override bool CanUseItem(Player player)
 		{
-			keybladeElement = keyType.fire;
-			comboMax = 2;
+			canShootAgain = false;
+			manaConsumed = 1;
+			keybladeElement = keyType.light;
+			comboMax = 4;
+			projectileTime = 1;
+			keyComboType = KeyComboType.normal;
 			return base.CanUseItem(player);
 		}
 	}

@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "0YxutptuXqyi+rTjP0k8S90O455qpXRinVuOa8/HGRZa/ujGWlFmiYYYV+0uCMpj2YTu32VoepT3Z/MM+Ggfjg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\cesar\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\KingdomTerrahearts\\KingdomTerrahearts.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\cesar\\.nuget\\packages\\tmodloader.codeassist\\0.1.1\\tmodloader.codeassist.0.1.1.nupkg.sha512"
+  ],
+  "logs": []
+}

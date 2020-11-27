@@ -71,16 +71,13 @@ namespace KingdomTerrahearts.Items
             ChangeNameByLevel();
         }
         
-        /*
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
             int lvl = (level >= abilityTooltips.Length) ? abilityTooltips.Length-1 : level;
             TooltipLine line = new TooltipLine(mod, "level tooltip", abilityTooltips[lvl]);
 
-            tooltips.Remove(line);
-            tooltips.Insert(tooltipStart, line);
+            tooltips.Add(line);
         }
-        */
 
         public virtual void ChangeNameByLevel()
         {
