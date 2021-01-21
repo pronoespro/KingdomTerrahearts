@@ -42,7 +42,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			recipe.AddRecipe();
 		}
 
-		public override bool CanUseItem(Player player)
+		public override void ChangeKeybladeValues()
 		{
 			canShootAgain = false;
 			manaConsumed = 1;
@@ -50,7 +50,6 @@ namespace KingdomTerrahearts.Items.Weapons
 			comboMax = 4;
 			projectileTime = 1;
 			keyComboType = KeyComboType.normal;
-			return base.CanUseItem(player);
 		}
 	}
 }

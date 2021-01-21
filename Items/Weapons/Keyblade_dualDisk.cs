@@ -48,13 +48,12 @@ namespace KingdomTerrahearts.Items.Weapons
 			recipe.AddRecipe();
 		}
 
-		public override bool CanUseItem(Player player)
+		public override void ChangeKeybladeValues()
 		{
 			keybladeElement = keyType.digital;
 			canShootAgain = false;
 			comboMax = 4;
 			projectileTime = 600;
-			return base.CanUseItem(player);
 		}
 
 	}

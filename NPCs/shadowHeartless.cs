@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.NPCs
 {
-    class shadowHeartless : BasicEnemy
+    class shadowHeartless : BasicGroundEnemy
     {
 
         public override void SetStaticDefaults()

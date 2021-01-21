@@ -10,11 +10,6 @@ namespace KingdomTerrahearts.Items.Weapons
     public abstract class Keyblade : ModItem
     {
 
-		public override void SetStaticDefaults()
-		{
-			Tooltip.SetDefault("No help available yet");
-		}
-
 		public enum keyType
 		{
 			light,
@@ -22,7 +17,8 @@ namespace KingdomTerrahearts.Items.Weapons
 			dark,
 			jungle,
 			digital,
-			destiny
+			destiny,
+			star
 		}
 
 		public enum KeyComboType
@@ -75,7 +71,10 @@ namespace KingdomTerrahearts.Items.Weapons
 		public override bool CanUseItem(Player player)
 		{
 
+			ChangeKeybladeValues();
+
 			item.mana = 0;
+
 			for (int i = 0; i < Main.projectile.Length; ++i)
 			{
 				if (Main.projectile[i].active && Main.projectile[i].owner == Main.myPlayer && Main.projectile[i].type == item.shoot && Main.projectile[i].timeLeft>projectileTime)
@@ -86,24 +85,23 @@ namespace KingdomTerrahearts.Items.Weapons
 				}
 			}
 
-
 			wielder = player;
 
 			switch (combo)
 			{
 				case 0:
-					item.shoot = -1;
+					item.shoot = ProjectileID.None;
 					item.useStyle = ItemUseStyleID.SwingThrow;
 					break;
 				case 1:
-					item.shoot = -1;
+					item.shoot = ProjectileID.None;
 					item.useStyle = ItemUseStyleID.Stabbing;
 					break;
 				case 2:
 					ShootmagicProjectile();
 					break;
 				case 3:
-					item.shoot = -1;
+					item.shoot = ProjectileID.None;
 					item.useStyle = ItemUseStyleID.Stabbing;
 					break;
 				case 4:
@@ -111,6 +109,10 @@ namespace KingdomTerrahearts.Items.Weapons
 					break;
 				case 5:
 					ComboPlus(combo);
+					break;
+				default:
+					item.shoot = ProjectileID.None;
+					item.useStyle = ItemUseStyleID.SwingThrow;
 					break;
 			}
 
@@ -123,6 +125,8 @@ namespace KingdomTerrahearts.Items.Weapons
 			return base.CanUseItem(player);
 		}
 
+		public abstract void ChangeKeybladeValues();
+
 		void ComboPlus(int comboMoment)
 		{
 			switch (keyComboType) {
@@ -130,11 +134,11 @@ namespace KingdomTerrahearts.Items.Weapons
 					switch (comboMoment)
 					{
 						case 4:
-							item.shoot = -1;
+							item.shoot = ProjectileID.None;
 							item.useStyle = ItemUseStyleID.SwingThrow;
 							break;
 						case 5:
-							item.shoot = -1;
+							item.shoot = ProjectileID.None;
 							item.useStyle = ItemUseStyleID.Stabbing;
 							break;
 					}
@@ -146,7 +150,7 @@ namespace KingdomTerrahearts.Items.Weapons
 							ShootmagicProjectile();
 							break;
 						case 5:
-							item.shoot = -1;
+							item.shoot = ProjectileID.None;
 							item.useStyle = ItemUseStyleID.Stabbing;
 							break;
 					}
@@ -158,7 +162,7 @@ namespace KingdomTerrahearts.Items.Weapons
 							ShootmagicProjectile();
 							break;
 						case 5:
-							item.shoot = -1;
+							item.shoot = ProjectileID.None;
 							item.useStyle = ItemUseStyleID.Stabbing;
 							break;
 					}
@@ -168,11 +172,11 @@ namespace KingdomTerrahearts.Items.Weapons
 					switch (comboMoment)
 					{
 						case 4:
-							item.shoot = -1;
+							item.shoot = ProjectileID.None;
 							item.useStyle = ItemUseStyleID.Stabbing;
 							break;
 						case 5:
-							item.shoot = -1;
+							item.shoot = ProjectileID.None;
 							item.useStyle = ItemUseStyleID.Stabbing;
 							break;
 					}
@@ -183,19 +187,12 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public override bool UseItem(Player player)
 		{
-			lastUsedTime = 0;
-			return base.UseItem(player);
-		}
-
-		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
-		{
-			position += Vector2.Normalize(new Vector2(speedX, speedY))/2;
-			for (int i = 0; i < extraShootTimes; i++)
+			if ((player.whoAmI == Main.myPlayer && Main.netMode==NetmodeID.MultiplayerClient)||Main.netMode==NetmodeID.SinglePlayer)
 			{
-				Projectile.NewProjectile(position.X, position.Y, speedX, speedY, item.shoot, item.damage, item.knockBack);
+				lastUsedTime = 0;
+				return true;
 			}
-
-			return true;
+			return false;
 		}
 
 		public void ShootmagicProjectile()
@@ -210,7 +207,7 @@ namespace KingdomTerrahearts.Items.Weapons
 				}
 				else
 				{
-					item.shoot = -1;
+					item.shoot = ProjectileID.None;
 					item.useStyle = ItemUseStyleID.Stabbing;
 					return;
 				}
@@ -243,6 +240,10 @@ namespace KingdomTerrahearts.Items.Weapons
 					item.shoot = mod.ProjectileType("teleportThrownKey");
 					item.shootSpeed = 15;
 					break;
+				case keyType.star:
+					item.shoot = ProjectileID.FallingStar;
+					item.shootSpeed = 25;
+					break;
 			}
 			item.useStyle = ItemUseStyleID.HoldingOut;
 		}
@@ -251,7 +252,10 @@ namespace KingdomTerrahearts.Items.Weapons
 		{
 			TooltipLine tooltip = new TooltipLine(mod, "Transformations", "This Keyblade can't transform itself or you");
 			tooltip.overrideColor = Color.LightBlue;
-			tooltips.Add(tooltip);
+			if (!tooltips.Contains(tooltip))
+			{
+				tooltips.Add(tooltip);
+			}
 		}
 
 		public override void UpdateInventory(Player player)
@@ -265,8 +269,11 @@ namespace KingdomTerrahearts.Items.Weapons
 			damageMult += (enlightened) ? 0.5f : 0;
 
 			item.damage = (int)(item.damage * damageMult);
+			item.color = (enlightened) ? Color.Blue : Color.White;
 
-			if ((player.inventory[player.selectedItem] == item))
+			if ((player.selectedItem>=0 && player.selectedItem<player.inventory.Length 
+				&& player.inventory[player.selectedItem] == item)
+				|| player.HeldItem==item)
 			{
 				lastUsedTime++;
 				if (lastUsedTime > item.useTime * 1.5f && combo > 0)
@@ -274,8 +281,6 @@ namespace KingdomTerrahearts.Items.Weapons
 					combo = 0;
 					lastUsedTime = 0;
 				}
-
-				item.color = (enlightened) ? Color.Blue : Color.White;
 
 			}
 			else
@@ -285,6 +290,5 @@ namespace KingdomTerrahearts.Items.Weapons
 				item.color = Color.White;
 			}
 		}
-
 	}
 }

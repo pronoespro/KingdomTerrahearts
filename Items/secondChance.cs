@@ -18,10 +18,10 @@ namespace KingdomTerrahearts.Items
             abilityName = "Second Chance";
 
             abilityTooltips = new string[] {
-                "An ability that lets you keep one hp after a fatal attack \nWorks every three minutes.",
-                "An ability that lets you keep one hp after a fatal attack \nWorks every three minutes.",
-                "An ability that lets you keep one hp after a fatal attack \nWorks every two minutes and a half.",
-                "An ability that lets you keep one hp after a fatal attack \nWorks every two minutes."
+                "An ability that lets you keep one hp after a fatal attack \nWorks every three minutes",
+                "An ability that lets you keep one hp after a fatal attack \nWorks every three minutes",
+                "An ability that lets you keep one hp after a fatal attack \nWorks every two minutes and a half",
+                "An ability that lets you keep one hp after a fatal attack \nWorks every two minutes"
 
             };
 

@@ -85,7 +85,8 @@ namespace KingdomTerrahearts.Tiles
 		{
 			player = Main.LocalPlayer;
 			SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
-			sp.skipToNight = true;
+			sp.skipTime = true;
+			sp.skipToDay = !Main.dayTime;
 			Tile tile = Main.tile[i, j];
 			int spawnX = i - tile.frameX / 18;
 			int spawnY = j + 2;

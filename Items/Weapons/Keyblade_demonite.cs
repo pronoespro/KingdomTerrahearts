@@ -22,10 +22,10 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.scale = 0.75f;
 			item.useTime = 20;
 			item.useAnimation = 20;
-			item.useStyle = 1;
+			item.useStyle = ItemUseStyleID.SwingThrow;
 			item.knockBack = 3;
 			item.value = 100;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 		}
@@ -40,11 +40,10 @@ namespace KingdomTerrahearts.Items.Weapons
 			recipe.AddRecipe();
 		}
 
-		public override bool CanUseItem(Player player)
-		{
+        public override void ChangeKeybladeValues()
+        {
 			keybladeElement = keyType.dark;
 			comboMax = 4;
-			return base.CanUseItem(player);
 		}
 	}
 }

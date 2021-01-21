@@ -19,7 +19,7 @@ namespace KingdomTerrahearts.Items.Materials
         {
             item.width = 20;
             item.height = 20;
-            item.rare = 1;
+            item.rare = ItemRarityID.Blue;
             item.value = 200;
             item.maxStack = 999;
         }

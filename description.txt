@@ -1,20 +1,18 @@
 Kingdom Terrahearts introduces the world of Kingdom Hearts to Terraria.
+"'This world is too small' is a thing the Terrarian thinks every day... until a portal opens and things from another world come rushing in. Otherwordly darkness and light enter the world of Terraria and you are the only one who can stop it".
 
 ---Mod Contents---
 
--A custom bed based on save spots in the KH franchise
--1 new prehardmode boss
--6 new habilities
--1 new "grappling hook"
--9 new weapons
--1 new huge tile (dive to heart)
--1 new block with a workbench (twilight town based)
--1 new enemy (more to come)
--1 new vanity item
--1 new material
--1 new "anti-death" item (Kupo coin)
+-A prehardmode boss, an event (the 1000 heartless battle), 2 enemies (more to come) and 1 town npc
+-6 habilities, a "grappling hook" (athletic flow)
+-9 weapons (keyblades and the arrowgun), a pickaxe keyblade
+-A tileset with a workbench (twilight town based, block, walls, crafting table and poster), a huge tile (dive to heart) and a custom bed based on save spots in the KH franchise
+-A vanity item and a dye (last world dye)
+-A material item
+-An anti-death item (Kupo coin)
+-A party member system for all town npcs
 
-DISCLAIMER: This mod has an error that closes terraria and says "Begin cannot be called before end", I'm working to find a solution, but it is not easy.
+DISCLAIMER: This mod is currently being developed for single player only. If you wish to play with other people do not use the npcs as party members unles you are ready for crazyness.
 
 Link to the wiki: https://terrariamods.gamepedia.com/Kingdom_Terrahearts
 Link to the forum: https://forums.terraria.org/index.php?threads/kingdom-terraheart-mod-for-tmodloader.87391/#post-1935075

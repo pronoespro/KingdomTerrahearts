@@ -33,11 +33,10 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.autoReuse = true;
 		}
 
-		public override bool CanUseItem(Player player)
+		public override void ChangeKeybladeValues()
 		{
 			keybladeElement = keyType.jungle;
 			comboMax = 4;
-			return base.CanUseItem(player);
 		}
 
 	}

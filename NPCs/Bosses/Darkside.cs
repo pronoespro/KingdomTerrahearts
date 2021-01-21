@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -46,7 +47,7 @@ namespace KingdomTerrahearts.NPCs.Bosses
             npc.HitSound = SoundID.NPCHit1;
             npc.DeathSound = SoundID.NPCDeath1;
             npc.behindTiles = true;
-            music = MusicID.Boss1;
+            music = (KingdomWorld.customInvasionUp)?MusicID.Boss1:-1;
             npc.ai[1] = 200;
         }
 
@@ -59,6 +60,9 @@ namespace KingdomTerrahearts.NPCs.Bosses
 
         public override void AI()
         {
+
+            if (KingdomWorld.customInvasionUp) music = -1;
+
             Target();
 
             npc.ai[2]--;

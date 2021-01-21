@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using KingdomTerrahearts.Items.Weapons;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -46,7 +47,8 @@ namespace KingdomTerrahearts
         public int castHealCost = 1000;
         public int reviveTime = 0;
 
-        public bool skipToNight = false;
+        public bool skipToDay = false;
+        public bool skipTime = false;
 
         public bool enlightened = false;
         public bool fightingInBattleground = false;
@@ -63,6 +65,8 @@ namespace KingdomTerrahearts
         int SCcurReload = 0;
         int AHPcurReload = 0;
         int curInvulnerabilityFrames = 0;
+
+        public int[] partyUpgrades;
 
         public void AddInvulnerability(int time)
         {
@@ -111,6 +115,12 @@ namespace KingdomTerrahearts
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
+            
+            if (KingdomTerrahearts.PartySelectHotkey.JustPressed)
+            {
+                KingdomTerrahearts.instance.TogglePartyUI();
+            }
+
             if (player.mount.Type == -1)
             {
                 if (canCastHeal && castHealAmount > 0 && player.statLife < (player.statLifeMax / 4 * 3))
@@ -302,22 +312,21 @@ namespace KingdomTerrahearts
             items.RemoveAt(0);
 
             Item item = new Item();
-            item.SetDefaults(mod.ItemType("Keyblade"));
+            item.SetDefaults(mod.ItemType("Keyblade_wood"));
             item.stack = 1;
-            item.Prefix(-1);
             items.Insert(0,item);
         }
 
         public override void PreUpdate()
         {
 
-            if (skipToNight && Main.dayTime)
+            if (skipTime && Main.dayTime!=skipToDay)
             {
-                Main.time += 50;
+                Main.time += 100;
             }
-            else if(!Main.dayTime)
+            else if(Main.dayTime == skipToDay)
             {
-                skipToNight = false;
+                skipTime = false;
             }
 
             if (curInvulnerabilityFrames > 0)
@@ -351,9 +360,9 @@ namespace KingdomTerrahearts
             {
                 //check if really trapped
                 bool newTrapped = false;
-                for (int i = 0; i < Main.npc.Length; i++)
+                for (int i = 0; i < Main.maxNPCs; i++)
                 {
-                    newTrapped = (Main.npc[i].boss && Main.npc[i].life>0) ? true : newTrapped;
+                    newTrapped = (Main.npc[i].boss && Main.npc[i].life>0 && Main.npc[i].active) ? true : newTrapped;
                 }
                 fightingInBattleground = newTrapped;
                 //effects
@@ -374,6 +383,7 @@ namespace KingdomTerrahearts
         {
             dashReloadSpeed = (dashReloadSpeed < reload) ? reload : dashReloadSpeed;
         }
+
 
         public override void UpdateVanityAccessories()
         {
@@ -398,6 +408,61 @@ namespace KingdomTerrahearts
                 player.head = mod.GetEquipSlot("orgCoatHead", EquipType.Head);
             }
             base.FrameEffects();
+        }
+
+        public override TagCompound Save()
+        {
+            return new TagCompound
+            {
+                {"partyUpgrades", partyUpgrades}
+            };
+        }
+
+        public override void Load(TagCompound tag)
+        {
+            partyUpgrades = tag.GetIntArray("partyUpgrades");
+        }
+
+        public void GetPartyMember(int npcNum)
+        {
+            if (npcNum<Main.maxNPCs && Main.npc[npcNum].active && Main.npc[npcNum].townNPC )
+            {
+                NPC npc = Main.npc[npcNum];
+                if (Main.npc[npcNum].HasBuff(mod.BuffType("PMemberBuff")))
+                {
+                    npc.DelBuff(npc.FindBuffIndex(mod.BuffType("PMemberBuff")));
+                    npc.color = Color.White;
+                    npc.Teleport(new Vector2(npc.homeTileX * 16, npc.homeTileY * 16 - npc.height)-npc.velocity);
+                    npc.velocity = new Vector2();
+                }
+                else
+                {
+                    npc.AddBuff(mod.BuffType("PMemberBuff"), 1000000000);
+                }
+            }
+        }
+
+        public bool NPCisPartyMember(int npcType)
+        {
+            for (int i = 0; i < Main.maxNPCTypes; i++)
+            {
+                if (i < Main.maxNPCs && Main.npc[i].active && Main.npc[i].townNPC && Main.npc[i].type == npcType)
+                {
+                    return Main.npc[i].HasBuff(mod.BuffType("PMemberBuff"));
+                }
+            }
+            return false;
+        }
+
+        public NPC GetModdedNPC(string name)
+        {
+            for(int i = 0; i < Main.maxNPCTypes; i++)
+            {
+                if (Main.npc[i].active && Main.npc[i].type == mod.NPCType(name)) { 
+                    return Main.npc[i]; 
+                }
+            }
+            return null;
         }
 
     }

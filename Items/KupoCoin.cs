@@ -10,9 +10,9 @@ namespace KingdomTerrahearts.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Kupo Coin");
-            Tooltip.SetDefault("A special coin that protects you from the worst." +
-                "\nIf your HP drops to 0, it will restore half your health a single time." +
-                "\nHas a three minutes cooldown.");
+            Tooltip.SetDefault("A special coin that protects you from the worst" +
+                "\nIf your HP drops to 0, it will restore half your health a single time" +
+                "\nHas a three minutes cooldown");
         }
 
         public override void SetDefaults()

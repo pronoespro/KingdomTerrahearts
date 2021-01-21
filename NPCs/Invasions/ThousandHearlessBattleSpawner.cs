@@ -14,8 +14,8 @@ namespace KingdomTerrahearts.NPCs.Invasions
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Powerfull Heart");
-            Tooltip.SetDefault("A heart so powerfull heartless need it." +
-                "\nCalls a thousand heartless.");
+            Tooltip.SetDefault("A heart so powerfull heartless need it" +
+                "\nCalls a thousand heartless");
         }
 
         public override void SetDefaults()
@@ -37,7 +37,7 @@ namespace KingdomTerrahearts.NPCs.Invasions
         {
             if (!KingdomWorld.customInvasionUp)
             {
-                Main.NewText("A thousand heartless are approaching.", 175, 75, 255, false);
+                Main.NewText("A thousand heartless are approaching", 175, 75, 255, false);
                 ThousandHeartlessInvasion.StartInvasion();
                 return true;
             }

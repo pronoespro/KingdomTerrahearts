@@ -32,14 +32,13 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.autoReuse = true;
 		}
 
-		public override bool CanUseItem(Player player)
+		public override void ChangeKeybladeValues()
 		{
 			canShootAgain = false;
 			manaConsumed = 10;
 			keybladeElement = keyType.destiny;
 			comboMax = 4;
 			keyComboType = KeyComboType.magic;
-			return base.CanUseItem(player);
 		}
 	}
 }

@@ -4,13 +4,24 @@ using Terraria.ID;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.UI;
+using KingdomTerrahearts.Interface;
+using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace KingdomTerrahearts
 {
 	public class KingdomTerrahearts : Mod
 	{
 
-		public KingdomTerrahearts instance;
+		public static ModHotKey PartySelectHotkey;
+
+		internal UserInterface partyInterface;
+		internal PartyUI partyUI;
+
+		public static KingdomTerrahearts instance;
+
+		private GameTime _LastUIUpdateGameTime;
 
 		internal interface ILoadable
 		{
@@ -27,11 +38,16 @@ namespace KingdomTerrahearts
 
 		public override void Unload()
 		{
+			PartySelectHotkey = null;
+			partyUI.Destroy();
+			partyUI = null;
 			instance = null;
 		}
 
 		public override void Load()
 		{
+			PartySelectHotkey = RegisterHotKey("Party menu", "F");
+
 			instance = this;
 			Logger.InfoFormat("{0} Sora logging", Name);
 
@@ -58,9 +74,46 @@ namespace KingdomTerrahearts
 
 				GameShaders.Armor.BindShader(ItemType("lastWorldDye"), new ArmorShaderData(dyeRef, "ArmorMyShader"));
 			}
+
+            if (!Main.dedServ)
+            {
+				partyInterface = new UserInterface();
+				partyUI = new PartyUI();
+				partyUI.Activate();
+            }
 		}
 
-		public override void UpdateMusic(ref int music, ref MusicPriority priority)
+        public override void UpdateUI(GameTime gameTime)
+        {
+			_LastUIUpdateGameTime = gameTime;
+            if (partyInterface?.CurrentState != null)
+            {
+				partyInterface.Update(gameTime);
+            }
+        }
+
+		
+
+        public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
+        {
+			int inventoryIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
+			if (inventoryIndex != -1)
+			{
+				layers.Insert(inventoryIndex, new LegacyGameInterfaceLayer(
+					"KingdomTerrahearts: PartyInterface",
+					delegate
+					{
+						if (_LastUIUpdateGameTime != null && partyInterface?.CurrentState != null)
+						{
+							partyInterface.Draw(Main.spriteBatch, _LastUIUpdateGameTime);
+						}
+						return true;
+					},
+					   InterfaceScaleType.UI));
+			}
+		}
+
+        public override void UpdateMusic(ref int music, ref MusicPriority priority)
 		{
 			if (Main.invasionX == Main.spawnTileX && KingdomWorld.customInvasionUp)
 			{
@@ -70,5 +123,28 @@ namespace KingdomTerrahearts
 
 
 		}
+
+		internal void ShowPartyUI()
+		{
+			partyInterface?.SetState(partyUI);
+		}
+
+		internal void HidePartyUI()
+		{
+			partyInterface?.SetState(null);
+		}
+
+		internal void TogglePartyUI()
+		{
+			partyInterface?.SetState((partyInterface?.CurrentState == partyUI)?null: partyUI);
+			if(partyInterface?.CurrentState == partyUI)
+				Main.playerInventory = true;
+		}
+
+		internal void SetPartyUI(bool setUI)
+		{
+			partyInterface?.SetState((!setUI) ? null : partyUI);
+		}
+
 	}
 }

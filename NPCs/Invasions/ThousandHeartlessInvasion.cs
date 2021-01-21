@@ -13,18 +13,25 @@ namespace KingdomTerrahearts.NPCs.Invasions
     class ThousandHeartlessInvasion
     {
 
+        static int invasionSize;
+
         static Mod mod = ModLoader.GetMod("KingdomTerrahearts");
 
         public static int[] heartless =
         {
             mod.NPCType("armoredKnightHeartless"),
             mod.NPCType("shadowHeartless"),
-            NPCID.EaterofSouls
+            mod.NPCType("SurveillanceRobotHeartless")
         };
+
+        public static int[] heartlessBosses ={};
 
         public static void StartInvasion()
         {
-            if(Main.invasionType!=0 && Main.invasionSize == 0)
+
+            heartlessBosses = new int[]{};
+
+            if (Main.invasionType!=0 && Main.invasionSize == 0)
             {
                 Main.invasionType = 0;
             }
@@ -41,7 +48,8 @@ namespace KingdomTerrahearts.NPCs.Invasions
                     Main.invasionType = -1;
                     ///////To be continued
                     KingdomWorld.customInvasionUp = true;
-                    Main.invasionSize = (int)(1000 * 1+(numPlayers-1)*0.25f);
+                    invasionSize = (int)(1000 * 1 + (numPlayers - 1) * 0.25f);
+                    Main.invasionSize = invasionSize;
                     Main.invasionSizeStart = Main.invasionSize;
                     Main.invasionProgress = 0;
                     Main.invasionProgressIcon = 0 + 3;
@@ -97,6 +105,10 @@ namespace KingdomTerrahearts.NPCs.Invasions
                     Main.invasionType = 0;
                     Main.invasionDelay = 0;
                 }
+                else if (Main.invasionSize <= invasionSize / 2)
+                {
+                    heartlessBosses = new int[] { mod.NPCType("Darkside") };
+                }
 
                 //Do not do the rest if invasion already at spawn
                 if (Main.invasionX == (double)Main.spawnTileX)
@@ -105,7 +117,7 @@ namespace KingdomTerrahearts.NPCs.Invasions
                 }
 
                 //Update when the invasion gets to Spawn
-                float moveRate = (float)Main.dayRate*5;
+                float moveRate = (float)Main.dayRate * 5;
 
                 //If the invasion is greater than the spawn position
                 if (Main.invasionX > (double)Main.spawnTileX)
@@ -143,6 +155,7 @@ namespace KingdomTerrahearts.NPCs.Invasions
                 }
             }
         }
+
         public static void CheckCustomInvasionProgress()
         {
             //Not really sure what this is

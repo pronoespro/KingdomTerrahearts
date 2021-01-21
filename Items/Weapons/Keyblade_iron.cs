@@ -30,11 +30,10 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.autoReuse = true;
 		}
 
-		public override bool CanUseItem(Player player)
+		public override void ChangeKeybladeValues()
 		{
 			keybladeElement = keyType.light;
 			comboMax = 3;
-			return base.CanUseItem(player);
 		}
 
 		public override void AddRecipes()

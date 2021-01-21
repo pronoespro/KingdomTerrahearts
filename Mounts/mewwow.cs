@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -65,6 +66,7 @@ namespace KingdomTerrahearts.Mounts
 
         }
 
+
         public override void UpdateEffects(Player player)
         {
 
@@ -74,10 +76,13 @@ namespace KingdomTerrahearts.Mounts
             if (WorldGen.SolidOrSlopedTile(playerBottomPosition.X,playerBottomPosition.Y)|| WorldGen.SolidOrSlopedTile(movementBottomPosition.X, movementBottomPosition.Y))
             {
 
+                int dustAmmount = 10;
+
                 if (isGrounded)
                 {
                     if (Math.Abs(player.velocity.X) > 0.1f)
                     {
+                        Main.PlaySound(new LegacySoundStyle(2, 16), x: (int)player.Center.X, y: (int)player.Center.Y);
                         timeOnGround++;
                         if (timeOnGround > 2)
                         {
@@ -94,6 +99,8 @@ namespace KingdomTerrahearts.Mounts
 
                     if (attacking)
                     {
+                        dustAmmount *= 5;
+                        Main.PlaySound(new LegacySoundStyle(2, 14), x: (int)player.Center.X, y: (int)player.Center.Y);
                         for (int i = 0; i < Main.npc.Length; i++)
                         {
                             if (Main.npc[i] == null)
@@ -116,7 +123,7 @@ namespace KingdomTerrahearts.Mounts
                     rect.Y += (int)(player.height*0.75f);
                     rect.Height /= 2;
 
-                    for (int i = 0; i < 15; i++)
+                    for (int i = 0; i < dustAmmount; i++)
                     {
                         int newDust = Dust.NewDust(new Vector2(rect.X, rect.Y), rect.Width, rect.Height, mountData.spawnDust = DustID.Confetti);
                         Main.dust[newDust].color = new Color(Main.rand.Next(50, 360), Main.rand.Next(50, 360), Main.rand.Next(50, 360));
@@ -129,7 +136,7 @@ namespace KingdomTerrahearts.Mounts
             else
             {
                 isGrounded = false;
-                if (player.velocity.Y > player.maxFallSpeed/2)
+                if (player.velocity.Y > player.maxFallSpeed*0.75f)
                 {
                     attacking = true;
                     player.immune = true;
