@@ -70,7 +70,7 @@ namespace KingdomTerrahearts.NPCs
 
                 if (lastPos == npc.Center)
                 {
-                    npc.velocity.Y = jumpForce;
+                    npc.velocity.Y = -jumpForce;
                 }
 
                 notMovedTime++;
@@ -84,7 +84,7 @@ namespace KingdomTerrahearts.NPCs
 
             if (Math.Abs(npc.velocity.X) > 0)
             {
-                //npc.direction = (int)(Math.Abs(npc.velocity.X)/npc.velocity.X);
+                npc.direction = (int)(Math.Abs(npc.velocity.X)/npc.velocity.X);
             }
             if (npc.velocity.Y > 0)
             {
@@ -140,7 +140,7 @@ namespace KingdomTerrahearts.NPCs
             }
 
             npc.frame.Y = frameHeight * curFrame;
-            //npc.spriteDirection = -npc.direction;
+            npc.spriteDirection = npc.direction;
         }
     }
 }

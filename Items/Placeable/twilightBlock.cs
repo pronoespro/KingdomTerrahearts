@@ -34,7 +34,7 @@ namespace KingdomTerrahearts.Items.Placeable
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.GrayBrick, 10);
-			recipe.AddIngredient(mod.ItemType("lucidShard"));
+			recipe.AddIngredient(mod.ItemType("twilightShard"));
 			recipe.AddTile(TileID.Furnaces);
 			recipe.SetResult(this, 99);
 			recipe.AddRecipe();

@@ -31,8 +31,7 @@ namespace KingdomTerrahearts.Items.Placeable
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.WoodenDoor);
-			recipe.AddIngredient(mod.ItemType("lucidShard"));
+			recipe.AddIngredient(mod.ItemType("twilightBlock"), 15);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.SetResult(this);
 			recipe.AddRecipe();

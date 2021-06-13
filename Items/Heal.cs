@@ -4,12 +4,12 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items
 {
-    class Heal:AbilityBase
+    public class Heal:AbilityBase
     {
 
-        int healAmmount = 30;
-        int invulnerability = 0;
-        int minManaCost = 40;
+        public int healAmmount = 30;
+        public int invulnerability = 0;
+        public int minManaCost = 40;
 
         public override void SetStaticDefaults()
         {
@@ -38,13 +38,16 @@ namespace KingdomTerrahearts.Items
 
         public override void UpdateInventory(Player player)
         {
-            abilityName = "Heal";
-            SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
-            sp.canCastHeal = true;
-            sp.castHealAmount = healAmmount;
-            sp.castHealInvulnerabilityTime = invulnerability;
-            sp.castHealCost = minManaCost;
-            base.UpdateInventory(player);
+                abilityName = "Heal";
+            if (player == null)
+            {
+                SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
+                sp.canCastHeal = true;
+                sp.castHealAmount = healAmmount;
+                sp.castHealInvulnerabilityTime = invulnerability;
+                sp.castHealCost = minManaCost;
+                base.UpdateInventory(player);
+            }
         }
 
 
@@ -63,12 +66,8 @@ namespace KingdomTerrahearts.Items
         public override void RaiseLevel()
         {
             base.RaiseLevel();
-            healAmmount+= 5;
-            if (level > 3)
-            {
-                minManaCost -= 5;
-                invulnerability += 2;
-            }
+            SoraPlayer sp = Main.player[item.owner].GetModPlayer<SoraPlayer>();
+            sp.RaiseHealLevel(this);
 
         }
 

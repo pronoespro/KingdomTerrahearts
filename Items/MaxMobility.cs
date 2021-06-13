@@ -8,15 +8,15 @@ namespace KingdomTerrahearts.Items
     {
 
 
-        float jumpHeight = 5;
-        int jumpCount = 1;
+        public float jumpHeight = 10;
+        public int jumpCount = 1;
 
-        float glideTime = 120;
-        bool noFallDamage = false;
+        public float glideTime = 120;
+        public bool noFallDamage = false;
 
-        float dashSpeed = 7.5f;
-        int dashReaload = 360;
-        bool canDashMidair = false;
+        public float dashSpeed = 7.5f;
+        public int dashReaload = 360;
+        public bool canDashMidair = false;
 
         public override void SetStaticDefaults()
         {
@@ -29,25 +29,6 @@ namespace KingdomTerrahearts.Items
         }
 
         public override void UpdateEquip(Player player)
-        {
-            abilityName = "Max Mobility";
-            SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
-            sp.canDoubleJump = true;
-            sp.doubleJumpHeight += jumpHeight;
-            sp.doubleJumpQuantity += jumpCount;
-
-            if (noFallDamage)
-                player.noFallDmg = true;
-            sp.canGlide = true;
-            sp.glideTime += glideTime;
-            sp.ChangeGlideFallSpeed(0.5f);
-            sp.dashSpeed += dashSpeed;
-            sp.canDash = true;
-            sp.canDashMidAir = canDashMidair;
-            base.UpdateEquip(player);
-        }
-
-        public override void UpdateInventory(Player player)
         {
             initLvl = 3;
             abilityName = "Max Mobility";
@@ -66,7 +47,38 @@ namespace KingdomTerrahearts.Items
             sp.canDash = true;
             sp.canDashMidAir = canDashMidair;
             sp.ChangeDashReload(dashReaload);
-            base.UpdateInventory(player);
+            base.UpdateEquip(player);
+        }
+
+        public override void UpdateInventory(Player player)
+        {
+            abilityName = "Max Mobility";
+            SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
+            initLvl = 3;
+            if (player == null)
+            {
+                sp.canDoubleJump = true;
+                sp.doubleJumpHeight += jumpHeight;
+                sp.doubleJumpQuantity += jumpCount;
+
+                if (noFallDamage)
+                    player.noFallDmg = true;
+                sp.canGlide = true;
+                sp.glideTime += glideTime;
+                sp.ChangeGlideFallSpeed(0.5f);
+
+                sp.dashSpeed += dashSpeed;
+                sp.canDash = true;
+                sp.canDashMidAir = canDashMidair;
+                sp.ChangeDashReload(dashReaload);
+                base.UpdateInventory(player);
+            }
+
+            abilityTooltips = new string[]
+            {
+                "Glide lasts for "+ ((glideTime/60).ToString())+" seconds" +
+                "\n"+((canDashMidair)?"Dash can be used in mid-air":"Dash cannot be used midair")
+            };
         }
 
         public override void AddRecipes()
@@ -86,28 +98,8 @@ namespace KingdomTerrahearts.Items
         public override void RaiseLevel()
         {
             base.RaiseLevel();
-            jumpHeight += 1.5f;
-            if (level > 2)
-            {
-                jumpCount++;
-            }
-
-            glideTime += 60;
-            if (level > 3)
-            {
-                noFallDamage = true;
-            }
-
-            dashSpeed += 2.5f;
-            dashReaload -= 30;
-            if (dashReaload <= 30)
-            {
-                dashReaload = 30;
-            }
-            if (level > 2)
-            {
-                canDashMidair = true;
-            }
+            SoraPlayer sp = Main.player[item.owner].GetModPlayer<SoraPlayer>();
+            sp.RaiseMobilityLevel(this);
         }
 
         public override void ResetLevelEffects()

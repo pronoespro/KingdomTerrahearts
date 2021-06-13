@@ -23,11 +23,21 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.useTime = 20;
 			item.useAnimation = 20;
 			item.useStyle = ItemUseStyleID.SwingThrow;
+			item.holdStyle = 4;
 			item.knockBack = 3;
 			item.value = 100;
 			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
+
+			SaveAtributes();
+			keyLevel = 1;
+			magic = keyMagic.magnet;
+			keyTransformations = new keyTransformation[] {keyTransformation.guns,keyTransformation.cannon };
+			transSprites = new string[]{ "Items/Weapons/sharpshooter", "Items/Weapons/sharpshooter" };
+			formChanges = new keyDriveForm[] { keyDriveForm.element,keyDriveForm.element};
+			animationTimes = new int[] { 20,10,30};
+			keySummon = summonType.chickenLittle;
 		}
 
 		public override void AddRecipes()
@@ -44,6 +54,7 @@ namespace KingdomTerrahearts.Items.Weapons
 		{
 			keybladeElement = keyType.star;
 			comboMax = 4;
+			keySummon = summonType.chickenLittle;
 		}
 	}
 }

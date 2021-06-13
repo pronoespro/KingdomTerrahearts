@@ -92,7 +92,7 @@ namespace KingdomTerrahearts.NPCs
 
         public override void FindFrame(int frameHeight)
         {
-            //npc.spriteDirection = -npc.direction;
+            npc.spriteDirection = npc.direction;
             npc.frame.Y = frameHeight * 0;
         }
 

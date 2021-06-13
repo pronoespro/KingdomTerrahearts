@@ -47,7 +47,7 @@ namespace KingdomTerrahearts.Tiles
             ModTranslation name = CreateMapEntryName();
 
             name.SetDefault("The Battleground");
-            AddMapEntry(new Color(255, 255, 255), name);
+            AddMapEntry(new Color(150, 30, 30), name);
 
             animationFrameHeight = 504;
             dustType = 11;
@@ -76,28 +76,30 @@ namespace KingdomTerrahearts.Tiles
 
             if (player.position.X > x - (16 * 9) && player.position.X < x + (16 * 9) && player.position.Y < y - (16 * 28))
             {
-                sp.initPosTrap = new Vector2(x - (16 * 9), y - (16 * 29) * 2);
-                sp.endPosTrap = new Vector2(x + (16 * 9) - 9, y - (16 * 29) + 8);
+                Vector2 init = new Vector2(x - (16 * 9), y - (16 * 29) * 2);
+                Vector2 end = new Vector2(x + (16 * 9) - 9, y - (16 * 29) + 16);
+                sp.SetTrapLimits(init,end);
+
                 bool playerIsTrapped = false;
                 for (int e = 0; e < Main.npc.Length; e++)
                 {
-                    if (Main.npc[e].boss && Main.npc[e].life > 0)
+                    if (sp.isBoss(e) && Main.npc[e].active && Main.npc[e].life > 0 )
                     {
-
-                        playerIsTrapped = Main.npc[e].life > Main.npc[e].lifeMax / 2;
-                        player.AddBuff(BuffID.ChaosState, 15, false);
-                        player.AddBuff(BuffID.Darkness, 15, false);
-                        player.AddBuff(BuffID.Blackout, 15, false);
-                        player.AddBuff(BuffID.NoBuilding, 60, false);
-                        if (!player.HasBuff(BuffID.PotionSickness))
-                        {
-                            player.AddBuff(BuffID.PotionSickness, 30, false);
-                        }
+                        playerIsTrapped = true;
                         break;
                     }
                 }
                 if (playerIsTrapped)
                 {
+                    player.AddBuff(BuffID.ChaosState, 15, false);
+                    player.AddBuff(BuffID.Darkness, 15, false);
+                    player.AddBuff(BuffID.Blackout, 15, false);
+                    player.AddBuff(BuffID.NoBuilding, 60, false);
+                    player.AddBuff(BuffID.Shine, 60, false);
+                    if (!player.HasBuff(BuffID.PotionSickness))
+                    {
+                        player.AddBuff(BuffID.PotionSickness, 30, false);
+                    }
 
                     if (!player.HasBuff(mod.BuffType("EnlightenedBuff")))
                     {
@@ -109,7 +111,10 @@ namespace KingdomTerrahearts.Tiles
 
         }
 
+
     }
+
+
     public class TheBattlegroundItem : ModItem
     {
         public override void SetStaticDefaults()

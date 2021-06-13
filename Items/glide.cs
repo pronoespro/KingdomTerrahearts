@@ -7,19 +7,18 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items
 {
-    class glide:AbilityBase
+    public class glide:AbilityBase
     {
 
-        float glideTime = 120;
-        bool noFallDamage = false;
+        public float glideTime = 120;
+        public bool noFallDamage = false;
 
         public override void SetStaticDefaults()
         {
             abilityName = "Glide";
             DisplayName.SetDefault(abilityName+" level " + (level + 1).ToString());
             Tooltip.SetDefault("A glide ability" +
-                "\nAllows you to fall slowly" +
-                "\nOnly lasts for 2 seconds");
+                "\nAllows you to fall slowly");
         }
 
         public override void UpdateEquip(Player player)
@@ -37,10 +36,17 @@ namespace KingdomTerrahearts.Items
         public override void UpdateInventory(Player player)
         {
             abilityName = "Glide";
-            SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
-            sp.canGlide = true;
-            sp.glideTime += glideTime;
-            sp.ChangeGlideFallSpeed(0.5f);
+            abilityTooltips = new string[]
+            {
+                "Lasts for "+ ((glideTime/60).ToString())+" seconds"
+            };
+            if (player == null)
+            {
+                SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
+                sp.canGlide = true;
+                sp.glideTime += glideTime;
+                sp.ChangeGlideFallSpeed(0.5f);
+            }
             base.UpdateInventory(player);
         }
 
@@ -57,12 +63,9 @@ namespace KingdomTerrahearts.Items
         }
         public override void RaiseLevel()
         {
-            glideTime += 60;
-            if (level > 3)
-            {
-                noFallDamage = true;
-            }
             base.RaiseLevel();
+            SoraPlayer sp = Main.player[item.owner].GetModPlayer<SoraPlayer>();
+            sp.RaiseGlideLevel(this);
         }
 
         public override void ResetLevelEffects()

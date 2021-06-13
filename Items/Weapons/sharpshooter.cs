@@ -39,6 +39,24 @@ namespace KingdomTerrahearts.Items.Weapons
             item.noMelee = true;
         }
 
+        public override bool AltFunctionUse(Player player)
+        {
+            return true;
+        }
+
+        public override bool UseItem(Player player)
+        {
+            if (player.altFunctionUse == 2)
+            {
+                combo = 0;
+                return true;
+            }
+            else
+            {
+                return base.UseItem(player);
+            }
+        }
+
         public override bool CanUseItem(Player player)
         {
 

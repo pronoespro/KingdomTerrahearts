@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items.Weapons
 {
-    class Keyblade_demonite:Keyblade
+    public class Keyblade_demonite:Keyblade
 	{
 
 		public override void SetStaticDefaults()
@@ -20,14 +20,22 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.width = 50;
 			item.height = 50;
 			item.scale = 0.75f;
-			item.useTime = 20;
-			item.useAnimation = 20;
 			item.useStyle = ItemUseStyleID.SwingThrow;
+            item.holdStyle = 4;
 			item.knockBack = 3;
 			item.value = 100;
 			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
+			item.useAnimation = item.useTime = 20;
+
+			SaveAtributes();
+			magic = keyMagic.poison;
+			keyTransformations = new keyTransformation[] { keyTransformation.none };
+			transSprites = new string[] { "Items/Weapons/Keyblade_destiny" };
+			formChanges = new keyDriveForm[] { keyDriveForm.rage };
+			animationTimes = new int[] { 20, 10 };
+			keyLevel = 1;
 		}
 
 		public override void AddRecipes()

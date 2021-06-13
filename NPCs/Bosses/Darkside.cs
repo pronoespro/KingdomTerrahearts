@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using KingdomTerrahearts.Extra;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -16,6 +17,8 @@ namespace KingdomTerrahearts.NPCs.Bosses
         public int shootAttackTimes = 2;
         public int shootAttacksUsed = 0;
 
+        bool resizedInBattleGrounds;
+
         void Target()
         {
             player = Main.player[npc.target];
@@ -30,7 +33,7 @@ namespace KingdomTerrahearts.NPCs.Bosses
         public override void SetDefaults()
         {
             npc.aiStyle = -1;
-            npc.lifeMax = 2500;
+            npc.lifeMax = 1500;
             npc.damage = 0;
             npc.defense = 15;
             npc.knockBackResist = 0;
@@ -46,8 +49,8 @@ namespace KingdomTerrahearts.NPCs.Bosses
             npc.noTileCollide = false;
             npc.HitSound = SoundID.NPCHit1;
             npc.DeathSound = SoundID.NPCDeath1;
-            npc.behindTiles = true;
-            music = (KingdomWorld.customInvasionUp)?MusicID.Boss1:-1;
+            npc.behindTiles = true; 
+            music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/Vs Pure Heartless");
             npc.ai[1] = 200;
         }
 
@@ -56,10 +59,23 @@ namespace KingdomTerrahearts.NPCs.Bosses
             npc.lifeMax = (int)(npc.lifeMax * 0.625f * bossLifeScale);
             npc.damage = (int)(npc.damage * 0.75f);
             npc.defense = (int)(npc.defense + numPlayers);
+            npc.scale = 1 + (0.5f * numPlayers);
         }
 
         public override void AI()
         {
+
+            if (player != null)
+            {
+                SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
+                if (sp.fightingInBattleground || KingdomWorld.customInvasionUp)
+                {
+                    npc.scale = (resizedInBattleGrounds) ? npc.scale : npc.scale * 1.5f;
+                    if (sp.fightingInBattleground)
+                        npc.damage *= 2;
+                    resizedInBattleGrounds = true;
+                }
+            }
 
             if (KingdomWorld.customInvasionUp) music = -1;
 
@@ -88,7 +104,7 @@ namespace KingdomTerrahearts.NPCs.Bosses
 
         void Teleport()
         {
-            if (Magnitude(player.Center - npc.Center) > npc.width*4)
+            if (MathHelp.Magnitude(player.Center - npc.Center) > npc.width*4)
             {
                 npc.alpha += 5;
                 if (npc.alpha >= 255)
@@ -105,10 +121,6 @@ namespace KingdomTerrahearts.NPCs.Bosses
                 if (npc.alpha <= 0)
                     npc.alpha = 0;
             }
-        }
-        float Magnitude(Vector2 vector)
-        {
-            return (float)Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y);
         }
 
         void DespawnHandler()
@@ -159,6 +171,16 @@ namespace KingdomTerrahearts.NPCs.Bosses
         public override void NPCLoot()
         {
             Item.NewItem(npc.getRect(), mod.ItemType("DarkenedHeart"),Stack:2);
+
+            Item staritem = new Item();
+            staritem.SetDefaults(mod.ItemType("lucidShard"));
+            staritem.stack = Main.rand.Next(1, 25);
+            player.GetItem(15, staritem);
+
+            staritem = new Item();
+            staritem.SetDefaults(ItemID.FallenStar);
+            staritem.stack = Main.rand.Next(1, 15);
+            player.GetItem(15, staritem);
         }
 
         public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)

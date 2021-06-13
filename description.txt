@@ -1,16 +1,15 @@
 Kingdom Terrahearts introduces the world of Kingdom Hearts to Terraria.
-"'This world is too small' is a thing the Terrarian thinks every day... until a portal opens and things from another world come rushing in. Otherwordly darkness and light enter the world of Terraria and you are the only one who can stop it".
 
 ---Mod Contents---
 
--A prehardmode boss, an event (the 1000 heartless battle), 2 enemies (more to come) and 1 town npc
+-A prehardmode boss, an event (the 1000 heartless battle), 4 enemies (more to come) and 3 town npcs
 -6 habilities, a "grappling hook" (athletic flow)
--9 weapons (keyblades and the arrowgun), a pickaxe keyblade
--A tileset with a workbench (twilight town based, block, walls, crafting table and poster), a huge tile (dive to heart) and a custom bed based on save spots in the KH franchise
--A vanity item and a dye (last world dye)
--A material item
--An anti-death item (Kupo coin)
--A party member system for all town npcs
+-21 keyblades, a arrowgun, a chacram, a pickaxe keyblade, an Ultimate gun (Moon Lord drop) and some joke weapons.
+-A tileset with a workbench (twilight town based, block, walls, crafting table and poster), a huge tile (dive to heart) and a custom bed based on save spots in the KH franchise that fast forwards time.
+-A vanity item, a vanity clothing set , a petand a dye (last world dye)
+-9 material items and an anti-death item (Kupo coin)
+-A party member system for all vanilla Terraria town npcs
+-Fighting bosses on the dive to heart battleground unlocks harder versions of themselves that drop special loot (not really that much harder, but enough to be a nuisance)
 
 DISCLAIMER: This mod is currently being developed for single player only. If you wish to play with other people do not use the npcs as party members unles you are ready for crazyness.
 

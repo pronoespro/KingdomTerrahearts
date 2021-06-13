@@ -25,16 +25,13 @@ namespace KingdomTerrahearts.Items.Armor
 		{
 			SoraPlayer p = player.GetModPlayer<SoraPlayer>();
 			p.orgCoatAccesory = true;
-			if (hideVisual)
-			{
-				p.orgCoatHideVanity = true;
-			}
+			p.orgCoatHideVanity = hideVisual;
 		}
 
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("lucidShard"));
+			recipe.AddIngredient(mod.ItemType("twilightShard"));
 			recipe.AddTile(TileID.Loom);
 			recipe.SetResult(this);
 			recipe.AddRecipe();

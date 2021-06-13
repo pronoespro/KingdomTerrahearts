@@ -26,11 +26,20 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.useTime = 30;
 			item.useAnimation = 16;
 			item.useStyle = ItemUseStyleID.SwingThrow;
+			item.holdStyle = 4;
 			item.knockBack = 3;
 			item.value = 100;
 			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
+
+			SaveAtributes();
+			guardType = blockingType.none;
+			canShootAgain = true;
+			keyTransformations = new keyTransformation[] { };
+			formChanges = new keyDriveForm[] { };
+			animationTimes = new int[] {30};
+			keySummon = summonType.mushu;
 		}
 
 		public override void AddRecipes() 
@@ -44,12 +53,13 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public override void ChangeKeybladeValues()
 		{
-			canShootAgain = false;
+			canShootAgain = true;
 			manaConsumed = 1;
 			keybladeElement = keyType.light;
 			comboMax = 4;
-			projectileTime = 1;
+			projectileTime = 10;
 			keyComboType = KeyComboType.normal;
+			keySummon = summonType.mushu;
 		}
 	}
 }

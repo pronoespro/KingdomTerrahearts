@@ -141,6 +141,9 @@ namespace KingdomTerrahearts.Mounts
                     attacking = true;
                     player.immune = true;
                     player.immuneNoBlink = true; ;
+                    SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
+                    if (!sp.IsInvulnerable())
+                    sp.AddInvulnerability(2);
                 }
                 else
                 {

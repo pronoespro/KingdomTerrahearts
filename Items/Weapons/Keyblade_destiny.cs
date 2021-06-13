@@ -17,19 +17,31 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 25;
+			item.damage = 30;
 			item.melee = true;
 			item.width = 80;
 			item.height = 80;
 			item.scale = 0.75f;
 			item.useTime = 20;
 			item.useAnimation = 20;
-			item.useStyle = 1;
+			item.useStyle = ItemUseStyleID.SwingThrow;
+			item.holdStyle = 4;
 			item.knockBack = 3;
 			item.value = 150000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
+
+			SaveAtributes();
+			keyLevel = 2;
+			magic = keyMagic.reflect;
+			magicCost = 15;
+			keyTransformations = new keyTransformation[] {keyTransformation.staff };
+            transSprites = new string[] { "Items/Weapons/Keyblade_destiny" };
+			formChanges = new keyDriveForm[] {keyDriveForm.limit };
+			animationTimes = new int[] {20,20};
+			guardType = blockingType.reflect;
+			keySummon = summonType.bambi;
 		}
 
 		public override void ChangeKeybladeValues()
@@ -39,6 +51,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			keybladeElement = keyType.destiny;
 			comboMax = 4;
 			keyComboType = KeyComboType.magic;
+			keySummon = summonType.bambi;
 		}
 	}
 }

@@ -4,14 +4,14 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items
 {
-    class secondChance:AbilityBase
+    public class secondChance:AbilityBase
     {
 
-        int invulnerabilityFrames = 1;
-        int reloadTime = 180;
-        bool autoHP = false;
-        int autoHPReload = 180*60;
-        int recoveredHp = 1;
+        public int invulnerabilityFrames = 1;
+        public int reloadTime = 180;
+        public bool autoHP = false;
+        public int autoHPReload = 180*60;
+        public int recoveredHp = 1;
 
         public override void SetStaticDefaults()
         {
@@ -43,15 +43,18 @@ namespace KingdomTerrahearts.Items
 
         public override void UpdateInventory(Player player)
         {
-            abilityName = "Second Chance";
-            SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
-            sp.hasSecondChance = true;
-            sp.secondChanceInvulnerability = invulnerabilityFrames;
-            sp.secondChanceReload = reloadTime;
-            sp.hasAutoHP = autoHP;
-            sp.autoHPRecover = recoveredHp;
-            sp.autoHPReload = autoHPReload;
-            base.UpdateInventory(player);
+            if (player == null)
+            {
+                abilityName = "Second Chance";
+                SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
+                sp.hasSecondChance = true;
+                sp.secondChanceInvulnerability = invulnerabilityFrames;
+                sp.secondChanceReload = reloadTime;
+                sp.hasAutoHP = autoHP;
+                sp.autoHPRecover = recoveredHp;
+                sp.autoHPReload = autoHPReload;
+                base.UpdateInventory(player);
+            }
         }
 
 
@@ -70,15 +73,8 @@ namespace KingdomTerrahearts.Items
         public override void RaiseLevel()
         {
             base.RaiseLevel();
-            invulnerabilityFrames += 2;
-            reloadTime -= 10;
-            if (level > 5)
-            {
-                autoHP = true;
-                autoHPReload -= 60*15;
-                recoveredHp += 10;
-            }
-
+            SoraPlayer sp = Main.player[item.owner].GetModPlayer<SoraPlayer>();
+            sp.RaiseSecondChanceLevel(this);
         }
 
         public override void ResetLevelEffects()

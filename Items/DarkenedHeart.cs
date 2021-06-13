@@ -21,17 +21,17 @@ namespace KingdomTerrahearts.Items
             item.height = 20;
             item.maxStack = 20;
             item.value = 10;
-            item.rare = 1;
+            item.rare = ItemRarityID.Blue;
             item.useAnimation = 40;
             item.useTime = 45;
-            item.useStyle = 4;
+            item.useStyle = ItemUseStyleID.HoldingUp;
             item.consumable = true;
         }
 
         public override bool CanUseItem(Player player)
         {
             bool alreadySpawned = NPC.AnyNPCs(mod.NPCType("Darkside"));
-            return true;
+            return !alreadySpawned;
         }
 
         public override bool UseItem(Player player)

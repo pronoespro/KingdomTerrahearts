@@ -21,9 +21,10 @@ namespace KingdomTerrahearts.Walls
 			Main.wallHouse[Type] = true;
 			dustType = DustID.t_Honey;
 			drop = mod.ItemType("TwilightWall");
-			AddMapEntry(new Color(150, 150, 150));
+			AddMapEntry(new Color(205, 105, 0));
 		}
 
+		/*
 		public override void NumDust(int i, int j, bool fail, ref int num)
 		{
 			num = fail ? 1 : 3;
@@ -35,6 +36,7 @@ namespace KingdomTerrahearts.Walls
 			g = 0.4f;
 			b = 0.4f;
 		}
+		*/
 
 	}
 }

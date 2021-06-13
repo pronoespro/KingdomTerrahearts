@@ -164,7 +164,8 @@ namespace KingdomTerrahearts.Tiles
 				if (healPlayer)
 				{
 					player.statLife = player.statLifeMax;
-					player.statMana = player.statManaMax;
+					if(player.statMana<player.statManaMax)
+						player.statMana = player.statManaMax;
 					sp.ResetTimers();
 				}
 			}

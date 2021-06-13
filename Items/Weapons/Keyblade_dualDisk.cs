@@ -24,12 +24,22 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.scale = 0.75f;
 			item.useTime = 15;
 			item.useAnimation = 15;
-			item.useStyle = 1;
+			item.useStyle = ItemUseStyleID.SwingThrow;
+			item.holdStyle = 4;
 			item.knockBack = 3;
 			item.value = 100;
 			item.rare = 2;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
+
+			SaveAtributes();
+			keyLevel = 3;
+			magic = keyMagic.confuse;
+			magicCost = 3;
+			keyTransformations = new keyTransformation[] { keyTransformation.none};
+			formChanges = new keyDriveForm[] { keyDriveForm.wisdom};
+			transSprites = new string[] { "Items/Weapons/Keyblade_dualDisk" };
+			animationTimes = new int[] { 15,12};
 		}
 
 		public override void AddRecipes()

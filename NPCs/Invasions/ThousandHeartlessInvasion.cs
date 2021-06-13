@@ -19,8 +19,8 @@ namespace KingdomTerrahearts.NPCs.Invasions
 
         public static int[] heartless =
         {
-            mod.NPCType("armoredKnightHeartless"),
             mod.NPCType("shadowHeartless"),
+            mod.NPCType("armoredKnightHeartless"),
             mod.NPCType("SurveillanceRobotHeartless")
         };
 
@@ -41,7 +41,7 @@ namespace KingdomTerrahearts.NPCs.Invasions
                 int numPlayers = 0;
                 for(int i = 0; i < 255; i++)
                 {
-                    numPlayers += (Main.player[i].active && Main.player[i].statLifeMax>=200) ? 1 : 0;
+                    numPlayers += (Main.player[i].active) ? 1 : 0;
                 }
                 if (numPlayers > 0)
                 {
@@ -117,7 +117,7 @@ namespace KingdomTerrahearts.NPCs.Invasions
                 }
 
                 //Update when the invasion gets to Spawn
-                float moveRate = (float)Main.dayRate * 5;
+                float moveRate = (float)Main.dayRate * 15;
 
                 //If the invasion is greater than the spawn position
                 if (Main.invasionX > (double)Main.spawnTileX)

@@ -4,11 +4,11 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items
 {
-    class doubleJump : AbilityBase
+    public class doubleJump : AbilityBase
     {
 
-        float jumpHeight = 5;
-        int jumpCount = 1;
+        public float jumpHeight = 10;
+        public int jumpCount = 1;
 
         public override void SetStaticDefaults()
         {
@@ -29,13 +29,17 @@ namespace KingdomTerrahearts.Items
             base.UpdateEquip(player);
         }
 
+        
         public override void UpdateInventory(Player player)
         {
-            abilityName = "Double Jump";
-            SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
-            sp.canDoubleJump = true;
-            sp.doubleJumpHeight += jumpHeight;
-            sp.doubleJumpQuantity += jumpCount;
+            if (player==null)
+            {
+                abilityName = "Double Jump";
+                SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
+                sp.canDoubleJump = true;
+                sp.doubleJumpHeight += jumpHeight;
+                sp.doubleJumpQuantity += jumpCount;
+            }
             base.UpdateInventory(player);
         }
 
@@ -53,12 +57,9 @@ namespace KingdomTerrahearts.Items
 
         public override void RaiseLevel()
         {
-            jumpHeight += 1.5f;
-            if (level > 2)
-            {
-                jumpCount++;
-            }
             base.RaiseLevel();
+            SoraPlayer sp = Main.player[item.owner].GetModPlayer<SoraPlayer>();
+            sp.RaiseDoubleJumpLevel(this);
         }
 
         public override void ResetLevelEffects()

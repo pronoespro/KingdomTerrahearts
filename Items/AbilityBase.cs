@@ -48,16 +48,11 @@ namespace KingdomTerrahearts.Items
         {
             level = initLvl;
             ResetLevelEffects();
-            if (NPC.downedBoss1)
+            SoraPlayer sp = Main.player[item.owner].GetModPlayer<SoraPlayer>();
+            for (int i = 0; i < sp.CheckPlayerLevel(); i++)
+            {
                 RaiseLevel();
-            if (NPC.downedBoss2)
-                RaiseLevel();
-            if (NPC.downedBoss3)
-                RaiseLevel();
-            if (NPC.downedSlimeKing)
-                RaiseLevel();
-            if (NPC.downedQueenBee)
-                RaiseLevel();
+            }
         }
 
         public virtual void ResetLevelEffects()
@@ -73,6 +68,7 @@ namespace KingdomTerrahearts.Items
         
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
+
             int lvl = (level >= abilityTooltips.Length) ? abilityTooltips.Length-1 : level;
             TooltipLine line = new TooltipLine(mod, "level tooltip", abilityTooltips[lvl]);
 

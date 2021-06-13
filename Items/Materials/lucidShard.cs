@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items.Materials
 {
-    class lucidShard:ModItem
+    public class lucidShard:ModItem
     {
 
         public override void SetStaticDefaults()
@@ -23,19 +23,6 @@ namespace KingdomTerrahearts.Items.Materials
             item.value = 200;
             item.maxStack = 999;
         }
-        /*
-        public override void AddRecipes()
-        {
-            ModRecipe recipe = new ModRecipe(mod);
-
-            recipe.AddIngredient(this, 2);
-
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult();
-            recipe.AddRecipe();
-
-        }
-        */
 
     }
 }

@@ -4,12 +4,12 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items
 {
-    class quickRun : AbilityBase
+    public class quickRun : AbilityBase
     {
 
-        float dashSpeed = 7.5f;
-        int dashReaload = 360;
-        bool canDashMidair = false;
+        public float dashSpeed = 10;
+        public int dashReaload = 360;
+        public bool canDashMidair = false;
         
         public override void SetStaticDefaults()
         {
@@ -19,6 +19,10 @@ namespace KingdomTerrahearts.Items
                 "\nAllows you to avoid attacks, no invulnerability" +
                 "\nVery low speed" +
                 "\nCan only be used on the ground");
+            abilityTooltips = new string[]
+            {
+
+            };
         }
 
         public override void UpdateEquip(Player player)
@@ -27,17 +31,21 @@ namespace KingdomTerrahearts.Items
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
             sp.dashSpeed += dashSpeed;
             sp.canDash = true;
-            base.UpdateEquip(player);
+            sp.canDashMidAir = canDashMidair;
+            sp.ChangeDashReload(dashReaload);
         }
 
         public override void UpdateInventory(Player player)
         {
-            abilityName = "Quick Run";
-            SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
-            sp.dashSpeed += dashSpeed;
-            sp.canDash = true;
-            sp.canDashMidAir = canDashMidair;
-            sp.ChangeDashReload(dashReaload);
+                abilityName = "Quick Run";
+            if (player == null)
+            {
+                SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
+                sp.dashSpeed += dashSpeed;
+                sp.canDash = true;
+                sp.canDashMidAir = canDashMidair;
+                sp.ChangeDashReload(dashReaload);
+            }
             base.UpdateInventory(player);
         }
 
@@ -56,16 +64,8 @@ namespace KingdomTerrahearts.Items
         public override void RaiseLevel()
         {
             base.RaiseLevel();
-            dashSpeed += 2.5f;
-            dashReaload -= 30;
-            if (dashReaload <= 30)
-            {
-                dashReaload = 30;
-            }
-            if (level > 2)
-            {
-                canDashMidair = true;
-            }
+            SoraPlayer sp = Main.player[item.owner].GetModPlayer<SoraPlayer>();
+            sp.RaiseQuickRunLevel(this);
         }
 
         public override void ResetLevelEffects()

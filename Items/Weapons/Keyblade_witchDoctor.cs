@@ -18,7 +18,7 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 30;
+			item.damage = 32;
 			item.melee = true;
 			item.width = 80;
 			item.height = 80;
@@ -26,17 +26,27 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.useTime = 24;
 			item.useAnimation = 24;
 			item.useStyle = ItemUseStyleID.SwingThrow;
+			item.holdStyle = 4;
 			item.knockBack = 3;
 			item.value = 100;
             item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
+
+			SaveAtributes();
+			keyLevel = 2;
+			keyTransformations = new keyTransformation[] {keyTransformation.yoyo };
+			transSprites = new string[] { "Items/Weapons/Keyblade_witchDoctor"};
+			formChanges = new keyDriveForm[] { keyDriveForm.strike};
+			animationTimes = new int[] { 24, 30};
+			keySummon = summonType.simba;
 		}
 
 		public override void ChangeKeybladeValues()
 		{
 			keybladeElement = keyType.jungle;
 			comboMax = 4;
+			keySummon = summonType.simba;
 		}
 
 	}

@@ -1,18 +1,24 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace KingdomTerrahearts.Interface
 {
+
     public class PartyUI:UIState
     {
 
         public SoraPlayer sora;
         UIPanel panel;
         UIPanel[] buttons=new UIPanel[30];
+
+        UIItemSlot item;
 
         public override void OnInitialize()
         {
@@ -34,14 +40,13 @@ namespace KingdomTerrahearts.Interface
             panel.Height.Set(250, 0); 
             panel.HAlign = 0; 
             panel.VAlign = 1f;
-            GeneralPanel.Append(panel); 
+            GeneralPanel.Append(panel);
 
         }
 
         public override void Update(GameTime gameTime)
         {
-            Player p;
-            p = Main.player[Main.myPlayer];
+            Player p = Main.player[Main.myPlayer];
             sora = p.GetModPlayer<SoraPlayer>();
 
             if (!Main.playerInventory)
@@ -49,6 +54,7 @@ namespace KingdomTerrahearts.Interface
                 KingdomTerrahearts.instance.SetPartyUI(false);
                 return;
             }
+
 
             //0:Guide
             if (NPC.AnyNPCs(NPCID.Guide))
@@ -92,7 +98,7 @@ namespace KingdomTerrahearts.Interface
                     buttons[1].HAlign = 0.25f;
                     buttons[1].Top.Set(25, 0);
                     buttons[1].OnClick += OnMerchantClick;
-                    panel.Append(buttons[0]);
+                    panel.Append(buttons[1]);
 
                     UIText text = new UIText("Merch");
                     text.HAlign = text.VAlign = 0.5f;

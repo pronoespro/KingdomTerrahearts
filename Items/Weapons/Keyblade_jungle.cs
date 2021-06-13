@@ -16,19 +16,27 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public override void SetDefaults()
 		{
-			item.damage = 26;
+			item.damage = 25;
 			item.melee = true;
 			item.width = 80;
 			item.height = 80;
 			item.scale = 0.75f;
 			item.useTime = 20;
 			item.useAnimation = 20;
-			item.useStyle = 1;
+			item.useStyle = ItemUseStyleID.SwingThrow;
+			item.holdStyle = 4;
 			item.knockBack = 3;
 			item.value = 100;
 			item.rare = 2;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
+
+			SaveAtributes();
+			keyLevel = 2;
+			keyTransformations = new keyTransformation[] { keyTransformation.drill};
+			transSprites = new string[] { "Items/Weapons/Keyblade_jungle" };
+			formChanges = new keyDriveForm[] { keyDriveForm.blitz};
+			animationTimes = new int[] { 20,15};
 		}
 
 		public override void ChangeKeybladeValues()

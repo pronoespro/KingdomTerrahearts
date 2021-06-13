@@ -10,14 +10,14 @@ using Terraria.Localization;
 namespace KingdomTerrahearts.NPCs.TownNPCs
 {
     [AutoloadHead]
-    class Neku:ModNPC
+    class Neku : ModNPC
     {
 
         bool firstTalked;
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Neku Sakuraba");
+            DisplayName.SetDefault("Player");
             Main.npcFrameCount[npc.type] = 26;
         }
 
@@ -30,17 +30,17 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
 
         public override bool CanTownNPCSpawn(int numTownNPCs, int money)
         {
-            return true;
+            return NPC.downedBoss1|| NPC.downedBoss2||NPC.downedBoss3;
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return (spawnInfo.playerInTown && !NPC.AnyNPCs(npc.type))?10:0;
+            return (spawnInfo.playerInTown && !NPC.AnyNPCs(npc.type)) ? 10 : 0;
         }
 
         public override void FindFrame(int frameHeight)
         {
-            npc.spriteDirection= npc.direction;
+            npc.spriteDirection = npc.direction;
         }
 
         public override void AI()
@@ -50,7 +50,7 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
 
         public override string TownNPCName()
         {
-            return "Neku";
+            return "Neku Sakuraba";
         }
 
         public override string GetChat()
@@ -81,17 +81,18 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
                 }
             }
 
-            return dialogOptions[r.Next(0,dialogOptions.Count)];
+            return dialogOptions[r.Next(0, dialogOptions.Count)];
         }
 
         public override void SetChatButtons(ref string button, ref string button2)
         {
-            button = Language.GetTextValue("LegacInterface.28");
+            if (NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3)
+                button = Language.GetTextValue("Shop");
         }
 
         public override void OnChatButtonClicked(bool firstButton, ref bool shop)
         {
-            if (firstButton)
+            if (firstButton && (NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3))
             {
                 shop = true;
             }
@@ -99,10 +100,31 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
 
         public override void SetupShop(Chest shop, ref int nextSlot)
         {
-            if(NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3)
+            if (NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3)
             {
-                shop.item[nextSlot].SetDefaults(ItemID.DeathSickle);
+                shop.item[nextSlot].SetDefaults(mod.ItemType("quickRun"));
                 nextSlot++;
+                shop.item[nextSlot].SetDefaults(mod.ItemType("Heal"));
+                nextSlot++;
+                shop.item[nextSlot].SetDefaults(mod.ItemType("doubleJump"));
+                nextSlot++;
+                if (NPC.downedBoss1 && NPC.downedBoss2 && NPC.downedBoss3)
+                {
+                    shop.item[nextSlot].SetDefaults(mod.ItemType("glide"));
+                    nextSlot++;
+                    shop.item[nextSlot].SetDefaults(mod.ItemType("secondChance"));
+                    nextSlot++;
+                    if (Main.hardMode)
+                    {
+                        shop.item[nextSlot].SetDefaults(mod.ItemType("MaxMobility"));
+                        nextSlot++;
+                        if (NPC.downedMoonlord)
+                        {
+                            shop.item[nextSlot].SetDefaults(mod.ItemType("Invincible"));
+                            nextSlot++;
+                        }
+                    }
+                }
             }
         }
 

@@ -25,32 +25,24 @@ namespace KingdomTerrahearts.Projectiles
             projectile.aiStyle = 7;
             projectile.friendly = true;
             projectile.penetrate = 1;
+            projectile.damage = 1;
             projectile.tileCollide = false;
             projectile.timeLeft *= 10;
         }
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-
+            Main.NewText("Ouch");
         }
 
         public override bool? CanUseGrapple(Player player)
         {
+
             Vector2 velNorm = Main.MouseWorld - player.position;
             velNorm.Normalize();
 
-
-            level = 1;
-            if (NPC.downedBoss1)
-                level++;
-            if (NPC.downedBoss2)
-                level++;
-            if (NPC.downedBoss3)
-                level++;
-            if (NPC.downedSlimeKing)
-                level++;
-            if (NPC.downedQueenBee)
-                level++;
+            SoraPlayer sp = Main.player[projectile.owner].GetModPlayer<SoraPlayer>();
+            level = sp.CheckPlayerLevel()+1;
 
             if (Math.Abs(velNorm.Y) > 0.3f && level<5)
             {
@@ -76,7 +68,7 @@ namespace KingdomTerrahearts.Projectiles
 
         public override float GrappleRange()
         {
-            return 150+(level*50);
+            return 150+(level*100);
         }
 
         public override void NumGrappleHooks(Player player, ref int numHooks)
@@ -86,12 +78,12 @@ namespace KingdomTerrahearts.Projectiles
 
         public override void GrappleRetreatSpeed(Player player, ref float speed)
         {
-            speed = 10;
+            speed = 60*level;
         }
 
         public override void GrapplePullSpeed(Player player, ref float speed)
         {
-            speed = 10;
+            speed = 40*level;
         }
 
         public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -133,6 +125,10 @@ namespace KingdomTerrahearts.Projectiles
                 }
             }
 
+        }
+        public override bool PreDrawExtras(SpriteBatch spriteBatch)
+        {
+            return false;
         }
 
     }

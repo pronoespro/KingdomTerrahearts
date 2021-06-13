@@ -11,7 +11,7 @@ namespace KingdomTerrahearts.Items
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Treasrure Trove");
+			DisplayName.SetDefault("Treasure Trove");
 			Tooltip.SetDefault("A pickaxe Keyblade" +
 				"\nallows you to mine faster");
 		}

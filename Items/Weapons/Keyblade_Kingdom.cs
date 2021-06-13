@@ -25,11 +25,19 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.useTime = 16;
 			item.useAnimation = 16;
 			item.useStyle = ItemUseStyleID.SwingThrow;
+			item.holdStyle = 4;
 			item.knockBack = 3;
 			item.value = 100;
 			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
+
+			SaveAtributes();
+			keyLevel = 2;
+			keyTransformations = new keyTransformation[] { keyTransformation.none};
+			transSprites = new string[] { "Items/Weapons/Keyblade_Kingdom"};
+			formChanges = new keyDriveForm[] { keyDriveForm.second};
+			animationTimes = new int[] { 16,13 };
 		}
 
 		public override void AddRecipes()
@@ -42,6 +50,12 @@ namespace KingdomTerrahearts.Items.Weapons
 
 			recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.EnchantedSword);
+			recipe.AddTile(TileID.Anvils);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+
+			recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.Starfury);
 			recipe.AddTile(TileID.Anvils);
 			recipe.SetResult(this);
 			recipe.AddRecipe();

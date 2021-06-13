@@ -20,14 +20,20 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.width = 50;
 			item.height = 50;
 			item.scale = 0.75f;
-			item.useTime = 27;
-			item.useAnimation = 27;
-			item.useStyle = 1;
+			item.useStyle = ItemUseStyleID.SwingThrow;
+			item.holdStyle = 4;
 			item.knockBack = 3;
 			item.value = 100;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
+			item.useTime = item.useAnimation = 20;
+
+			SaveAtributes();
+			keyLevel = 1;
+			keyTransformations = new keyTransformation[0];
+			formChanges = new keyDriveForm[] { keyDriveForm.second };
+			animationTimes = new int[] { 20 };
 		}
 
 		public override void ChangeKeybladeValues()
