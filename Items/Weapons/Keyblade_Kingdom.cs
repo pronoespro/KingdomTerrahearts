@@ -66,6 +66,10 @@ namespace KingdomTerrahearts.Items.Weapons
 			keybladeElement = keyType.light;
 			comboMax = 4;
 			projectileTime = 10000;
+			keyTransformations = new keyTransformation[] { keyTransformation.none };
+			transSprites = new string[] { "Items/Weapons/Keyblade_Kingdom" };
+			formChanges = new keyDriveForm[] { keyDriveForm.second };
+			animationTimes = new int[] { 16, 13 };
 		}
 
 	}

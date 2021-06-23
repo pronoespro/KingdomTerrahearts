@@ -56,6 +56,13 @@ namespace KingdomTerrahearts.Items.Weapons
 			keybladeElement = keyType.light;
 			comboMax = 4;
 			keySummon = summonType.dualKeys;
+			magic = keyMagic.lightning;
+			keyTransformations = new keyTransformation[] { keyTransformation.none, keyTransformation.dual };
+			transSprites = new string[] { "Items/Weapons/Keyblade_oath", "Items/Weapons/Transformations/Keyblade_dual" };
+			formChanges = new keyDriveForm[] { keyDriveForm.light, keyDriveForm.dual };
+			animationTimes = new int[] { 15, 10, 8 };
+			projectileTime = (int)(projectileTime * 3.5f);
+			keySummon = summonType.dualKeys;
 		}
 	}
 }

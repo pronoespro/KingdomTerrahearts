@@ -25,6 +25,10 @@ namespace KingdomTerrahearts
         //biome related
         public static int twilightBiome;
 
+        //Dimension related
+        public static bool inAnotherDimension = false;
+        public Tile[,] tiles;
+
         //Initialize all variables to their default values
         public override void Initialize()
         {
@@ -33,9 +37,47 @@ namespace KingdomTerrahearts
             downedCustomInvasion = false;
         }
 
+        public void GoToMainDimension()
+        {
+            inAnotherDimension = false;
+            for (int i = 0; i < Main.tile.GetLength(0); i++)
+            {
+                for (int j = 0; j < Main.tile.GetLength(1); j++)
+                {
+                    Main.tile[i, j] = tiles[i,j];
+                }
+            }
+        }
+
+        public void GoToSpace()
+        {
+            if (!inAnotherDimension)
+            {
+                tiles = new Tile[Main.tile.GetLength(0), Main.tile.GetLength(1)];
+                for (int i = 0; i < Main.tile.GetLength(0); i++)
+                {
+                    for (int j = 0; j < Main.tile.GetLength(1); j++)
+                    {
+                        
+                        tiles[i,j]=Main.tile[i, j];
+                    }
+                }
+            }
+
+            for (int i = 0; i < Main.tile.GetLength(0); i++)
+            {
+                for(int j=0;j< Main.tile.GetLength(1); j++)
+                {
+                    Main.tile[i, j] = new Tile();
+                }
+            }
+            inAnotherDimension = true;
+        }
+
         //Save downed data
         public override TagCompound Save()
         {
+
             var downed = new List<string>();
             if (downedCustomInvasion) downed.Add("thousandHeartless");
             if (downedDarkside) downed.Add("Darkside");
@@ -59,7 +101,9 @@ namespace KingdomTerrahearts
             downedDarkside = downed.Contains("Darkside");
 
             for (int i = 0; i < downedXionPhases.Length; i++)
+            {
                 downedXionPhases[i] = downed.Contains("XionPhase" + i.ToString());
+            }
         }
 
         //Sync downed data

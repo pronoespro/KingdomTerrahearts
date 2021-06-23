@@ -55,7 +55,12 @@ namespace KingdomTerrahearts.Items.Weapons
 		public override void ChangeKeybladeValues()
 		{
 			keybladeElement = keyType.dark;
-			comboMax = 6;
+			magic = keyMagic.ice;
+			guardType = blockingType.reflect;
+			keyTransformations = new keyTransformation[] { keyTransformation.none };
+			formChanges = new keyDriveForm[] { keyDriveForm.rage };
+			transSprites = new string[] { "Items/Weapons/Keyblade_demonite", "Items/Weapons/Keyblade_destiny" };
+			animationTimes = new int[] { 10, 10 };
 		}
 
 	}

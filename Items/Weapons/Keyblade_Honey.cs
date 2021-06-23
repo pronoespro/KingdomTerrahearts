@@ -44,6 +44,12 @@ namespace KingdomTerrahearts.Items.Weapons
 			keybladeElement = keyType.honey;
 			comboMax = 4;
 			keySummon = summonType.bambi;
+			magic = keyMagic.balloon;
+			keyTransformations = new keyTransformation[] { keyTransformation.guns, keyTransformation.cannon };
+			transSprites = new string[] { "Items/Weapons/Keyblade_oblivion", "Items/Weapons/Keyblade_oblivion" };
+			formChanges = new keyDriveForm[] { keyDriveForm.element, keyDriveForm.element };
+			animationTimes = new int[] { 20, 10, 15 };
+			projectileTime = 1000;
 		}
 	}
 }

@@ -29,17 +29,24 @@ namespace KingdomTerrahearts.Items.Weapons.Joke
 
 			SaveAtributes();
 			magic = keyMagic.fire;
+			guardType = blockingType.none;
 			magicCost = 1;
 			keyTransformations = new keyTransformation[] {  };
-			transSprites = new string[] {};
+			transSprites = new string[] {""};
 			formChanges = new keyDriveForm[] { };
 			animationTimes = new int[] { 10, 10 };
 			keyLevel = -100;
 			keySummon = summonType.mushu;
+			keybladeElement = keyType.fire;
+			comboMax = 1;
 		}
 
         public override void AddRecipes()
-        {
+		{
+			keyTransformations = new keyTransformation[] { };
+			transSprites = new string[] { "" };
+			formChanges = new keyDriveForm[] { };
+
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(this,2);
 			recipe.SetResult(ItemID.Wood);
@@ -48,9 +55,17 @@ namespace KingdomTerrahearts.Items.Weapons.Joke
 
         public override void ChangeKeybladeValues()
 		{
+			magic = keyMagic.fire;
+			guardType = blockingType.none;
+			magicCost = 1;
+			keyTransformations = new keyTransformation[] { };
+			transSprites = new string[] { "" };
+			formChanges = new keyDriveForm[] { };
+			animationTimes = new int[] { 10, 10 };
+			keyLevel = -100;
+			keySummon = summonType.mushu;
 			keybladeElement = keyType.fire;
 			comboMax = 1;
-			keySummon = summonType.mushu;
 		}
 	}
 }

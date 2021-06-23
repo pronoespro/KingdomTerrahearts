@@ -44,6 +44,10 @@ namespace KingdomTerrahearts.Items.Weapons
 			keybladeElement = keyType.jungle;
 			comboMax = 4;
 			projectileTime = 60 * 5;
+			keyTransformations = new keyTransformation[] { keyTransformation.drill };
+			transSprites = new string[] { "Items/Weapons/Keyblade_jungle" };
+			formChanges = new keyDriveForm[] { keyDriveForm.blitz };
+			animationTimes = new int[] { 20, 15 };
 		}
 
 		public override void AddRecipes()

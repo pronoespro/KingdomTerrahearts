@@ -40,6 +40,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			formChanges = new keyDriveForm[] { keyDriveForm.ultimate };
 			transSprites = new string[] { "Items/Weapons/Keyblade_demonite", "Items/Weapons/Keyblade_destiny" };
 			animationTimes = new int[] { 10, 10 ,15};
+			keyLevel = 100;
 		}
 
 		public override void AddRecipes()
@@ -56,6 +57,13 @@ namespace KingdomTerrahearts.Items.Weapons
 		{
 			keybladeElement = keyType.light;
 			comboMax = 6;
+			guardType = blockingType.reversal;
+			projectileTime = 999;
+			magic = keyMagic.fire;
+			keyTransformations = new keyTransformation[] { keyTransformation.swords };
+			formChanges = new keyDriveForm[] { keyDriveForm.ultimate };
+			transSprites = new string[] { "Items/Weapons/Keyblade_demonite", "Items/Weapons/Keyblade_destiny" };
+			animationTimes = new int[] { 10, 10, 15 };
 		}
 
 

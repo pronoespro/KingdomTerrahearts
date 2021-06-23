@@ -30,16 +30,27 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.useTime = item.useAnimation = 20;
 
 			SaveAtributes();
+			guardType = blockingType.reflect;
 			keyLevel = 1;
 			keyTransformations = new keyTransformation[0];
+			transSprites = new string[] { };
 			formChanges = new keyDriveForm[] { keyDriveForm.second };
-			animationTimes = new int[] { 20 };
+			animationTimes = new int[] { 20, 20 };
+			keySummon = summonType.mewwow;
+			comboMax = 3;
+			keybladeElement = keyType.light;
 		}
 
 		public override void ChangeKeybladeValues()
 		{
-			keybladeElement = keyType.light;
+			guardType = blockingType.reflect;
+			keyTransformations = new keyTransformation[0];
+			transSprites = new string[] { };
+			formChanges = new keyDriveForm[] { keyDriveForm.second };
+			animationTimes = new int[] { 20, 20 };
+			keySummon = summonType.mewwow;
 			comboMax = 3;
+			keybladeElement = keyType.light;
 		}
 
 		public override void AddRecipes()

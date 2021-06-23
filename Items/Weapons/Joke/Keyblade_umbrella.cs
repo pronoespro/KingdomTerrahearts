@@ -52,6 +52,13 @@ namespace KingdomTerrahearts.Items.Weapons.Joke
 			keybladeElement = keyType.dark;
 			comboMax = 2;
 			keySummon = summonType.dumbo;
+			magic = keyMagic.balloon;
+			magicCost = 5;
+			keyTransformations = new keyTransformation[] { };
+			transSprites = new string[] { };
+			formChanges = new keyDriveForm[] { };
+			animationTimes = new int[] { 20, 20 };
+			keySummon = summonType.dumbo;
 		}
 	}
 }

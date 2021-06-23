@@ -15,8 +15,15 @@ namespace KingdomTerrahearts
 	public class KingdomTerrahearts : Mod
 	{
 
+		//Fighting gameplay
 		public static ModHotKey PartySelectHotkey;
 		public static ModHotKey GuardHotKey;
+
+		//Music gameplay
+		public static ModHotKey MusicUpKey;
+		public static ModHotKey MusicDownKey;
+		public static ModHotKey MusicLeftKey;
+		public static ModHotKey MusicRightKey;
 
 		internal UserInterface partyInterface;
 		internal PartyUI partyUI;
@@ -55,6 +62,12 @@ namespace KingdomTerrahearts
 			HideLevelUpUI();
 
 			PartySelectHotkey = null;
+			GuardHotKey = null;
+			MusicUpKey = null;
+			MusicLeftKey = null;
+			MusicDownKey = null;
+			MusicRightKey = null;
+
 			partyUI.Destroy();
 			commandUI.Destroy();
 			dialogUI.Destroy();
@@ -68,6 +81,10 @@ namespace KingdomTerrahearts
 		{
 			PartySelectHotkey = RegisterHotKey("Party menu", "F");
 			GuardHotKey = RegisterHotKey("Guard","Q");
+			MusicUpKey = RegisterHotKey("MusicalUp", "Z");
+			MusicLeftKey = RegisterHotKey("MusicalLeft", "X");
+			MusicDownKey = RegisterHotKey("MusicalDown", "N");
+			MusicRightKey = RegisterHotKey("MusicalRight", "M");
 
 			instance = this;
 

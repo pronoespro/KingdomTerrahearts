@@ -51,6 +51,13 @@ namespace KingdomTerrahearts.Items.Weapons
 			keybladeElement = keyType.destiny;
 			comboMax = 4;
 			keyComboType = KeyComboType.magic;
+			magic = keyMagic.reflect;
+			magicCost = 15;
+			keyTransformations = new keyTransformation[] { keyTransformation.staff };
+			transSprites = new string[] { "Items/Weapons/Keyblade_destiny" };
+			formChanges = new keyDriveForm[] { keyDriveForm.limit };
+			animationTimes = new int[] { 20, 20 };
+			guardType = blockingType.reflect;
 			keySummon = summonType.bambi;
 		}
 	}

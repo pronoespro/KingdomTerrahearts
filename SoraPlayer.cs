@@ -158,10 +158,48 @@ namespace KingdomTerrahearts
         public override void PlayerDisconnect(Player player)
         {
             inTwilightTown = false;
+
+            bool thereAreOtherPlayers = false;
+            for (int i = 0; i < Main.maxPlayers; i++)
+            {
+                if (Main.player[i].active && Main.player[i] != Main.LocalPlayer)
+                {
+                    thereAreOtherPlayers = true;
+                }
+            }
+
+            if (!thereAreOtherPlayers)
+            {
+                KingdomWorld kingdom = mod.GetModWorld(Main.worldName) as KingdomWorld;
+                kingdom.GoToMainDimension();
+            }
         }
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
+            /*
+            if (KingdomTerrahearts.MusicUpKey.JustPressed)
+            {
+                Main.NewText("up");
+                KingdomWorld kingdom= mod.GetModWorld("KingdomWorld")as KingdomWorld;
+                Main.NewText(Main.worldName);
+                kingdom.GoToSpace();
+            } else if (KingdomTerrahearts.MusicLeftKey.JustPressed)
+            {
+                Main.NewText("left");
+            }
+            else if (KingdomTerrahearts.MusicDownKey.JustPressed)
+            {
+                Main.NewText("down");
+                KingdomWorld kingdom = mod.GetModWorld("KingdomWorld") as KingdomWorld;
+                Main.NewText(Main.worldName);
+                kingdom.GoToMainDimension();
+            }
+            else if (KingdomTerrahearts.MusicRightKey.JustPressed)
+            {
+                Main.NewText("right");
+            }
+            */
 
             if (KingdomTerrahearts.PartySelectHotkey.JustPressed)
             {

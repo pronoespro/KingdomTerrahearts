@@ -39,12 +39,20 @@ namespace KingdomTerrahearts.Items.Weapons
 			formChanges = new keyDriveForm[] { keyDriveForm.second };
 			transSprites = new string[] { "Items/Weapons/Transformations/Keyblade_FinalXionDual", "Items/Weapons/Keyblade_destiny" };
 			animationTimes = new int[] { 10, 10, 15 };
+			keyLevel = 100;
 		}
 
 		public override void ChangeKeybladeValues()
 		{
 			keybladeElement = keyType.light;
 			comboMax = 6;
+			guardType = blockingType.normal;
+			projectileTime = 120;
+			magic = keyMagic.magnet;
+			keyTransformations = new keyTransformation[] { keyTransformation.dual };
+			formChanges = new keyDriveForm[] { keyDriveForm.second };
+			transSprites = new string[] { "Items/Weapons/Transformations/Keyblade_FinalXionDual", "Items/Weapons/Keyblade_destiny" };
+			animationTimes = new int[] { 10, 10, 15 };
 		}
 
 	}

@@ -44,6 +44,13 @@ namespace KingdomTerrahearts.Items.Weapons.Custom
 			keybladeElement = keyType.dark;
 			comboMax = 4;
 			keySummon = summonType.dumbo;
+			magic = keyMagic.wind;
+			projectileTime *= 5;
+			keyTransformations = new keyTransformation[] { keyTransformation.staff, keyTransformation.shield };
+			transSprites = new string[] { "Items/Weapons/Keyblade_demonite", "Items/Weapons/Keyblade_destiny" };
+			formChanges = new keyDriveForm[] { keyDriveForm.element };
+			animationTimes = new int[] { 7, 5, 10 };
+			keySummon = summonType.dumbo;
 		}
 
 	}

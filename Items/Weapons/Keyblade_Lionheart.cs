@@ -44,6 +44,13 @@ namespace KingdomTerrahearts.Items.Weapons
 			keybladeElement = keyType.fire;
 			comboMax = 4;
 			keySummon = summonType.mushu;
+			magic = keyMagic.fire;
+			keyTransformations = new keyTransformation[] { keyTransformation.guns, keyTransformation.cannon };
+			transSprites = new string[] { "Items/Weapons/Keyblade_oblivion", "Items/Weapons/Keyblade_oblivion" };
+			formChanges = new keyDriveForm[] { keyDriveForm.element, keyDriveForm.element };
+			animationTimes = new int[] { 20, 10, 15 };
+			projectileTime = 1000;
+			keySummon = summonType.mushu;
 		}
 
         public override void AddRecipes()

@@ -34,6 +34,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			item.autoReuse = true;
 
 			SaveAtributes();
+			keyLevel = 0;
 			guardType = blockingType.none;
 			canShootAgain = true;
 			keyTransformations = new keyTransformation[] { };
@@ -60,6 +61,9 @@ namespace KingdomTerrahearts.Items.Weapons
 			projectileTime = 10;
 			keyComboType = KeyComboType.normal;
 			keySummon = summonType.mushu;
+			keyTransformations = new keyTransformation[] { };
+			formChanges = new keyDriveForm[] { };
+			animationTimes = new int[] { 30 };
 		}
 	}
 }

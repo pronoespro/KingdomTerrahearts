@@ -198,7 +198,7 @@ namespace KingdomTerrahearts.Items.Weapons
 
 				wielder = player;
 
-				if ((curTransformation == -1 || ( keyTransformations[curTransformation] == keyTransformation.none)) && CommandLogic.instance.selectedCommand==0)
+				if ((curTransformation == -1 || (keyTransformations.Length>0 && keyTransformations[curTransformation] == keyTransformation.none)) && CommandLogic.instance.selectedCommand==0)
 				{
 					for (int i = 0; i < Main.projectile.Length; ++i)
 					{
@@ -211,7 +211,7 @@ namespace KingdomTerrahearts.Items.Weapons
 					}
 				}
 
-				if (animationTimes.Length > 0)
+				if (animationTimes.Length > 0 && keyTransformations.Length>0)
 				{
 					item.useTime =item.useAnimation= animationTimes[(curTransformation+1<keyTransformations.Length)?curTransformation+1:keyTransformations.Length-1];
 				}
@@ -272,7 +272,7 @@ namespace KingdomTerrahearts.Items.Weapons
 
 			item.mana = 0;
 
-			if (curTransformation == -1 || keyTransformations[curTransformation]==keyTransformation.none)
+			if (curTransformation == -1 || (keyTransformations.Length>0 && keyTransformations[curTransformation]==keyTransformation.none))
 			{
 				switch (combo)
 				{

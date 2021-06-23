@@ -57,6 +57,13 @@ namespace KingdomTerrahearts.Items.Weapons
 			comboMax = 4;
 			keySummon = summonType.genie;
 			projectileTime = 500;
+			magic = keyMagic.fire;
+			keyTransformations = new keyTransformation[] { keyTransformation.none, keyTransformation.dual };
+			transSprites = new string[] { "Items/Weapons/Keyblade_oblivion", "Items/Weapons/Transformations/Keyblade_dual" };
+			formChanges = new keyDriveForm[] { keyDriveForm.dark, keyDriveForm.dual };
+			animationTimes = new int[] { 15, 10, 8 };
+			keySummon = summonType.genie;
+			projectileTime = 500;
 		}
 	}
 }

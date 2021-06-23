@@ -63,7 +63,14 @@ namespace KingdomTerrahearts.Items.Weapons
 			keybladeElement = keyType.digital;
 			canShootAgain = false;
 			comboMax = 4;
+
 			projectileTime = 600;
+			magic = keyMagic.confuse;
+			magicCost = 3;
+			keyTransformations = new keyTransformation[] { keyTransformation.none };
+			formChanges = new keyDriveForm[] { keyDriveForm.wisdom };
+			transSprites = new string[] { "Items/Weapons/Keyblade_dualDisk" };
+			animationTimes = new int[] { 15, 12 };
 		}
 
 	}

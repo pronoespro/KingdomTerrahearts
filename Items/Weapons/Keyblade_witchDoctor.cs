@@ -47,6 +47,11 @@ namespace KingdomTerrahearts.Items.Weapons
 			keybladeElement = keyType.jungle;
 			comboMax = 4;
 			keySummon = summonType.simba;
+			keyTransformations = new keyTransformation[] { keyTransformation.yoyo };
+			transSprites = new string[] { "Items/Weapons/Keyblade_witchDoctor" };
+			formChanges = new keyDriveForm[] { keyDriveForm.strike };
+			animationTimes = new int[] { 24, 30 };
+			keySummon = summonType.simba;
 		}
 
 	}
