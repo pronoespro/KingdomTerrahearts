@@ -17,11 +17,11 @@ namespace KingdomTerrahearts.Items.Armor
 
 		public override void SetDefaults()
 		{
-			item.width = 18;
-			item.height = 18;
-			item.value = 10000;
-			item.rare = ItemRarityID.Green;
-			item.vanity = true;
+			Item.width = 18;
+			Item.height = 18;
+			Item.value = 10000;
+			Item.rare = ItemRarityID.Green;
+			Item.vanity = true;
 		}
 	}
 }

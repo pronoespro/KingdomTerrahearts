@@ -5,7 +5,11 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.DataStructures;
+using Terraria.GameContent.Bestiary;
 using Terraria.UI;
+using Terraria.ModLoader.Utilities;
+using Terraria.GameContent.ItemDropRules;
 
 namespace KingdomTerrahearts.NPCs
 {
@@ -24,40 +28,51 @@ namespace KingdomTerrahearts.NPCs
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Red Nocturne");
+
+            // Influences how the NPC looks in the Bestiary
+            NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new NPCID.Sets.NPCBestiaryDrawModifiers(0)
+            {
+                Velocity = 1f, // Draws the NPC in the bestiary as if its walking +1 tiles in the x direction
+                Direction = 1 // -1 is left and 1 is right. NPCs are drawn facing the left by default but ExamplePerson will be drawn facing the right
+                              // Rotation = MathHelper.ToRadians(180) // You can also change the rotation of an NPC. Rotation is measured in radians
+                              // If you want to see an example of manually modifying these when the NPC is drawn, see PreDraw
+            };
+
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
         }
 
         public override void SetDefaults()
         {
-            npc.lifeMax = 50;
-            npc.aiStyle = -1;
-            npc.scale = 0.65f;
-            npc.damage = 0;
-            npc.defense = 2;
-            npc.knockBackResist = 20f;
-            npc.width = 34;
-            npc.height = 70;
-            npc.value = 100;
-            npc.npcSlots = 0.1f;
-            npc.HitSound = SoundID.NPCHit4;
-            npc.DeathSound = SoundID.NPCDeath14;
-            npc.noGravity = true;
-            npc.noTileCollide = true;
+            NPC.lifeMax = 50;
+            NPC.aiStyle = -1;
+            NPC.scale = 0.65f;
+            NPC.damage = 0;
+            NPC.defense = 2;
+            NPC.knockBackResist = 20f;
+            NPC.width = 34;
+            NPC.height = 70;
+            NPC.value = 100;
+            NPC.npcSlots = 0.1f;
+            NPC.HitSound = SoundID.NPCHit4;
+            NPC.DeathSound = SoundID.NPCDeath14;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
             attackTimer = Main.rand.Next(15, 45);
         }
 
         public override void AI()
         {
-            npc.TargetClosest(true);
-            Player p = Main.player[npc.target];
+            NPC.TargetClosest(true);
+            Player p = Main.player[NPC.target];
 
-            float distToPlayer= Vector2.Distance(npc.Center, p.Center);
-            Vector2 pRelDist = p.Center - npc.Center;
+            float distToPlayer= Vector2.Distance(NPC.Center, p.Center);
+            Vector2 pRelDist = p.Center - NPC.Center;
 
             if (hitRotation > 0)
             {
-                npc.rotation = hitRotation / rotationSpeed;
+                NPC.rotation = hitRotation / rotationSpeed;
                 hitRotation--;
-                npc.velocity *= speedReduction;
+                NPC.velocity *= speedReduction;
             }
             else
             {
@@ -66,18 +81,21 @@ namespace KingdomTerrahearts.NPCs
                     attackTimer--;
                     if (attackTimer > 0)
                     {
-                        npc.rotation = (float)(Math.Sin(Main.time / 10) / 6);
-                        npc.velocity *= speedReduction;
+                        NPC.rotation = (float)(Math.Sin(Main.time / 10) / 6);
+                        NPC.velocity *= speedReduction;
                     }
                     else if (attackTimer > -100/((Main.expertMode)?4:1))
                     {
-                        npc.rotation = (float)(Math.Sin(Main.time / 2) / 6);
-                        npc.velocity *= speedReduction;
+                        NPC.rotation = (float)(Math.Sin(Main.time / 2) / 6);
+                        NPC.velocity *= speedReduction;
                     }
                     else
                     {
+
+                        ProjectileSource_NPC s = new ProjectileSource_NPC(NPC);
+
                         pRelDist = MathHelp.Normalize(pRelDist) * speed/4;
-                        int proj=Projectile.NewProjectile(npc.Center, pRelDist, ProjectileID.Fireball, 10,1) ;
+                        int proj=Projectile.NewProjectile(s,NPC.Center, pRelDist, ProjectileID.Fireball, 10,1) ;
                         Main.projectile[proj].scale = 0.25f;
                         Main.projectile[proj].tileCollide =!Main.expertMode;
                         Main.projectile[proj].timeLeft =100*((Main.expertMode)?2:1);
@@ -86,24 +104,26 @@ namespace KingdomTerrahearts.NPCs
                 }
                 else
                 {
-                    npc.velocity = MathHelp.Normalize(p.Center - npc.Center) * speed;
+                    NPC.velocity = MathHelp.Normalize(p.Center - NPC.Center) * speed;
                 }
             }
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return SpawnCondition.Underworld.Chance+SpawnCondition.SolarTower.Chance;
+            return SpawnCondition.Underworld.Chance/2+SpawnCondition.SolarTower.Chance;
         }
 
-        public override void NPCLoot()
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            Random r = new Random();
-            if (r.Next(5) <= 3)
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.blazingShard>(),5,1,6));
+
+            if (Main.player[NPC.target].Center.Y > Main.UnderworldLayer)
             {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("blazingShard"), Main.rand.Next(5) + 1);
+                npcLoot.Add(ItemDropRule.Common(ItemID.Hellstone,1,1,5));
             }
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Hellstone, Main.rand.Next(3)+1);
+
+
         }
 
         public override void HitEffect(int hitDirection, double damage)

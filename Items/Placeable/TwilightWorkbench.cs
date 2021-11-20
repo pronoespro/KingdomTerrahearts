@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,29 +12,29 @@ namespace KingdomTerrahearts.Items.Placeable
 		{
 			DisplayName.SetDefault("Twiligth Night Table");
 			Tooltip.SetDefault("Night Table that you can use as a workbench.");
+			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 28;
-			item.height = 14;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = 1;
-			item.consumable = true;
-			item.value = 150;
-			item.createTile=mod.TileType("TwilightWorkbench");
+			Item.width = 28;
+			Item.height = 14;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = 1;
+			Item.consumable = true;
+			Item.value = 150;
+			Item.createTile=ModContent.TileType<Tiles.TwilightWorkbench>();
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("twilightBlock"), 10);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe()
+			.AddIngredient(ModContent.ItemType<Placeable.twilightBlock>(), 10)
+			.Register();
 		}
 
 	}

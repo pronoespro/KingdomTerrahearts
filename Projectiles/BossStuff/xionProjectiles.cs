@@ -21,14 +21,14 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
 
         public override void SetDefaults()
         {
-            projectile.width = 331;
-            projectile.height = 461;
-            projectile.scale = 1;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.light = 0.75f;
-            projectile.timeLeft = 250;
-            projectile.ignoreWater = true;
+            Projectile.width = 331;
+            Projectile.height = 461;
+            Projectile.scale = 1;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.light = 0.75f;
+            Projectile.timeLeft = 250;
+            Projectile.ignoreWater = true;
         }
 
     }
@@ -40,33 +40,32 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Xion's Keyblade");
-            Main.projFrames[projectile.type] = 4;
-            ProjectileID.Sets.DontAttachHideToAlpha[projectile.type] = true;
+            Main.projFrames[Projectile.type] = 4;
+            ProjectileID.Sets.DontAttachHideToAlpha[Projectile.type] = true;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 686;
-            projectile.height = 243;
-            projectile.scale = 1;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.timeLeft = 250;
-            projectile.ignoreWater = true;
-            projectile.hide = true;
-            projectile.light = 1;
+            Projectile.width = 686;
+            Projectile.height = 243;
+            Projectile.scale = 1;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 250;
+            Projectile.ignoreWater = true;
+            Projectile.hide = true;
+            Projectile.light = 1;
         }
 
         public override void AI()
         {
-            projectile.frame = (int)projectile.ai[0]+1;
+            Projectile.frame = (int)Projectile.ai[0]+1;
         }
 
-        public override void DrawBehind(int index, List<int> drawCacheProjsBehindNPCsAndTiles, List<int> drawCacheProjsBehindNPCs, List<int> drawCacheProjsBehindProjectiles, List<int> drawCacheProjsOverWiresUI)
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
         {
-            drawCacheProjsBehindNPCsAndTiles.Add(index);
+            behindNPCsAndTiles.Add(index);
         }
-
     }
 
     public class xion_finalPhase_lightBeam : ModProjectile
@@ -78,15 +77,15 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
 
         public override void SetDefaults()
         {
-            projectile.width = 450;
-            projectile.height = 10;
-            projectile.scale = 1;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.timeLeft = 200;
-            projectile.ignoreWater = true;
-            projectile.light = 1;
-            //projectile.hide = true;
+            Projectile.width = 450;
+            Projectile.height = 10;
+            Projectile.scale = 1;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 200;
+            Projectile.ignoreWater = true;
+            Projectile.light = 1;
+            //Projectile.hide = true;
         }
 
         public override void AI()
@@ -94,17 +93,17 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
 
             for(int i = 0; i < 50; i++)
             {
-                Dust.NewDust(projectile.position, projectile.width, projectile.height * 100, DustID.GoldCoin);
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height * 100, DustID.GoldCoin);
             }
 
-            if (projectile.timeLeft > 50 && projectile.timeLeft < 150)
+            if (Projectile.timeLeft > 50 && Projectile.timeLeft < 150)
             {
 
                 for (int i = 0; i < Main.maxPlayers; i++)
                 {
-                    if (Main.player[i].active && Main.player[i].Center.X > projectile.position.X && Main.player[i].Center.X < projectile.Center.X + projectile.width/2f)
+                    if (Main.player[i].active && Main.player[i].Center.X > Projectile.position.X && Main.player[i].Center.X < Projectile.Center.X + Projectile.width/2f)
                     {
-                        Main.player[i].Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Main.player[i].name + " saw the light."), projectile.damage, 0);
+                        Main.player[i].Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Main.player[i].name + " saw the light."), Projectile.damage, 0);
                     }
                 }
 
@@ -112,15 +111,14 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
 
         }
 
-        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        public override bool PreDraw(ref Color lightColor)
         {
-            Vector2 originalPos = new Vector2(projectile.position.X - Main.screenPosition.X, projectile.position.Y-Main.screenPosition.Y);
-            for(int i =  100-projectile.timeLeft *4 ; i < Math.Min(800-projectile.timeLeft* 4,100) ; i++)
+            Vector2 originalPos = new Vector2(Projectile.position.X - Main.screenPosition.X, Projectile.position.Y - Main.screenPosition.Y);
+            for (int i = 100 - Projectile.timeLeft * 4; i < Math.Min(800 - Projectile.timeLeft * 4, 100); i++)
             {
                 Color c = new Color(255f, 255f, 255f, 0f);
-                spriteBatch.Draw(mod.GetTexture("Projectiles/BossStuff/xion_finalPhase_lightBeam"), originalPos + new Vector2(0, 10 * i), c);
+                Main.spriteBatch.Draw((Texture2D)ModContent.Request<Texture2D>("KingdomTerrahearts/Projectiles/BossStuff/xion_finalPhase_lightBeam"), originalPos + new Vector2(0, 10 * i), c);
             }
-
             return false;
         }
 

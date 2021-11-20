@@ -12,16 +12,16 @@ namespace KingdomTerrahearts.Items.Materials
         {
             DisplayName.SetDefault("Orichalchum");
             Tooltip.SetDefault("A rare and most valuable ore" +
-                "\nUsed for item synthesis");
+                "\nUsed for Item synthesis");
         }
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.rare = ItemRarityID.Quest;
-            item.value = 2000000;
-            item.maxStack = 999;
+            Item.width = 20;
+            Item.height = 20;
+            Item.rare = ItemRarityID.Quest;
+            Item.value = 2000000;
+            Item.maxStack = 999;
         }
     }
 }

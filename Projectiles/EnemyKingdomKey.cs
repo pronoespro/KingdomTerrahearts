@@ -17,19 +17,19 @@ namespace KingdomTerrahearts.Projectiles
 
         public override void SetDefaults()
         {
-            projectile.width = 80;
-            projectile.height = 80;
-            projectile.scale = 0.5f;
-            projectile.friendly = false;
-            projectile.hostile = true;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.light = 0.75f;
+            Projectile.width = 80;
+            Projectile.height = 80;
+            Projectile.scale = 0.5f;
+            Projectile.friendly = false;
+            Projectile.hostile = true;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.light = 0.75f;
         }
 
         public override void AI()
         {
-            projectile.rotation += MathHelp.DegreeToQuat(90);
+            Projectile.rotation += MathHelp.DegreeToQuat(90);
         }
 
     }

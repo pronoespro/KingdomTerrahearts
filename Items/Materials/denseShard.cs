@@ -12,16 +12,16 @@ namespace KingdomTerrahearts.Items.Materials
         {
             DisplayName.SetDefault("Dense Shard");
             Tooltip.SetDefault("A gem fragment filled with constriction" +
-                "\nA very common ingredient of item synthesis");
+                "\nA very common ingredient of Item synthesis");
         }
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.rare = ItemRarityID.Blue;
-            item.value = 200;
-            item.maxStack = 999;
+            Item.width = 20;
+            Item.height = 20;
+            Item.rare = ItemRarityID.Blue;
+            Item.value = 200;
+            Item.maxStack = 999;
         }
     }
 }

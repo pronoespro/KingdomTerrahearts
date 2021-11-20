@@ -1,6 +1,7 @@
 ﻿using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 using Terraria.ID;
+using Terraria.GameContent.Creative;
 
 namespace KingdomTerrahearts.Items.Placeable
 {
@@ -12,28 +13,28 @@ namespace KingdomTerrahearts.Items.Placeable
 			Tooltip.SetDefault("A pice of a town far away" +
 				"\nThe town is fine, this is just a lost fragment nobody cared about" +
 	"\nThat nobody being Roxas");
+			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 12;
-			item.height = 12;
-			item.maxStack = 999;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 7;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.consumable = true;
-			item.createWall = mod.WallType("TwilightWall");
+			Item.width = 12;
+			Item.height = 12;
+			Item.maxStack = 999;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 7;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.consumable = true;
+			Item.createWall = ModContent.WallType<Walls.TwilightWall>();
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("twilightBlock"));
-			recipe.SetResult(this, 4);
-			recipe.AddRecipe();
+			CreateRecipe(4)
+			.AddIngredient(ModContent.ItemType<Placeable.twilightBlock>())
+			.Register();
 		}
 	}
 }

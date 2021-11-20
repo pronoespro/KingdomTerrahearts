@@ -1,134 +1,109 @@
-﻿using Microsoft.Xna.Framework;
+﻿using KingdomTerrahearts.Extra;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Projectiles
 {
-    class athleticFlowShotLock : ModProjectile
+    public class athleticFlowShotLock : ModProjectile
     {
 
-        int level=1;
+        List<int> targetsLocked;
+        int curTarget;
+        Vector2 originalPos;
 
         public override void SetStaticDefaults()
         {
-            projectile.CloneDefaults(ProjectileID.GemHookAmethyst);
+            DisplayName.SetDefault("Shotlock");
+            Main.projHook[Type] = true;
         }
 
         public override void SetDefaults()
         {
-            projectile.netImportant = true;
-            projectile.width = 18;
-            projectile.height = 18;
-            projectile.aiStyle = 7;
-            projectile.friendly = true;
-            projectile.penetrate = 1;
-            projectile.damage = 1;
-            projectile.tileCollide = false;
-            projectile.timeLeft *= 10;
+            Projectile.netImportant = true;
+            Projectile.width =200;
+            Projectile.height = 200;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.timeLeft = 25;
+            Projectile.light = 1;
+            targetsLocked = new List<int>();
         }
 
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        public override void AI()
         {
-            Main.NewText("Ouch");
-        }
+            if (Projectile.ai[0] == 0) { Projectile.ai[0] = MathHelp.Magnitude(Projectile.velocity); }
 
-        public override bool? CanUseGrapple(Player player)
-        {
+            Player p = Main.player[Projectile.owner];
+            SoraPlayer sp = p.GetModPlayer<SoraPlayer>();
 
-            Vector2 velNorm = Main.MouseWorld - player.position;
-            velNorm.Normalize();
 
-            SoraPlayer sp = Main.player[projectile.owner].GetModPlayer<SoraPlayer>();
-            level = sp.CheckPlayerLevel()+1;
 
-            if (Math.Abs(velNorm.Y) > 0.3f && level<5)
+            Projectile.velocity = MathHelp.Normalize(Projectile.velocity) * (Projectile.ai[0]+(sp.CheckPlayerLevel()/2f));
+
+            Projectile.scale = 0.25f + (sp.CheckPlayerLevel() / 20f);
+
+            if (Projectile.timeLeft>targetsLocked.Count*5)
             {
-                return false;
-            }
 
-            int hookOut = 0;
-            for (int i=0; i < 1000; i++){
-
-                if(Main.projectile[i].active && Main.projectile[i].owner==Main.myPlayer && Main.projectile[i].type == projectile.type)
+                for (int i = 0; i < Main.maxNPCs; i++)
                 {
-                    hookOut++;
+                    if (Main.npc[i].active && KingdomTerrahearts.instance.IsEnemy(i) && !targetsLocked.Contains(i) && IsInDistance(i))
+                    {
+                        targetsLocked.Add(i);
+                    }
                 }
 
             }
-            if (hookOut != 0)
+            else
             {
-                return false;
-            }
+                sp.SetContactinvulnerability(15);
 
-            return true;
-        }
-
-        public override float GrappleRange()
-        {
-            return 150+(level*100);
-        }
-
-        public override void NumGrappleHooks(Player player, ref int numHooks)
-        {
-            numHooks = 1;
-        }
-
-        public override void GrappleRetreatSpeed(Player player, ref float speed)
-        {
-            speed = 60*level;
-        }
-
-        public override void GrapplePullSpeed(Player player, ref float speed)
-        {
-            speed = 40*level;
-        }
-
-        public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
-        {
-
-            spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Immediate,BlendState.AlphaBlend,SamplerState.LinearClamp,DepthStencilState.Default,RasterizerState.CullNone,null,Main.GameViewMatrix.ZoomMatrix);
-
-            Texture2D texture = ModContent.GetTexture("KingdomTerrahearts/Projectiles/athleticFlowShotLock_chain");
-            Vector2 position = projectile.Center;
-            Vector2 mountedCenter = Main.player[projectile.owner].MountedCenter;
-
-            Rectangle? sourceRectangle = new Rectangle?();
-            Vector2 origin = new Vector2((float)texture.Width / 2f, (float)texture.Height / 2f);
-            float num1 = (float)texture.Height;
-            
-            Vector2 vector2_4 = mountedCenter - position;
-            float rotation = (float)Math.Atan2((double)vector2_4.Y, (double)vector2_4.X)-1.57f;
-            bool flag = true;
-            if((float.IsNaN(position.X)&& float.IsNaN(position.Y))|| (float.IsNaN(vector2_4.X)&&float.IsNaN(vector2_4.Y)))
-            {
-                flag= false;
-            }
-            while (flag)
-            {
-                if ((double)vector2_4.Length() < (double)num1 + 1.0)
+                if (originalPos == Vector2.Zero)
                 {
-                    flag = false;
+                    originalPos = p.Center;
                 }
-                else
+
+                if (++Projectile.ai[1] > 5)
                 {
-                    Vector2 vector2_1 = vector2_4;
-                    vector2_1.Normalize();
-                    position += vector2_1 * num1;
-                    vector2_4 = mountedCenter - position;
-                    Color color2 = Lighting.GetColor((int)(position.X / 16), (int)((double)position.Y / 16.0));
-                    color2 = projectile.GetAlpha(color2);
-                    Main.spriteBatch.Draw(texture, position - Main.screenPosition, sourceRectangle, color2, rotation, origin, 1f, SpriteEffects.None, 0);
+                    curTarget++;
+                    originalPos = p.Center;
+                }
+
+                if (targetsLocked.Count > 0 && curTarget<targetsLocked.Count)
+                {
+                    p.Center =Vector2.Lerp(originalPos, Main.npc[targetsLocked[curTarget]].Center,Math.Clamp(Projectile.ai[1]/4f,0,1));
+                    p.velocity = Vector2.Zero;
+                    p.gravity = 0;
                 }
             }
-
         }
-        public override bool PreDrawExtras(SpriteBatch spriteBatch)
+
+        public bool IsInDistance(int npc)
+        {
+            int minDistance =(int)(Projectile.width*Projectile.scale + (Main.npc[npc].width + Main.npc[npc].height) / 2f);
+           return Vector2.Distance(Main.npc[npc].Center, Projectile.Center) < minDistance;
+        }
+
+        public override bool? CanCutTiles()
         {
             return false;
+        }
+
+        public override void PostDraw(Color lightColor)
+        {
+            foreach(int target in targetsLocked)
+            {
+                Texture2D tex = ModContent.Request<Texture2D>("KingdomTerrahearts/Projectiles/athleticFlowShotLock_target").Value;
+                Main.spriteBatch.Draw(tex,Main.npc[target].Center-new Vector2(tex.Width/2,tex.Height/2)-Main.screenPosition,lightColor);
+            }
         }
 
     }

@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
+using Terraria.GameContent.Creative;
 
 namespace KingdomTerrahearts.Items
 {
@@ -12,29 +13,29 @@ namespace KingdomTerrahearts.Items
             DisplayName.SetDefault("Rail Slide Ability");
             Tooltip.SetDefault("An ability that allows you to use the Rail Slide ability" +
                 "\nFly through the sky");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 24;
-            item.height = 24;
-            item.useTime = 20;
-            item.useAnimation = 20;
-            item.useStyle = ItemUseStyleID.SwingThrow;
-            item.value = 100;
-            item.rare = ItemRarityID.Pink;
-            item.UseSound = SoundID.Item79;
-            item.noMelee = true;
-            item.mountType = mod.MountType("FlowmotionPath");
+            Item.width = 24;
+            Item.height = 24;
+            Item.useTime = 20;
+            Item.useAnimation = 20;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.value = 100;
+            Item.rare = ItemRarityID.Pink;
+            Item.UseSound = SoundID.Item79;
+            Item.noMelee = true;
+            Item.mountType = ModContent.MountType<Mounts.FlowmotionPath>();
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.FallenStar, 3);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe()
+            .AddIngredient(ItemID.FallenStar, 3)
+            .AddTile(TileID.WorkBenches)
+            .Register();
         }
 
     }

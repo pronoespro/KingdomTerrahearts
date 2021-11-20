@@ -1,0 +1,5 @@
+C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Beta\Mod Sources\KingdomTerrahearts\obj\Debug\net5.0\KingdomTerrahearts.csproj.AssemblyReference.cache
+C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Beta\Mod Sources\KingdomTerrahearts\obj\Debug\net5.0\KingdomTerrahearts.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Beta\Mod Sources\KingdomTerrahearts\obj\Debug\net5.0\KingdomTerrahearts.AssemblyInfoInputs.cache
+C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Beta\Mod Sources\KingdomTerrahearts\obj\Debug\net5.0\KingdomTerrahearts.AssemblyInfo.cs
+C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Beta\Mod Sources\KingdomTerrahearts\obj\Debug\net5.0\KingdomTerrahearts.csproj.CoreCompileInputs.cache

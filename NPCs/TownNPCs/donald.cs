@@ -18,14 +18,14 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Royal Magician");
-            Main.npcFrameCount[npc.type] = 26;
+            Main.npcFrameCount[NPC.type] = 26;
         }
 
         public override void SetDefaults()
         {
-            animationType = NPCID.Guide;
-            npc.townNPC = true;
-            npc.CloneDefaults(NPCID.Guide);
+            AnimationType = NPCID.Guide;
+            NPC.townNPC = true;
+            NPC.CloneDefaults(NPCID.Guide);
         }
 
         public override bool CanTownNPCSpawn(int numTownNPCs, int money)
@@ -35,12 +35,12 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return (spawnInfo.playerInTown && !NPC.AnyNPCs(npc.type)) ? 10 : 0;
+            return (spawnInfo.playerInTown && !NPC.AnyNPCs(NPC.type)) ? 10 : 0;
         }
 
         public override void FindFrame(int frameHeight)
         {
-            npc.spriteDirection = npc.direction;
+            NPC.spriteDirection = NPC.direction;
         }
 
         public override void AI()
@@ -60,12 +60,12 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
 
             if (!firstTalked)
             {
-                dialogOptions.Add("Hello! I'm "+npc.FullName+"!");
+                dialogOptions.Add("Hello! I'm "+NPC.FullName+"!");
                 firstTalked = true;
             }
             else
             {
-                if (NPC.AnyNPCs(mod.NPCType("goofy")))
+                if (NPC.AnyNPCs(ModContent.NPCType<goofy>()))
                 {
                     dialogOptions.Add("Goofy is the shield and I am the wand that will hit you in the head!");
                 }

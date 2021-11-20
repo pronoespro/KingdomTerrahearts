@@ -3,9 +3,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
 using Terraria.GameInput;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -25,8 +27,8 @@ namespace KingdomTerrahearts.Interface
             Item = new Item();
             Item.SetDefaults(0);
 
-            Width.Set(Main.inventoryBack9Texture.Width * scale, 0f);
-            Height.Set(Main.inventoryBack9Texture.Height * scale, 0f);
+            Width.Set(Terraria.GameContent.TextureAssets.InventoryBack.Width() * scale, 0f);
+            Height.Set(Terraria.GameContent.TextureAssets.InventoryBack.Height() * scale, 0f);
         }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -58,27 +60,60 @@ namespace KingdomTerrahearts.Interface
         UIItemSlot item;
         UIText text;
 
+
+        const int slotX = 50;
+        const int slotY = 270;
+
         public override void OnInitialize()
         {
+
+            UIPanel panel = new UIPanel();
+            panel.Width.Set(150, 0);
+            panel.Height.Set(150, 0);
+            panel.HAlign = 0.5f;
+            panel.VAlign = 0.5f;
+            Append(panel);
+
             item = new UIItemSlot();
             item.HAlign = item.VAlign = 0.5f;
             Append(item);
 
-            UIImageButton itemResetButton = new UIImageButton(ModContent.GetTexture("Terraria/UI/ButtonFavoriteActive"));
-            itemResetButton.Width.Set(100, 0);
-            itemResetButton.Height.Set(100, 0);
-            itemResetButton.HAlign = 0.56f;
-            itemResetButton.VAlign = 0.54f;
-            itemResetButton.OnClick += new MouseEvent(LevelUpKeyblade);
-            Append(itemResetButton);
 
         }
 
         public override void Update(GameTime gameTime)
         {
-            Keyblade keyblade = (Keyblade)item.Item.modItem;
+
+            if (Main.LocalPlayer.talkNPC!= -1)
+            {
+                KingdomTerrahearts.instance.HideLevelUpUI();
+            }
+
+            if (item != null) {
+                KeybladeBase keyblade = (KeybladeBase)item.Item.ModItem;
+
+                if (keyblade==null)
+                {
+                    // QuickSpawnClonedItem will preserve mod data of the item. QuickSpawnItem will just spawn a fresh version of the item, losing the prefix.
+                    Main.LocalPlayer.QuickSpawnClonedItem(item.Item, item.Item.stack);
+                    // Now that we've spawned the item back onto the player, we reset the item by turning it into air.
+                    item.Item.TurnToAir();
+                }
+            }
+        }
+
+        private bool tickPlayed;
+
+        protected override void DrawSelf(SpriteBatch spriteBatch)
+        {
+
+            Main.hidePlayerCraftingMenu = true;
+
+            KeybladeBase keyblade = (KeybladeBase)item.Item.ModItem;
             if (keyblade != null)
             {
+
+
                 if (text == null)
                 {
                     text = new UIText("Keyblade level: " + (keyblade.keyLevel).ToString());
@@ -90,6 +125,34 @@ namespace KingdomTerrahearts.Interface
                 {
                     text.SetText("Keyblade level: " + (keyblade.keyLevel).ToString());
                 }
+
+
+                bool hoveringOnLevelButton = Main.mouseX > slotX && Main.mouseX < slotX && Main.mouseY > slotY && Main.mouseY > slotY && !PlayerInput.IgnoreMouseInterface;
+
+                if (hoveringOnLevelButton)
+                {
+                    if (!tickPlayed)
+                    {
+                        SoundEngine.PlaySound(SoundID.MenuTick, -1, -1, 1, 1f, 0f);
+                    }
+                    tickPlayed = true;
+
+
+                    if (Main.mouseLeftRelease && Main.mouseLeft)
+                    {
+
+                        if (keyblade.keyLevel < 10000)
+                        {
+                            keyblade.keyLevel++;
+                            SoundEngine.PlaySound(SoundID.Item37, -1, -1);
+                        }
+                    }
+                }
+
+
+
+
+
             }
             else
             {
@@ -102,21 +165,15 @@ namespace KingdomTerrahearts.Interface
             }
         }
 
-        void LevelUpKeyblade(UIMouseEvent evt, UIElement listeningElement)
+        public override void OnDeactivate()
         {
-            ModItem keybladeItem=item.Item.modItem;
-
-            if (keybladeItem.GetType().Name.Contains("Keyblade_"))
+            if (!item.Item.IsAir)
             {
-                Keyblade keyblade = keybladeItem as Keyblade;
-                if (keyblade.keyLevel < 10)
-                    keyblade.keyLevel++;
+                // QuickSpawnClonedItem will preserve mod data of the item. QuickSpawnItem will just spawn a fresh version of the item, losing the prefix.
+                Main.LocalPlayer.QuickSpawnClonedItem(item.Item, item.Item.stack);
+                // Now that we've spawned the item back onto the player, we reset the item by turning it into air.
+                item.Item.TurnToAir();
             }
-        }
-
-        void Destroy()
-        {
-            item = null;
         }
 
     }

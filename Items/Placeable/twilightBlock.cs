@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -14,30 +15,30 @@ namespace KingdomTerrahearts.Items.Placeable
 			Tooltip.SetDefault("A pice of a town far away" +
 				"\nThe town is fine, this is just a lost fragment nobody cared about" +
 	"\nThat nobody being Roxas");
+			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 100;
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 12;
-			item.height = 12;
-			item.maxStack = 999;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = 1;
-			item.consumable = true;
-			item.createTile = mod.TileType("twilightTownBlock");
+			Item.width = 12;
+			Item.height = 12;
+			Item.maxStack = 999;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = 1;
+			Item.consumable = true;
+			Item.createTile = ModContent.TileType<Tiles.twilightTownBlock>();
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.GrayBrick, 10);
-			recipe.AddIngredient(mod.ItemType("twilightShard"));
-			recipe.AddTile(TileID.Furnaces);
-			recipe.SetResult(this, 99);
-			recipe.AddRecipe();
+			CreateRecipe(99)
+			.AddIngredient(ItemID.GrayBrick, 10)
+			.AddIngredient(ModContent.ItemType<Materials.twilightShard>())
+			.AddTile(TileID.Furnaces)
+			.Register();
 		}
 
 	}

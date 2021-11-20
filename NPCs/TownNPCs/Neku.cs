@@ -18,14 +18,14 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Player");
-            Main.npcFrameCount[npc.type] = 26;
+            Main.npcFrameCount[NPC.type] = 26;
         }
 
         public override void SetDefaults()
         {
-            animationType = NPCID.Guide;
-            npc.townNPC = true;
-            npc.CloneDefaults(NPCID.Guide);
+            AnimationType = NPCID.Guide;
+            NPC.townNPC = true;
+            NPC.CloneDefaults(NPCID.Guide);
         }
 
         public override bool CanTownNPCSpawn(int numTownNPCs, int money)
@@ -35,12 +35,12 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return (spawnInfo.playerInTown && !NPC.AnyNPCs(npc.type)) ? 10 : 0;
+            return (spawnInfo.playerInTown && !NPC.AnyNPCs(NPC.type)) ? 10 : 0;
         }
 
         public override void FindFrame(int frameHeight)
         {
-            npc.spriteDirection = npc.direction;
+            NPC.spriteDirection = NPC.direction;
         }
 
         public override void AI()
@@ -102,26 +102,32 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
         {
             if (NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3)
             {
-                shop.item[nextSlot].SetDefaults(mod.ItemType("quickRun"));
+                shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.quickRun>());
                 nextSlot++;
-                shop.item[nextSlot].SetDefaults(mod.ItemType("Heal"));
+                shop.item[nextSlot].SetDefaults(ModContent.ItemType < Items.Heal>());
                 nextSlot++;
-                shop.item[nextSlot].SetDefaults(mod.ItemType("doubleJump"));
+                shop.item[nextSlot].SetDefaults(ModContent.ItemType < Items.doubleJump>());
                 nextSlot++;
                 if (NPC.downedBoss1 && NPC.downedBoss2 && NPC.downedBoss3)
                 {
-                    shop.item[nextSlot].SetDefaults(mod.ItemType("glide"));
+                    shop.item[nextSlot].SetDefaults(ModContent.ItemType < Items.glide>());
                     nextSlot++;
-                    shop.item[nextSlot].SetDefaults(mod.ItemType("secondChance"));
+                    shop.item[nextSlot].SetDefaults(ModContent.ItemType < Items.secondChance>());
                     nextSlot++;
                     if (Main.hardMode)
                     {
-                        shop.item[nextSlot].SetDefaults(mod.ItemType("MaxMobility"));
+                        shop.item[nextSlot].SetDefaults(ModContent.ItemType < Items.MaxMobility>());
                         nextSlot++;
-                        if (NPC.downedMoonlord)
+
+                        if (NPC.downedPlantBoss)
                         {
-                            shop.item[nextSlot].SetDefaults(mod.ItemType("Invincible"));
+                            shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.WielderSoul>());
                             nextSlot++;
+                            if (NPC.downedMoonlord)
+                            {
+                                shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.Invincible>());
+                                nextSlot++;
+                            }
                         }
                     }
                 }

@@ -17,12 +17,12 @@ namespace KingdomTerrahearts.Projectiles.Weapons
 
         public override void SetDefaults()
         {
-            projectile.width = projectile.height=30;
-            projectile.timeLeft = 70;
-            projectile.aiStyle = -1;
-            projectile.friendly = true;
-            projectile.penetrate = 5;
-            projectile.light = 0.5f;
+            Projectile.width = Projectile.height=30;
+            Projectile.timeLeft = 70;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.penetrate = 5;
+            Projectile.light = 0.5f;
 
             fireTime = 240;
         }

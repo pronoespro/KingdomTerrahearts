@@ -9,18 +9,18 @@ using Terraria.GameContent.Generation;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 namespace KingdomTerrahearts.Walls
 {
     class TwilightWall:ModWall
     {
 
-		public override void SetDefaults()
+        public override void SetStaticDefaults()
 		{
 			Main.wallHouse[Type] = true;
-			dustType = DustID.t_Honey;
-			drop = mod.ItemType("TwilightWall");
+			DustType= DustID.t_Honey;
+			ItemDrop = ModContent.ItemType<Items.Placeable.TwilightWall>();
 			AddMapEntry(new Color(205, 105, 0));
 		}
 

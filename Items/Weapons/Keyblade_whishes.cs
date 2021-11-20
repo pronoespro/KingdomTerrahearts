@@ -4,35 +4,36 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items.Weapons
 {
-    class Keyblade_whishes : Keyblade
+    class Keyblade_whishes : KeybladeBase
 	{
 
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Three wishes");
 			Tooltip.SetDefault("Its powers will bring you great treasure");
+			base.SetStaticDefaults();
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 70;
-			item.melee = true;
-			item.width = item.height = 50;
-			item.scale = 0.85f;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.holdStyle = 4;
-			item.knockBack = 3;
-			item.value = 100;
-			item.rare = ItemRarityID.Green;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
-			item.useAnimation = item.useTime = 15;
+			base.SetDefaults();
+			Item.damage = 70;
+			Item.width = Item.height = 50;
+			Item.scale = 0.85f;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.holdStyle = 4;
+			Item.knockBack = 3;
+			Item.value = 100;
+			Item.rare = ItemRarityID.Green;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
+			Item.useAnimation = Item.useTime = 15;
 
 			SaveAtributes();
 			magic = keyMagic.fire;
-			keyTransformations = new keyTransformation[] { keyTransformation.none, keyTransformation.dual };
-			transSprites = new string[] { "Items/Weapons/Keyblade_oblivion", "Items/Weapons/Transformations/Keyblade_dual" };
-			formChanges = new keyDriveForm[] { keyDriveForm.dark, keyDriveForm.dual };
+			keyTransformations = new keyTransformation[] { keyTransformation.cannon, keyTransformation.staff};
+			transSprites = new string[] { "Items/Weapons/Transformations/Lamp_Cannon", "Items/Weapons/Transformations/Lamp_Staff" };
+			formChanges = new keyDriveForm[] { keyDriveForm.element, keyDriveForm.wisdom};
 			animationTimes = new int[] { 15, 10, 8 };
 			keyLevel = 1;
 			keySummon = summonType.genie;
@@ -41,13 +42,12 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.DjinnLamp);
-			recipe.AddIngredient(ItemID.GoldCoin,20);
-			recipe.AddIngredient(ItemID.Shackle);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe()
+			.AddIngredient(ItemID.DjinnLamp)
+			.AddIngredient(ItemID.GoldCoin,20)
+			.AddIngredient(ItemID.Shackle)
+			.AddTile(TileID.Anvils)
+			.Register();
 
 		}
 
@@ -58,8 +58,8 @@ namespace KingdomTerrahearts.Items.Weapons
 			keySummon = summonType.genie;
 			projectileTime = 500;
 			magic = keyMagic.fire;
-			keyTransformations = new keyTransformation[] { keyTransformation.none, keyTransformation.dual };
-			transSprites = new string[] { "Items/Weapons/Keyblade_oblivion", "Items/Weapons/Transformations/Keyblade_dual" };
+			keyTransformations = new keyTransformation[] { keyTransformation.cannon, keyTransformation.staff };
+			transSprites = new string[] { "Items/Weapons/Transformations/Lamp_Cannon", "Items/Weapons/Transformations/Lamp_Staff" };
 			formChanges = new keyDriveForm[] { keyDriveForm.dark, keyDriveForm.dual };
 			animationTimes = new int[] { 15, 10, 8 };
 			keySummon = summonType.genie;

@@ -25,16 +25,16 @@ namespace KingdomTerrahearts.NPCs
         public override void AI()
         {
 
-            npc.TargetClosest(false);
-            Player p = Main.player[npc.target];
+            NPC.TargetClosest(false);
+            Player p = Main.player[NPC.target];
 
-            npc.immortal = false;
+            NPC.immortal = false;
 
-            Vector2 moveTo = p.Center - npc.Center;
+            Vector2 moveTo = p.Center - NPC.Center;
 
-            if (npc.wet)
+            if (NPC.wet)
             {
-                npc.velocity.Y = -jumpForce;
+                NPC.velocity.Y = -jumpForce;
             }
 
             if (followPlayers)
@@ -43,14 +43,14 @@ namespace KingdomTerrahearts.NPCs
                 desiredVel += Math.Sign(moveTo.X) * 0.5f;
                 desiredVel = (Math.Abs(desiredVel) > maxVel / 5) ? Math.Sign(desiredVel) * maxVel / 5 : desiredVel;
 
-                npc.velocity.X += desiredVel;
-                if (Math.Abs(npc.velocity.X) > maxVel) npc.velocity.X = Math.Sign(npc.velocity.X) * maxVel;
+                NPC.velocity.X += desiredVel;
+                if (Math.Abs(NPC.velocity.X) > maxVel) NPC.velocity.X = Math.Sign(NPC.velocity.X) * maxVel;
 
-                if (lastPos == npc.Center)
+                if (lastPos == NPC.Center)
                 {
-                    npc.velocity.Y = -jumpForce;
+                    NPC.velocity.Y = -jumpForce;
                 }
-                if (lastPos.X == npc.Center.X)
+                if (lastPos.X == NPC.Center.X)
                 {
                     notMovedTime++;
                     if (notMovedTime > 120)
@@ -65,12 +65,12 @@ namespace KingdomTerrahearts.NPCs
             else
             {
 
-                npc.velocity.X += -moveTo.X / Math.Abs(moveTo.X) * .25f;
-                npc.velocity.X = (Math.Abs(npc.velocity.X) > 2) ? npc.velocity.X / Math.Abs(npc.velocity.X) * 2 : npc.velocity.X;
+                NPC.velocity.X += -moveTo.X / Math.Abs(moveTo.X) * .25f;
+                NPC.velocity.X = (Math.Abs(NPC.velocity.X) > 2) ? NPC.velocity.X / Math.Abs(NPC.velocity.X) * 2 : NPC.velocity.X;
 
-                if (lastPos == npc.Center)
+                if (lastPos == NPC.Center)
                 {
-                    npc.velocity.Y = -jumpForce;
+                    NPC.velocity.Y = -jumpForce;
                 }
 
                 notMovedTime++;
@@ -82,15 +82,15 @@ namespace KingdomTerrahearts.NPCs
 
             }
 
-            if (Math.Abs(npc.velocity.X) > 0)
+            if (Math.Abs(NPC.velocity.X) > 0)
             {
-                npc.direction = (int)(Math.Abs(npc.velocity.X)/npc.velocity.X);
+                NPC.direction = (int)(Math.Abs(NPC.velocity.X)/NPC.velocity.X);
             }
-            if (npc.velocity.Y > 0)
+            if (NPC.velocity.Y > 0)
             {
                 curFrame = 4;
             }
-            else if (npc.velocity.Y < 0)
+            else if (NPC.velocity.Y < 0)
             {
                 curFrame = 3;
             }
@@ -99,7 +99,7 @@ namespace KingdomTerrahearts.NPCs
                 curFrame = (curFrame < 3) ? curFrame : 0;
             }
 
-            lastPos = npc.Center;
+            lastPos = NPC.Center;
 
             specialActionCooldown--;
             if (specialActionCooldown < 0) SpecialAction();
@@ -139,8 +139,8 @@ namespace KingdomTerrahearts.NPCs
                 }
             }
 
-            npc.frame.Y = frameHeight * curFrame;
-            npc.spriteDirection = npc.direction;
+            NPC.frame.Y = frameHeight * curFrame;
+            NPC.spriteDirection = NPC.direction;
         }
     }
 }

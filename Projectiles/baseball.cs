@@ -18,16 +18,16 @@ namespace KingdomTerrahearts.Projectiles
 
         public override void SetDefaults()
         {
-            projectile.width = projectile.height = 10;
-            projectile.scale = 1.5f;
-            projectile.aiStyle = -1;
-            projectile.friendly = true;
-            projectile.penetrate = 5;
+            Projectile.width = Projectile.height = 10;
+            Projectile.scale = 1.5f;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.penetrate = 5;
         }
 
         public override void AI()
         {
-            projectile.velocity.Y+=0.25f;
+            Projectile.velocity.Y+=0.25f;
         }
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)

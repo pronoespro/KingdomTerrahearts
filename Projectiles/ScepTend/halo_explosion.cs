@@ -13,25 +13,25 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override void SetStaticDefaults()
         {
-            Main.projFrames[projectile.type] = 5;
+            Main.projFrames[Projectile.type] = 5;
         }
 
         public override void SetDefaults()
         {
-            projectile.netImportant = true;
-            projectile.width = 176;
-            projectile.height = 144;
-            projectile.friendly = true;
-            projectile.tileCollide = false;
-            projectile.penetrate = -1;
-            projectile.timeLeft = 30;
-            projectile.light = 1.5f;
+            Projectile.netImportant = true;
+            Projectile.width = 176;
+            Projectile.height = 144;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 30;
+            Projectile.light = 1.5f;
         }
 
         public override void AI()
         {
-            projectile.velocity = Vector2.Zero;
-            projectile.frame =(int)((1f-(projectile.timeLeft / 30f))*5f);
+            Projectile.velocity = Vector2.Zero;
+            Projectile.frame =(int)((1f-(Projectile.timeLeft / 30f))*5f);
         }
 
     }

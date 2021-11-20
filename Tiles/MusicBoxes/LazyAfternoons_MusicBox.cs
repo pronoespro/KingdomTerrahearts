@@ -8,7 +8,7 @@ namespace KingdomTerrahearts.Tiles.MusicBoxes
 {
     public class LazyAfternoons_MusicBox:ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileObsidianKill[Type] = true;
@@ -17,7 +17,6 @@ namespace KingdomTerrahearts.Tiles.MusicBoxes
 			TileObjectData.newTile.LavaDeath = false;
 			TileObjectData.newTile.DrawYOffset = 2;
 			TileObjectData.addTile(Type);
-			disableSmartCursor = true;
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Music Box");
 			AddMapEntry(new Color(200, 200, 200), name);
@@ -25,15 +24,15 @@ namespace KingdomTerrahearts.Tiles.MusicBoxes
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-			Item.NewItem(i * 16, j * 16, 16, 48, mod.ItemType("LazyAfternoons_Item"));
+			Item.NewItem(i * 16, j * 16, 16, 48, ModContent.ItemType<Items.Placeable.LazyAfternoons_Item>());
 		}
 
 		public override void MouseOver(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
 			player.noThrow = 2;
-			player.showItemIcon = true;
-			player.showItemIcon2 =mod.ItemType("LazyAfternoons_Item");
+			player.cursorItemIconEnabled = true;
+			player.cursorItemIconID =ModContent.ItemType<Items.Placeable.LazyAfternoons_Item>();
 		}
 	}
 }

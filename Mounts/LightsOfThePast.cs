@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.DataStructures;
 
 namespace KingdomTerrahearts.Mounts
 {
@@ -13,54 +14,54 @@ namespace KingdomTerrahearts.Mounts
         public Vector2[] keyOffsets = new Vector2[50];
         public float[] keySinePos = new float[50];
 
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
-            mountData.spawnDust = DustID.Confetti;
-            //mountData.buff = mod.BuffType("mewwowBuff");
-            mountData.heightBoost = 0;
-            mountData.fallDamage = 0f;
-            mountData.runSpeed =0;
-            mountData.dashSpeed = 0;
-            mountData.flightTimeMax = 0;
-            mountData.fatigueMax = 0;
-            mountData.jumpHeight = 0;
-            mountData.acceleration = 0.3f;
-            mountData.jumpSpeed = 0;
-            mountData.blockExtraJumps = false;
-            mountData.totalFrames = 1;
-            mountData.constantJump = true;
-            int[] array = new int[mountData.totalFrames];
+            MountData.spawnDust = DustID.Confetti;
+            //MountData.buff = mod.BuffType("mewwowBuff");
+            MountData.heightBoost = 0;
+            MountData.fallDamage = 0f;
+            MountData.runSpeed =0;
+            MountData.dashSpeed = 0;
+            MountData.flightTimeMax = 0;
+            MountData.fatigueMax = 0;
+            MountData.jumpHeight = 0;
+            MountData.acceleration = 0.3f;
+            MountData.jumpSpeed = 0;
+            MountData.blockExtraJumps = false;
+            MountData.totalFrames = 1;
+            MountData.constantJump = true;
+            int[] array = new int[MountData.totalFrames];
             for (int i = 0; i < array.Length; i++)
             {
                 array[i] = 0;
             }
-            mountData.playerYOffsets = array;
-            mountData.xOffset = 0;
-            mountData.yOffset = 0;
-            mountData.bodyFrame = 0;
-            mountData.playerHeadOffset = 0;
-            mountData.standingFrameCount = 0;
-            mountData.standingFrameDelay = 0;
-            mountData.runningFrameCount = 0;
-            mountData.runningFrameDelay = 0;
-            mountData.runningFrameStart = 0;
-            mountData.flyingFrameCount = 0;
-            mountData.flyingFrameDelay = 0;
-            mountData.flyingFrameStart = 0;
-            mountData.inAirFrameCount = 0;
-            mountData.inAirFrameDelay = 0;
-            mountData.inAirFrameStart = 0;
-            mountData.idleFrameCount = 0;
-            mountData.idleFrameDelay = 0;
-            mountData.idleFrameStart = 0;
-            mountData.idleFrameLoop = false;
-            mountData.swimFrameCount = 0;
-            mountData.swimFrameDelay = 0;
-            mountData.swimFrameStart = 0;
+            MountData.playerYOffsets = array;
+            MountData.xOffset = 0;
+            MountData.yOffset = 0;
+            MountData.bodyFrame = 0;
+            MountData.playerHeadOffset = 0;
+            MountData.standingFrameCount = 0;
+            MountData.standingFrameDelay = 0;
+            MountData.runningFrameCount = 0;
+            MountData.runningFrameDelay = 0;
+            MountData.runningFrameStart = 0;
+            MountData.flyingFrameCount = 0;
+            MountData.flyingFrameDelay = 0;
+            MountData.flyingFrameStart = 0;
+            MountData.inAirFrameCount = 0;
+            MountData.inAirFrameDelay = 0;
+            MountData.inAirFrameStart = 0;
+            MountData.idleFrameCount = 0;
+            MountData.idleFrameDelay = 0;
+            MountData.idleFrameStart = 0;
+            MountData.idleFrameLoop = false;
+            MountData.swimFrameCount = 0;
+            MountData.swimFrameDelay = 0;
+            MountData.swimFrameStart = 0;
             if (Main.netMode != NetmodeID.Server)
             {
-                mountData.textureWidth = mountData.frontTexture.Width;
-                mountData.textureHeight = mountData.frontTexture.Height;
+                MountData.textureWidth = MountData.frontTexture.Width();
+                MountData.textureHeight = MountData.frontTexture.Height();
             }
         }
 
@@ -69,11 +70,13 @@ namespace KingdomTerrahearts.Mounts
 
             Player p = Main.player[Main.myPlayer];
 
+            ProjectileSource_BySourceId s = new ProjectileSource_BySourceId(-1);
+
             if (keybladesFromThePast[0].active == false)
             {
                 for(int i = 0; i < keybladesFromThePast.Length; i++)
                 {
-                    keybladesFromThePast[i]=Main.projectile[Projectile.NewProjectile(p.position,Vector2.Zero,mod.ProjectileType("ultimate_projectile"),0,0)];
+                    keybladesFromThePast[i]=Main.projectile[Projectile.NewProjectile(s,p.position,Vector2.Zero,ModContent.ProjectileType<Projectiles.ultimate_projectile_stab>(),0,0)];
                     keySinePos[i] = Main.rand.NextFloat(-1f, 1f);
                     keyOffsets[i] = Main.rand.NextVector2Circular(25, 2);
                 }

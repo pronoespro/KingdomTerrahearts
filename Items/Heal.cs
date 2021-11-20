@@ -16,8 +16,9 @@ namespace KingdomTerrahearts.Items
             abilityName = "Heal";
 
             DisplayName.SetDefault(abilityName + " level " + (level + 1).ToString());
+
             Tooltip.SetDefault("An ability that lets you use magic to heal" +
-                "\nOnly activates if you already used a potion" +
+                "\nCant be used under mana sickness" +
                 "\nWastes all MP");
         }
 
@@ -38,7 +39,7 @@ namespace KingdomTerrahearts.Items
 
         public override void UpdateInventory(Player player)
         {
-                abilityName = "Heal";
+            abilityName = "Heal";
             if (player == null)
             {
                 SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
@@ -53,20 +54,17 @@ namespace KingdomTerrahearts.Items
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-
-            recipe.AddIngredient(ItemID.FallenStar, 2);
-
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe()
+            .AddIngredient(ItemID.FallenStar, 2)
+            .AddTile(TileID.WorkBenches)
+            .Register();
 
         }
 
         public override void RaiseLevel()
         {
             base.RaiseLevel();
-            SoraPlayer sp = Main.player[item.owner].GetModPlayer<SoraPlayer>();
+            SoraPlayer sp = Main.player[Item.playerIndexTheItemIsReservedFor].GetModPlayer<SoraPlayer>();
             sp.RaiseHealLevel(this);
 
         }

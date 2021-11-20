@@ -1,5 +1,6 @@
 ﻿using Terraria.ModLoader;
 using Terraria.ID;
+using Terraria.GameContent.Creative;
 
 namespace KingdomTerrahearts.Items.Placeable
 {
@@ -8,22 +9,23 @@ namespace KingdomTerrahearts.Items.Placeable
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Music Box (Lazy Afternoons)");
+			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
 		public override void SetDefaults()
 		{
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.useTurn = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.autoReuse = true;
-			item.consumable = true;
-			item.createTile = mod.TileType("LazyAfternoons_MusicBox");
-			item.width = 24;
-			item.height = 24;
-			item.rare = ItemRarityID.LightRed;
-			item.value = 100000;
-			item.accessory = true;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.useTurn = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.autoReuse = true;
+			Item.consumable = true;
+			Item.createTile = ModContent.TileType<Tiles.MusicBoxes.LazyAfternoons_MusicBox>();
+			Item.width = 24;
+			Item.height = 24;
+			Item.rare = ItemRarityID.LightRed;
+			Item.value = 100000;
+			Item.accessory = true;
 		}
 
     }

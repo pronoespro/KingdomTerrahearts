@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -14,25 +15,16 @@ namespace KingdomTerrahearts.Items
 			Tooltip.SetDefault("A bowl of dog food" +
 				"\nUsed to craft the ultimate pet ever" +
 				"\nPlease come home...");
+			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 0;
-			item.width = 16;
-			item.height = 30;
-			item.rare = ItemRarityID.Lime;
-			item.value = Item.sellPrice(0, 0, 50, 0);
-		}
-
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Bone, 10);
-			recipe.AddIngredient(ItemID.Bowl);
-			recipe.AddIngredient(ItemID.RottenChunk,3);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			Item.damage = 0;
+			Item.width = 16;
+			Item.height = 30;
+			Item.rare = ItemRarityID.Lime;
+			Item.value = Item.sellPrice(0, 0, 50, 0);
 		}
 
 	}

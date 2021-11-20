@@ -36,6 +36,15 @@ namespace KingdomTerrahearts.Extra
         {
             return (float)Math.Sqrt(d* 2f);
         }
+
+		public static float Lerp(float min, float max,float t)
+        {
+			float result = max - min;
+			result *= t;
+			result += min;
+			return result;
+        }
+
     }
 
 

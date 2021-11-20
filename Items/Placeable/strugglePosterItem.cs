@@ -1,4 +1,5 @@
 ﻿using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,33 +11,31 @@ namespace KingdomTerrahearts.Items.Placeable
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Struggle Poster");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 30;
-            item.height = 30;
-            item.maxStack = 99;
-            item.useTurn = true;
-            item.autoReuse = true;
-            item.useAnimation = 15;
-            item.useTime = 10;
-            item.useStyle = 1;
-            item.consumable = true;
-            item.rare = 1;
-            item.createTile = mod.TileType("strugglePosterTile");
-            item.placeStyle = 0;
+            Item.width = 30;
+            Item.height = 30;
+            Item.maxStack = 99;
+            Item.useTurn = true;
+            Item.autoReuse = true;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
+            Item.useStyle = 1;
+            Item.consumable = true;
+            Item.rare = 1;
+            Item.createTile = ModContent.TileType<Tiles.strugglePosterTile>();
+            Item.placeStyle = 0;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-
-            recipe.AddIngredient(mod.ItemType("twilightBlock"),7);
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this);
-
-            recipe.AddRecipe();
+            CreateRecipe()
+            .AddIngredient(ModContent.ItemType<twilightBlock>(),7)
+            .AddTile(TileID.WorkBenches)
+            .Register();
 
         }
 

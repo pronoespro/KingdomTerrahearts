@@ -20,29 +20,29 @@ namespace KingdomTerrahearts.Projectiles
         public override void SetDefaults()
         {
 
-            projectile.width = 30;
-            projectile.height = 120;
-            projectile.aiStyle = -1;
-            projectile.alpha = 100;
-            projectile.friendly = true;
-            projectile.ignoreWater = true;
-            projectile.light = 1.5f;
-            projectile.maxPenetrate = -1;
-            projectile.melee = true;
-            projectile.penetrate = 1000;
-            projectile.tileCollide = false;
-            projectile.timeLeft = 75;
+            Projectile.width = 30;
+            Projectile.height = 120;
+            Projectile.aiStyle = -1;
+            Projectile.alpha = 100;
+            Projectile.friendly = true;
+            Projectile.ignoreWater = true;
+            Projectile.light = 1.5f;
+            Projectile.maxPenetrate = -1;
+            Projectile.DamageType= ModContent.GetInstance<KeybladeDamage>();
+            Projectile.penetrate = 1000;
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 75;
 
         }
 
         public override void AI()
         {
-            projectile.velocity.X = projectile.velocity.X + projectile.velocity.Y*MathHelp.Sign(projectile.velocity.X);
-            projectile.velocity.Y = 0;
+            Projectile.velocity.X = Projectile.velocity.X + Projectile.velocity.Y*MathHelp.Sign(Projectile.velocity.X);
+            Projectile.velocity.Y = 0;
 
-            timeLeft = (timeLeft == 0) ? projectile.timeLeft : timeLeft;
+            timeLeft = (timeLeft == 0) ? Projectile.timeLeft : timeLeft;
 
-            projectile.alpha = (projectile.timeLeft > 50) ? 100 : 100 + 155 * (projectile.timeLeft);
+            Projectile.alpha = (Projectile.timeLeft > 50) ? 100 : 100 + 155 * (Projectile.timeLeft);
         }
 
     }

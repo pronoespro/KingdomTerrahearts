@@ -10,7 +10,7 @@ namespace KingdomTerrahearts.Tiles
     class strugglePosterTile:ModTile
     {
 
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = true;
@@ -23,15 +23,15 @@ namespace KingdomTerrahearts.Tiles
             TileObjectData.newTile.StyleHorizontal= true;
             TileObjectData.newTile.StyleWrapLimit = 42;
             TileObjectData.addTile(Type);
-            disableSmartCursor = true;
             ModTranslation name = CreateMapEntryName();
+            TileID.Sets.DisableSmartCursor[Type] = true;
             name.SetDefault("Poster");
             AddMapEntry(new Color(100,100,0), name);
         }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(i * 16, j * 16, 32, 16, mod.ItemType("strugglePosterItem"));
+            Item.NewItem(i * 16, j * 16, 32, 16, ModContent.ItemType<Items.Placeable.strugglePosterItem>());
         }
 
     }

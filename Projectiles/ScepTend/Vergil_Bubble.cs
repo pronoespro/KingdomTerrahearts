@@ -13,21 +13,21 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override void SetStaticDefaults()
         {
-            Main.projFrames[projectile.type] = 4;
+            Main.projFrames[Projectile.type] = 4;
         }
 
         public override void SetDefaults()
         {
-            projectile.netImportant = true;
-            projectile.width = 32;
-            projectile.height = 32;
-            projectile.friendly = true;
-            projectile.tileCollide = false;
-            projectile.penetrate = -1;
-            projectile.timeLeft = 30;
-            projectile.velocity = Vector2.Zero;
-            projectile.damage = 0;
-            projectile.ai[0] = (projectile.ai[0] == 0) ? 1 : projectile.ai[0];
+            Projectile.netImportant = true;
+            Projectile.width = 32;
+            Projectile.height = 32;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = 30;
+            Projectile.velocity = Vector2.Zero;
+            Projectile.damage = 0;
+            Projectile.ai[0] = (Projectile.ai[0] == 0) ? 1 : Projectile.ai[0];
         }
 
         public override bool? CanHitNPC(NPC target)
@@ -37,17 +37,17 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override void AI()
         {
-            projectile.alpha = (int)(250 - (projectile.timeLeft / 30f)*5);
-            projectile.damage = 0;
-            projectile.scale =(3-(1-(projectile.timeLeft/30f)/5))*projectile.ai[0];
-            projectile.frame = (int)((1f - (projectile.timeLeft / 30f)) * 4f);
+            Projectile.alpha = (int)(250 - (Projectile.timeLeft / 30f)*5);
+            Projectile.damage = 0;
+            Projectile.scale =(3-(1-(Projectile.timeLeft/30f)/5))*Projectile.ai[0];
+            Projectile.frame = (int)((1f - (Projectile.timeLeft / 30f)) * 4f);
 
             for (int i = 0; i < 15; i++)
             {
                 if (Main.rand.Next(3) == 0)
                 {
-                    Vector2 scale = new Vector2(projectile.width * projectile.scale, projectile.height * projectile.scale);
-                    Dust.NewDust(projectile.Center - scale / 4, (int)scale.X, (int)scale.Y, DustID.Electric);
+                    Vector2 scale = new Vector2(Projectile.width * Projectile.scale, Projectile.height * Projectile.scale);
+                    Dust.NewDust(Projectile.Center - scale / 4, (int)scale.X, (int)scale.Y, DustID.Electric);
                 }
             }
 

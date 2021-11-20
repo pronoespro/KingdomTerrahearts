@@ -4,34 +4,35 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items.Weapons
 {
-    class Keyblade_Honey : Keyblade
+    class Keyblade_Honey : KeybladeBase
 	{
 
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Hunny Spout");
 			Tooltip.SetDefault("You're braver than you believe, and stronger than you seem, and smarter than you think");
+			base.SetStaticDefaults();
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 26;
-			item.melee = true;
-			item.width = item.height = 50;
-			item.scale = 0.85f;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.holdStyle = 4;
-			item.knockBack = 3;
-			item.value = 100;
-			item.rare = ItemRarityID.Green;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
-			item.useAnimation = item.useTime = 20;
+			base.SetDefaults();
+			Item.damage = 26;
+			Item.width = Item.height = 50;
+			Item.scale = 0.85f;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.holdStyle = 4;
+			Item.knockBack = 3;
+			Item.value = 100;
+			Item.rare = ItemRarityID.Green;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
+			Item.useAnimation = Item.useTime = 20;
 
 			SaveAtributes();
 			magic = keyMagic.balloon;
 			keyTransformations = new keyTransformation[] { keyTransformation.guns, keyTransformation.cannon };
-			transSprites = new string[] { "Items/Weapons/Keyblade_oblivion", "Items/Weapons/Keyblade_oblivion" };
+			transSprites = new string[] { "Items/Weapons/Transformations/Lionheart_Gun", "Items/Weapons/Keyblade_oblivion" };
 			formChanges = new keyDriveForm[] { keyDriveForm.element, keyDriveForm.element };
 			animationTimes = new int[] { 20, 10, 15 };
 			projectileTime = 1000;
@@ -46,7 +47,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			keySummon = summonType.bambi;
 			magic = keyMagic.balloon;
 			keyTransformations = new keyTransformation[] { keyTransformation.guns, keyTransformation.cannon };
-			transSprites = new string[] { "Items/Weapons/Keyblade_oblivion", "Items/Weapons/Keyblade_oblivion" };
+			transSprites = new string[] { "Items/Weapons/Transformations/Lionheart_Cannon" };
 			formChanges = new keyDriveForm[] { keyDriveForm.element, keyDriveForm.element };
 			animationTimes = new int[] { 20, 10, 15 };
 			projectileTime = 1000;

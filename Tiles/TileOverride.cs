@@ -14,7 +14,7 @@ namespace KingdomTerrahearts.Tiles
         {
             if (type == TileID.Trees && Main.rand.Next(15)==0)
             {
-                Item.NewItem(i * 16, j * 16, 1, 1, mod.ItemType("Keyblade_woodenStick"));
+                Item.NewItem(i * 16, j * 16, 1, 1, ModContent.ItemType<Items.Weapons.Joke.Keyblade_woodenStick>());
             }
             if (type==TileID.Chlorophyte)
             {

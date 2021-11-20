@@ -12,19 +12,19 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override void SetDefaults()
         {
-            projectile.width = 32;
-            projectile.height = 32;
-            projectile.friendly = true;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.timeLeft = 30;
+            Projectile.width = 32;
+            Projectile.height = 32;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 30;
 
-            projectile.ai[0] = projectile.timeLeft;
+            Projectile.ai[0] = Projectile.timeLeft;
         }
 
         public override void AI()
         {
-            projectile.alpha = (int)((1-(projectile.timeLeft/ projectile.ai[0])) * 250);
+            Projectile.alpha = (int)((1-(Projectile.timeLeft/ Projectile.ai[0])) * 250);
         }
 
     }

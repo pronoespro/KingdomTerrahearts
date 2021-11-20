@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using KingdomTerrahearts.Extra;
+using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -16,15 +17,15 @@ namespace KingdomTerrahearts.Projectiles
 
         public override void SetDefaults()
         {
-            projectile.width = 50;
-            projectile.height = 50;
-            projectile.scale = 0.5f;
-            projectile.aiStyle = 3;
-            projectile.friendly = true;
-            projectile.melee = true;
-            projectile.penetrate = 2;
-            projectile.timeLeft = 600;
-            projectile.extraUpdates = 1;
+            Projectile.width = 50;
+            Projectile.height = 50;
+            Projectile.scale = 0.5f;
+            Projectile.aiStyle = 3;
+            Projectile.friendly = true;
+            Projectile.DamageType = ModContent.GetInstance<KeybladeDamage>();
+            Projectile.penetrate = 2;
+            Projectile.timeLeft = 600;
+            Projectile.extraUpdates = 1;
         }
 
     }

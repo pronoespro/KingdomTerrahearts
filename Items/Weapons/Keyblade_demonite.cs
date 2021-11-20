@@ -4,37 +4,38 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items.Weapons
 {
-    public class Keyblade_demonite:Keyblade
+    public class Keyblade_demonite:KeybladeBase
 	{
 
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Darkgnaw");
 			Tooltip.SetDefault("A keyblade made out of darkness");
+			base.SetStaticDefaults();
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 15;
-			item.melee = true;
-			item.width = 50;
-			item.height = 50;
-			item.scale = 0.75f;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-            item.holdStyle = 4;
-			item.knockBack = 3;
-			item.value = 100;
-			item.rare = ItemRarityID.Green;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
-			item.useAnimation = item.useTime = 20;
+			base.SetDefaults();
+			Item.damage = 15;
+			Item.width = 50;
+			Item.height = 50;
+			Item.scale = 0.75f;
+			Item.useStyle = ItemUseStyleID.Swing;
+            Item.holdStyle = 4;
+			Item.knockBack = 3;
+			Item.value = 100;
+			Item.rare = ItemRarityID.Green;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
+			Item.useAnimation = Item.useTime = 20;
 
 			SaveAtributes();
 			magic = keyMagic.poison;
 			keyTransformations = new keyTransformation[] { keyTransformation.none };
-			transSprites = new string[] { "Items/Weapons/Keyblade_destiny" };
+			transSprites = new string[] {"Items/Weapons/Keyblade_demonite" };
 			formChanges = new keyDriveForm[] { keyDriveForm.rage };
-			animationTimes = new int[] { 20, 10 };
+			animationTimes = new int[] { 20, 17 };
 			keyLevel = 1;
 			keybladeElement = keyType.dark;
 			comboMax = 4;
@@ -42,21 +43,20 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
+			Recipe recipe= CreateRecipe();
 			recipe.AddIngredient(ItemID.DemoniteBar, 15);
 			recipe.AddIngredient(ItemID.Amethyst);
 			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			recipe.Register();
 		}
 
         public override void ChangeKeybladeValues()
 		{
 			magic = keyMagic.poison;
 			keyTransformations = new keyTransformation[] { keyTransformation.none };
-			transSprites = new string[] { "Items/Weapons/Keyblade_destiny" };
+			transSprites = new string[] { "Items/Weapons/Keyblade_demonite" };
 			formChanges = new keyDriveForm[] { keyDriveForm.rage };
-			animationTimes = new int[] { 20, 10 };
+			animationTimes = new int[] { 20, 17 };
 			keybladeElement = keyType.dark;
 			comboMax = 4;
 		}

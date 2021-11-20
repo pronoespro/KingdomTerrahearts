@@ -23,10 +23,10 @@ C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Mod Sources\KingdomTerrahea
 C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Mod Sources\KingdomTerrahearts\bin\Debug\net45\tModLoader.xml
 C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Mod Sources\KingdomTerrahearts\bin\Debug\net45\MonoMod.RuntimeDetour.xml
 C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Mod Sources\KingdomTerrahearts\bin\Debug\net45\MonoMod.Utils.xml
-C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Mod Sources\KingdomTerrahearts\obj\Debug\net45\KingdomTerrahearts.csprojAssemblyReference.cache
 C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Mod Sources\KingdomTerrahearts\obj\Debug\net45\KingdomTerrahearts.AssemblyInfoInputs.cache
 C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Mod Sources\KingdomTerrahearts\obj\Debug\net45\KingdomTerrahearts.AssemblyInfo.cs
 C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Mod Sources\KingdomTerrahearts\obj\Debug\net45\KingdomTerrahearts.csproj.CoreCompileInputs.cache
 C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Mod Sources\KingdomTerrahearts\obj\Debug\net45\KingdomTerrahearts.csproj.CopyComplete
 C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Mod Sources\KingdomTerrahearts\obj\Debug\net45\KingdomTerrahearts.dll
 C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Mod Sources\KingdomTerrahearts\obj\Debug\net45\KingdomTerrahearts.pdb
+C:\Users\cesar\Documents\My Games\Terraria\ModLoader\Mod Sources\KingdomTerrahearts\obj\Debug\net45\KingdomTerrahearts.csproj.AssemblyReference.cache

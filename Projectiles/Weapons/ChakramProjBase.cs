@@ -1,6 +1,7 @@
 ﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.DataStructures;
 using KingdomTerrahearts.Extra;
 using Terraria.ModLoader.IO;
 using System;
@@ -27,63 +28,64 @@ namespace KingdomTerrahearts.Projectiles.Weapons
 
         public override void AI()
         {
-            initTimeLeft = (initTimeLeft > 0) ? initTimeLeft : projectile.timeLeft;
-            initVel = (initVel > 0) ? initVel : MathHelp.Magnitude(projectile.velocity);
-            initVelX = (initVel != 0) ? initVelX : projectile.velocity.X;
+            initTimeLeft = (initTimeLeft > 0) ? initTimeLeft : Projectile.timeLeft;
+            initVel = (initVel > 0) ? initVel : MathHelp.Magnitude(Projectile.velocity);
+            initVelX = (initVel != 0) ? initVelX : Projectile.velocity.X;
 
-            projectile.spriteDirection = (initVel > 0) ? 1 : 0;
-            projectile.rotation += rotOTime*projectile.spriteDirection;
+            Projectile.spriteDirection = (initVel > 0) ? 1 : 0;
+            Projectile.rotation += rotOTime*Projectile.spriteDirection;
 
-            distToPlayer = Main.player[projectile.owner].Center - projectile.Center;
+            distToPlayer = Main.player[Projectile.owner].Center - Projectile.Center;
 
-            if (projectile.timeLeft < 5) return;
+            if (Projectile.timeLeft < 5) return;
 
 
-            if (projectile.ai[0] < 50)
+            if (Projectile.ai[0] < 50)
             {
-                projectile.velocity.Y -= gravity;
+                Projectile.velocity.Y -= gravity;
             }
             else
             {
-                projectile.velocity.Y += gravity;
+                Projectile.velocity.Y += gravity;
             }
 
-            if (projectile.timeLeft < 60)
+            if (Projectile.timeLeft < 60)
             {
-                projectile.tileCollide = false;
-                projectile.velocity = Vector2.Lerp(projectile.velocity, MathHelp.Normalize(distToPlayer) * initVel,0.2f);
+                Projectile.tileCollide = false;
+                Projectile.velocity = Vector2.Lerp(Projectile.velocity, MathHelp.Normalize(distToPlayer) * initVel,0.2f);
 
 
-                if (Vector2.Dot(MathHelp.Normalize(distToPlayer), MathHelp.Normalize(projectile.velocity))==1)
+                if (Vector2.Dot(MathHelp.Normalize(distToPlayer), MathHelp.Normalize(Projectile.velocity))==1)
                 {
-                    if (MathHelp.Magnitude(Main.player[projectile.owner].velocity) > initVel / 2)
+                    if (MathHelp.Magnitude(Main.player[Projectile.owner].velocity) > initVel / 2)
                     {
-                        projectile.velocity = MathHelp.Normalize(projectile.velocity) * MathHelp.Magnitude(Main.player[projectile.owner].velocity) * 2;
-                        projectile.Center = (MathHelp.Magnitude(distToPlayer) > 500) ? Main.player[projectile.owner].Center + MathHelp.Normalize(distToPlayer) * 500 : projectile.Center;
+                        Projectile.velocity = MathHelp.Normalize(Projectile.velocity) * MathHelp.Magnitude(Main.player[Projectile.owner].velocity) * 2;
+                        Projectile.Center = (MathHelp.Magnitude(distToPlayer) > 500) ? Main.player[Projectile.owner].Center + MathHelp.Normalize(distToPlayer) * 500 : Projectile.Center;
                     }
 
                 }
             }
-            if (projectile.timeLeft < 40)
-                projectile.timeLeft = (MathHelp.Magnitude(distToPlayer) > MathHelp.Magnitude(projectile.velocity) * 5) ? 50 : 1;
+            if (Projectile.timeLeft < 40)
+                Projectile.timeLeft = (MathHelp.Magnitude(distToPlayer) > MathHelp.Magnitude(Projectile.velocity) * 5) ? 50 : 1;
 
-            Dust.NewDust(projectile.Center, projectile.width, projectile.height, DustID.Fire);
+            Dust.NewDust(Projectile.Center, Projectile.width, Projectile.height, DustID.Torch);
 
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            projectile.timeLeft = 40;
+            Projectile.timeLeft = 40;
 
-            if (projectile.ai[0] > 50 && Main.player[projectile.owner].statMana>20)
+            if (Projectile.ai[0] > 50 && Main.player[Projectile.owner].statMana>20)
             {
+                ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
                 int projAmmount = Main.rand.Next(2,5);
                 for (int i = 0; i < projAmmount; i++)
                 {
-                    Projectile.NewProjectile(projectile.Center, new Vector2(Main.rand.Next(-2, 2), Main.rand.Next(2, 5)), ProjectileID.BallofFire, projectile.damage / 2, 1);
+                    int proj=Projectile.NewProjectile(s,Projectile.Center, new Vector2(Main.rand.Next(-2, 2), Main.rand.Next(2, 5)), ProjectileID.BallofFire, Projectile.damage / 2, 1,Projectile.owner);
                 }
 
-                Main.player[projectile.owner].statMana -= 20;
+                Main.player[Projectile.owner].statMana -= 20;
             }
 
             return false;

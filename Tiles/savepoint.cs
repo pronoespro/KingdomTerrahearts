@@ -13,8 +13,10 @@ namespace KingdomTerrahearts.Tiles
 
 		Player player;
 
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
+			TileID.Sets.IsValidSpawnPoint[Type] = true;
+			
 			Main.tileFrameImportant[Type] = true;
 			Main.tileLavaDeath[Type] = true;
 			Main.tileLighted[Type] = true;
@@ -26,10 +28,10 @@ namespace KingdomTerrahearts.Tiles
 			name.SetDefault("Save point");
 			AddMapEntry(new Color(200, 200, 200), name);
 			//dustType = DustType<Sparkle>();
-			disableSmartCursor = true;
-			adjTiles = new int[] { TileID.Beds };
-			bed = true;
-			animationFrameHeight = 38;
+
+			TileID.Sets.DisableSmartCursor[Type] = true;
+			AdjTiles = new int[] { TileID.Beds };
+			AnimationFrameHeight = 38;
 		}
 		public override void SetSpriteEffects(int i, int j, ref SpriteEffects spriteEffects)
 		{
@@ -78,29 +80,38 @@ namespace KingdomTerrahearts.Tiles
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
+
+			player = Main.LocalPlayer;
+			SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
+
+
 			Item.NewItem(i * 16, j * 16, 64, 32, ItemType<Items.Placeable.savePoint_Item>());
 		}
 
-		public override bool NewRightClick(int i, int j)
+        public override bool RightClick(int i, int j)
 		{
+
 			player = Main.LocalPlayer;
 			SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
-			sp.skipTime = true;
-			sp.skipToDay = !Main.dayTime;
+
 			Tile tile = Main.tile[i, j];
 			int spawnX = i - tile.frameX / 18;
 			int spawnY = j + 2;
 			spawnX += tile.frameX >= 72 ? 5 : 2;
+
 			if (tile.frameY % 38 != 0)
 			{
 				spawnY--;
 			}
 			player.FindSpawn();
 
+			player.ChangeSpawn(spawnX, spawnY);
+			Main.NewText("Game Saved!", 255, 240, 20);
+
 			bool healPlayer = true;
-			foreach(NPC npc in Main.npc)
+			foreach (NPC npc in Main.npc)
 			{
-				if (!npc.friendly && Vector2.Distance(player.Center,npc.Center)<250)
+				if (!npc.friendly && Vector2.Distance(player.Center, npc.Center) < 250)
 				{
 					healPlayer = false;
 					break;
@@ -113,20 +124,14 @@ namespace KingdomTerrahearts.Tiles
 				sp.ResetTimers();
 			}
 
-			/*
+
 			if (player.SpawnX == spawnX && player.SpawnY == spawnY)
 			{
-				player.RemoveSpawn();
-				Main.NewText("Spawn point removed!", 255, 240, 20, false);
+				sp.skipTime = true;
+				sp.skipToDay = !Main.dayTime;
 			}
-			else if (Player.CheckSpawn(spawnX, spawnY))
-			{
-			*/
 
-				player.ChangeSpawn(spawnX, spawnY);
-				Main.NewText("Game Saved!", 255, 240, 20, false);
 
-			//}
 			return true;
 		}
 
@@ -134,8 +139,8 @@ namespace KingdomTerrahearts.Tiles
 		{
 			Player player = Main.LocalPlayer;
 			player.noThrow = 2;
-			player.showItemIcon = true;
-			player.showItemIcon2 = ItemType<Items.Placeable.savePoint_Item>();
+			player.cursorItemIconEnabled = true;
+			player.cursorItemIconID = ItemType<Items.Placeable.savePoint_Item>();
 		}
 
 		public override void NearbyEffects(int i, int j, bool closer)
@@ -147,11 +152,14 @@ namespace KingdomTerrahearts.Tiles
 				sp = player.GetModPlayer<SoraPlayer>();
 			}
 
-			Tile tile = Main.tile[i, j];
 			float reallyClose = Vector2.Distance(player.position, new Vector2(i * 16, j * 16));
 
 			if (reallyClose < 50 && player!=null)
 			{
+
+				sp.canTPToSavePoints = true;
+
+
 				bool healPlayer = true;
 				foreach (NPC npc in Main.npc)
 				{
@@ -168,7 +176,7 @@ namespace KingdomTerrahearts.Tiles
 						player.statMana = player.statManaMax;
 					sp.ResetTimers();
 				}
-			}
+            }
 
 			base.NearbyEffects(i, j, closer);
 		}

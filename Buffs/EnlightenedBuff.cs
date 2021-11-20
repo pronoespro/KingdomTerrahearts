@@ -8,10 +8,16 @@ namespace KingdomTerrahearts.Buffs
 {
     class EnlightenedBuff:ModBuff
     {
-        public override void SetDefaults()
+
+        public override void ModifyBuffTip(ref string tip, ref int rare)
+        {
+            tip = "Light strenghtens you";
+            base.ModifyBuffTip(ref tip, ref rare);
+        }
+
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Enlightened");
-            Description.SetDefault("Light strenghtens you");
             Main.buffNoSave[Type] = false;
             Main.buffNoTimeDisplay[Type] = false;
         }

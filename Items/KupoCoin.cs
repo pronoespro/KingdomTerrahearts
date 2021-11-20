@@ -1,4 +1,5 @@
 ﻿using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -13,15 +14,16 @@ namespace KingdomTerrahearts.Items
             Tooltip.SetDefault("A special coin that protects you from the worst" +
                 "\nIf your HP drops to 0, it will restore half your health a single time" +
                 "\nHas a three minutes cooldown");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 50;
-            item.height = 50;
-            item.value = 40000;
-            item.rare = 1;
-            item.maxStack = 1;
+            Item.width = 50;
+            Item.height = 50;
+            Item.value = 40000;
+            Item.rare = 1;
+            Item.maxStack = 1;
         }
 
         public override void UpdateInventory(Player player)
@@ -29,7 +31,7 @@ namespace KingdomTerrahearts.Items
             int foundCoin = 0;
             for(int i = 0; i < player.inventory.Length; i++)
             {
-                if (player.inventory[i].type==item.type && player.selectedItem!=i)
+                if (player.inventory[i].type==Item.type && player.selectedItem!=i)
                 {
                     if (foundCoin==0)
                     {
@@ -38,7 +40,7 @@ namespace KingdomTerrahearts.Items
                     else
                     {
                         Item.NewItem(player.getRect(), ItemID.GoldCoin, 4);
-                        player.ConsumeItem(mod.ItemType("KupoCoin"),true);
+                        player.ConsumeItem(ModContent.ItemType<KupoCoin>(),true);
                     }
                 }
             }

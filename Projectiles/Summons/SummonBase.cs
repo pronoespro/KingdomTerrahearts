@@ -18,7 +18,7 @@ namespace KingdomTerrahearts.Projectiles.Summons
             {
                 if (KingdomTerrahearts.instance.IsEnemy(i))
                 {
-                    if (target == -1 || Vector2.Distance(projectile.Center, Main.npc[i].Center) < Vector2.Distance(projectile.Center, Main.npc[target].Center))
+                    if (target == -1 || Vector2.Distance(Projectile.Center, Main.npc[i].Center) < Vector2.Distance(Projectile.Center, Main.npc[target].Center))
                     {
                         target = i;
                     }

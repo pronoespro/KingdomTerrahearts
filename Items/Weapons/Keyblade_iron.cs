@@ -4,30 +4,31 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items.Weapons
 {
-    class Keyblade_iron:Keyblade
+    class Keyblade_iron:KeybladeBase
     {
 
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Starlight keyblade");
 			Tooltip.SetDefault("A keyblade for common keyblade wielders");
+			base.SetStaticDefaults();
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 17;
-			item.melee = true;
-			item.width = 50;
-			item.height = 50;
-			item.scale = 0.75f;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.holdStyle = 4;
-			item.knockBack = 3;
-			item.value = 100;
-			item.rare = ItemRarityID.Green;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
-			item.useTime = item.useAnimation = 20;
+			base.SetDefaults();
+			Item.damage = 17;
+			Item.width = 50;
+			Item.height = 50;
+			Item.scale = 0.75f;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.holdStyle = 4;
+			Item.knockBack = 3;
+			Item.value = 100;
+			Item.rare = ItemRarityID.Green;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
+			Item.useTime = Item.useAnimation = 20;
 
 			SaveAtributes();
 			guardType = blockingType.reflect;
@@ -57,35 +58,31 @@ namespace KingdomTerrahearts.Items.Weapons
 		{
 
 			//iron
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.IronBar, 10);
-			recipe.AddIngredient(ItemID.Ruby,1);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe()
+			.AddIngredient(ItemID.IronBar, 10)
+			.AddIngredient(ItemID.Ruby,1)
+			.AddTile(TileID.Anvils)
+			.Register();
 
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.IronBar, 10);
-			recipe.AddIngredient(ItemID.FallenStar, 5);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe()
+			.AddIngredient(ItemID.IronBar, 10)
+			.AddIngredient(ItemID.FallenStar, 5)
+			.AddTile(TileID.Anvils)
+			.Register();
 
 			//lead
 
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.LeadBar, 10);
-			recipe.AddIngredient(ItemID.Ruby, 1);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe()
+			.AddIngredient(ItemID.LeadBar, 10)
+			.AddIngredient(ItemID.Ruby, 1)
+			.AddTile(TileID.Anvils)
+			.Register();
 
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.LeadBar, 10);
-			recipe.AddIngredient(ItemID.FallenStar, 5);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe()
+			.AddIngredient(ItemID.LeadBar, 10)
+			.AddIngredient(ItemID.FallenStar, 5)
+			.AddTile(TileID.Anvils)
+			.Register();
 		}
 
 	}

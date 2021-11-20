@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using KingdomTerrahearts.Logic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -19,6 +20,7 @@ namespace KingdomTerrahearts.Interface
         UIPanel[] buttons=new UIPanel[30];
 
         UIItemSlot item;
+        UIText slotsDisplay;
 
         public override void OnInitialize()
         {
@@ -42,6 +44,11 @@ namespace KingdomTerrahearts.Interface
             panel.VAlign = 1f;
             GeneralPanel.Append(panel);
 
+            slotsDisplay = new UIText("Slots left: 0");
+            slotsDisplay.HAlign = 0.5f;
+            slotsDisplay.Top.Set(45, 0);
+            GeneralPanel.Append(slotsDisplay);
+
         }
 
         public override void Update(GameTime gameTime)
@@ -55,6 +62,7 @@ namespace KingdomTerrahearts.Interface
                 return;
             }
 
+            slotsDisplay.SetText("Slots left: "+PartyMemberLogic.GetPartySlotsLeft(p.name));
 
             //0:Guide
             if (NPC.AnyNPCs(NPCID.Guide))
@@ -75,7 +83,7 @@ namespace KingdomTerrahearts.Interface
                 }
                 else if(buttons[0]!= new UIPanel())
                 {
-                    buttons[0].BackgroundColor = sora.NPCisPartyMember(NPCID.Guide) ? Color.LightBlue : Color.Transparent;
+                    buttons[0].BackgroundColor = (PartyMemberLogic.IsPartyMember(NPCID.Guide)>=0) ? Color.LightBlue : Color.Transparent;
                 }
             }
             else
@@ -106,7 +114,7 @@ namespace KingdomTerrahearts.Interface
                 }
                 else if (buttons[1] != new UIPanel())
                 {
-                    buttons[1].BackgroundColor = sora.NPCisPartyMember(NPCID.Merchant) ? Color.LightBlue : Color.Transparent;
+                    buttons[1].BackgroundColor = (PartyMemberLogic.IsPartyMember(NPCID.Merchant) >= 0) ? Color.LightBlue : Color.Transparent;
                 }
             }
             else
@@ -138,7 +146,7 @@ namespace KingdomTerrahearts.Interface
                 }
                 else if (buttons[2] != new UIPanel())
                 {
-                    buttons[2].BackgroundColor = sora.NPCisPartyMember(NPCID.Nurse) ? Color.LightBlue : Color.Transparent;
+                    buttons[2].BackgroundColor = (PartyMemberLogic.IsPartyMember(NPCID.Nurse) >= 0) ? Color.LightBlue : Color.Transparent;
                 }
             }
             else
@@ -170,7 +178,7 @@ namespace KingdomTerrahearts.Interface
                 }
                 else if (buttons[3] != new UIPanel())
                 {
-                    buttons[3].BackgroundColor = sora.NPCisPartyMember(NPCID.Demolitionist) ? Color.LightBlue : Color.Transparent;
+                    buttons[3].BackgroundColor = (PartyMemberLogic.IsPartyMember(NPCID.Demolitionist) >= 0) ? Color.LightBlue : Color.Transparent;
                 }
             }
             else
@@ -203,7 +211,7 @@ namespace KingdomTerrahearts.Interface
                 }
                 else if (buttons[4] != new UIPanel())
                 {
-                    buttons[4].BackgroundColor = sora.NPCisPartyMember(NPCID.DyeTrader) ? Color.LightBlue : Color.Transparent;
+                    buttons[4].BackgroundColor = (PartyMemberLogic.IsPartyMember(NPCID.DyeTrader) >= 0) ? Color.LightBlue : Color.Transparent;
                 }
             }
             else
@@ -236,7 +244,7 @@ namespace KingdomTerrahearts.Interface
                 }
                 else if (buttons[5] != new UIPanel())
                 {
-                    buttons[5].BackgroundColor = sora.NPCisPartyMember(NPCID.Angler) ? Color.LightBlue : Color.Transparent;
+                    buttons[5].BackgroundColor = (PartyMemberLogic.IsPartyMember(NPCID.Angler) >= 0) ? Color.LightBlue : Color.Transparent;
                 }
             }
             else
@@ -268,7 +276,7 @@ namespace KingdomTerrahearts.Interface
                 }
                 else if (buttons[6] != new UIPanel())
                 {
-                    buttons[6].BackgroundColor = sora.NPCisPartyMember(NPCID.Dryad) ? Color.LightBlue : Color.Transparent;
+                    buttons[6].BackgroundColor = (PartyMemberLogic.IsPartyMember(NPCID.Dryad) >= 0) ? Color.LightBlue : Color.Transparent;
                 }
             }
             else
@@ -300,7 +308,7 @@ namespace KingdomTerrahearts.Interface
                 }
                 else if (buttons[7] != new UIPanel())
                 {
-                    buttons[7].BackgroundColor = sora.NPCisPartyMember(NPCID.Painter) ? Color.LightBlue : Color.Transparent;
+                    buttons[7].BackgroundColor = (PartyMemberLogic.IsPartyMember(NPCID.Painter) >= 0) ? Color.LightBlue : Color.Transparent;
                 }
             }
             else
@@ -332,7 +340,7 @@ namespace KingdomTerrahearts.Interface
                 }
                 else if (buttons[8] != new UIPanel())
                 {
-                    buttons[8].BackgroundColor = sora.NPCisPartyMember(NPCID.ArmsDealer) ? Color.LightBlue : Color.Transparent;
+                    buttons[8].BackgroundColor = (PartyMemberLogic.IsPartyMember(NPCID.ArmsDealer) >= 0) ? Color.LightBlue : Color.Transparent;
                 }
             }
             else
@@ -364,7 +372,7 @@ namespace KingdomTerrahearts.Interface
                 }
                 else if (buttons[9] != new UIPanel())
                 {
-                    buttons[9].BackgroundColor = sora.NPCisPartyMember(NPCID.DD2Bartender) ? Color.LightBlue : Color.Transparent;
+                    buttons[9].BackgroundColor = (PartyMemberLogic.IsPartyMember(NPCID.DD2Bartender) >= 0) ? Color.LightBlue : Color.Transparent;
                 }
             }
             else
@@ -396,7 +404,7 @@ namespace KingdomTerrahearts.Interface
                 }
                 else if (buttons[10] != new UIPanel())
                 {
-                    buttons[10].BackgroundColor = sora.NPCisPartyMember(NPCID.Stylist) ? Color.LightBlue : Color.Transparent;
+                    buttons[10].BackgroundColor = (PartyMemberLogic.IsPartyMember(NPCID.Stylist) >= 0) ? Color.LightBlue : Color.Transparent;
                 }
             }
             else
@@ -429,7 +437,7 @@ namespace KingdomTerrahearts.Interface
                 }
                 else if (buttons[11] != new UIPanel())
                 {
-                    buttons[11].BackgroundColor = sora.NPCisPartyMember(NPCID.GoblinTinkerer) ? Color.LightBlue : Color.Transparent;
+                    buttons[11].BackgroundColor = (PartyMemberLogic.IsPartyMember(NPCID.GoblinTinkerer) >= 0) ? Color.LightBlue : Color.Transparent;
                 }
             }
             else
@@ -462,7 +470,7 @@ namespace KingdomTerrahearts.Interface
                 }
                 else if (buttons[12] != new UIPanel())
                 {
-                    buttons[12].BackgroundColor = sora.NPCisPartyMember(NPCID.WitchDoctor) ? Color.LightBlue : Color.Transparent;
+                    buttons[12].BackgroundColor = (PartyMemberLogic.IsPartyMember(NPCID.WitchDoctor) >= 0) ? Color.LightBlue : Color.Transparent;
                 }
             }
             else
@@ -495,7 +503,7 @@ namespace KingdomTerrahearts.Interface
                 }
                 else if (buttons[13] != new UIPanel())
                 {
-                    buttons[13].BackgroundColor = sora.NPCisPartyMember(NPCID.Clothier) ? Color.LightBlue : Color.Transparent;
+                    buttons[13].BackgroundColor = (PartyMemberLogic.IsPartyMember(NPCID.Clothier) >= 0) ? Color.LightBlue : Color.Transparent;
                 }
             }
             else
@@ -528,7 +536,7 @@ namespace KingdomTerrahearts.Interface
                 }
                 else if (buttons[14] != new UIPanel())
                 {
-                    buttons[14].BackgroundColor = sora.NPCisPartyMember(NPCID.Mechanic) ? Color.LightBlue : Color.Transparent;
+                    buttons[14].BackgroundColor = (PartyMemberLogic.IsPartyMember(NPCID.Mechanic) >= 0) ? Color.LightBlue : Color.Transparent;
                 }
             }
             else
@@ -561,7 +569,7 @@ namespace KingdomTerrahearts.Interface
                 }
                 else if (buttons[15] != new UIPanel())
                 {
-                    buttons[15].BackgroundColor = sora.NPCisPartyMember(NPCID.PartyGirl) ? Color.LightBlue : Color.Transparent;
+                    buttons[15].BackgroundColor = (PartyMemberLogic.IsPartyMember(NPCID.PartyGirl) >= 0) ? Color.LightBlue : Color.Transparent;
                 }
             }
             else

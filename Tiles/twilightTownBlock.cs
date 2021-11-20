@@ -1,19 +1,18 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 
 namespace KingdomTerrahearts.Tiles
 {
     class twilightTownBlock:ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileSolid[Type] = true;
 			Main.tileMergeDirt[Type] = true;
 			Main.tileBlockLight[Type] = true;
 			Main.tileLighted[Type] = true;
-			drop = mod.ItemType("twilightBlock");
+			ItemDrop = ModContent.ItemType<Items.Placeable.twilightBlock>();
 			AddMapEntry(new Color(235, 135, 0));
 		}
 

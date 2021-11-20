@@ -7,17 +7,21 @@ namespace KingdomTerrahearts.Buffs
     public class mewwowBuff:ModBuff
     {
 
-        public override void SetDefaults()
+        public override void ModifyBuffTip(ref string tip, ref int rare)
+        {
+            tip = "You are mounting a Dream Eater";
+        }
+
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Mew Wow");
-            Description.SetDefault("You are mounting a Dream Eater");
             Main.buffNoTimeDisplay[Type] = true;
             Main.buffNoSave[Type] = true;
         }
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.mount.SetMount(mod.MountType("mewwow"),player);
+            player.mount.SetMount(ModContent.MountType<Mounts.mewwow>(),player);
             player.buffTime[buffIndex] = 10;
         }
 

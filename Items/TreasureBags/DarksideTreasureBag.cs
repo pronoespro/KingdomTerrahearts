@@ -17,12 +17,12 @@ namespace KingdomTerrahearts.Items.TreasureBags
 
         public override void SetDefaults()
         {
-            item.maxStack = 999;
-            item.consumable = true;
-            item.width = 20;
-            item.height = 20;
-            item.rare = 9;
-            item.expert = true;
+            Item.maxStack = 999;
+            Item.consumable = true;
+            Item.width = 20;
+            Item.height = 20;
+            Item.rare = 9;
+            Item.expert = true;
         }
         public override bool CanRightClick()
         {
@@ -33,11 +33,18 @@ namespace KingdomTerrahearts.Items.TreasureBags
         {
             player.TryGettingDevArmor();
 
-            player.QuickSpawnItem(mod.ItemType("Keyblade_iron"));
+            if (Main.rand.Next(100) < 3)
+            {
+                player.QuickSpawnItem(ModContent.ItemType<Weapons.Keyblade_demonite>());
+            }
+            else
+            {
+                player.QuickSpawnItem(ModContent.ItemType<Weapons.Keyblade_iron>());
+            }
 
         }
 
-        public override int BossBagNPC => mod.NPCType("Darkside");
+        public override int BossBagNPC => ModContent.NPCType<NPCs.Bosses.Darkside>();
 
     }
 }

@@ -13,18 +13,18 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override void SetStaticDefaults()
         {
-            Main.projFrames[projectile.type] = 6;
+            Main.projFrames[Projectile.type] = 6;
         }
 
         public override void SetDefaults()
         {
-            projectile.netImportant = true;
-            projectile.width = 26;
-            projectile.height = 26;
-            projectile.friendly = true;
-            projectile.tileCollide = true;
-            projectile.penetrate = 1000;
-            projectile.timeLeft = 150;
+            Projectile.netImportant = true;
+            Projectile.width = 26;
+            Projectile.height = 26;
+            Projectile.friendly = true;
+            Projectile.tileCollide = true;
+            Projectile.penetrate = 1000;
+            Projectile.timeLeft = 150;
         }
 
         public override bool? CanHitNPC(NPC target)
@@ -34,28 +34,28 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            projectile.velocity = Vector2.Zero;
+            Projectile.velocity = Vector2.Zero;
             return false;
         }
 
         public override void AI()
         {
-            projectile.scale = 3f;
-            if (MathHelp.Magnitude(projectile.velocity) > 0)
+            Projectile.scale = 3f;
+            if (MathHelp.Magnitude(Projectile.velocity) > 0)
             {
-                projectile.velocity.Y += 0.1f;
-                projectile.frame = (projectile.velocity.Y==0)?0:((projectile.velocity.Y>0)?4:5);
+                Projectile.velocity.Y += 0.1f;
+                Projectile.frame = (Projectile.velocity.Y==0)?0:((Projectile.velocity.Y>0)?4:5);
             }
             else
             {
-                projectile.frame = 0;
+                Projectile.frame = 0;
             }
 
             for(int i = 0; i < Main.maxNPCs; i++)
             {
                 if (Main.npc[i].active && !Main.npc[i].friendly && !Main.npc[i].townNPC)
                 {
-                    if (Vector2.Distance(Main.npc[i].Center, projectile.Center) < (Main.npc[i].width + Main.npc[i].height) / 2 + (projectile.width+projectile.height)/2)
+                    if (Vector2.Distance(Main.npc[i].Center, Projectile.Center) < (Main.npc[i].width + Main.npc[i].height) / 2 + (Projectile.width+Projectile.height)/2)
                     {
                         Main.npc[i].life = 0;
                         Main.npc[i].checkDead();

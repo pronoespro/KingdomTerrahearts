@@ -7,60 +7,61 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Mounts
 {
-    public class FlowmotionPath:ModMountData
+    public class FlowmotionPath:ModMount
 	{
 
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			// What separates mounts and minecarts are these 3 lines
-			mountData.Minecart = true;
+			MountData.Minecart = true;
 			// This makes the minecarts item autoequip in the minecart slot
 			MountID.Sets.Cart[ModContent.MountType<FlowmotionPath>()] = true;
 			// The specified method takes care of spawning dust when stopping or jumping. Use DelegateMethods.Minecart.Sparks for normal sparks.
-			mountData.MinecartDust = GreenSparks;
+			
+			//MountData.MinecartDust = GreenSparks;
 
-			mountData.spawnDust = 16;
-			//mountData.buff = ModContent.BuffType<ExampleMinecartBuff>(); // serves the same purpose as for Car.cs
+			MountData.spawnDust = 16;
+			//MountData.buff = ModContent.BuffType<ExampleMinecartBuff>(); // serves the same purpose as for Car.cs
 
 			// Movement fields:
-			mountData.flightTimeMax = 20; // always set flight time to 0 for minecarts
-			mountData.fallDamage = 0f; // how much fall damage will the player take in the minecart
-			mountData.runSpeed = 20f; // how fast can the minecart go
-			mountData.acceleration = 1f; // how fast does the minecart accelerate
-			mountData.jumpHeight = 75; // how far does the minecart jump
-			mountData.jumpSpeed = 5.15f; // how fast does the minecart jump
-			mountData.blockExtraJumps = true; // Can the player not use a could in a bottle when in the minecart?
-			mountData.heightBoost = 0;
+			MountData.flightTimeMax = 20; // always set flight time to 0 for minecarts
+			MountData.fallDamage = 0f; // how much fall damage will the player take in the minecart
+			MountData.runSpeed = 20f; // how fast can the minecart go
+			MountData.acceleration = 1f; // how fast does the minecart accelerate
+			MountData.jumpHeight = 75; // how far does the minecart jump
+			MountData.jumpSpeed = 5.15f; // how fast does the minecart jump
+			MountData.blockExtraJumps = true; // Can the player not use a could in a bottle when in the minecart?
+			MountData.heightBoost = 0;
 
 			// Drawing fields:
-			mountData.playerYOffsets = new int[] { 0, 0, 0 }; // where is the players Y position on the mount for each frame of animation
-			mountData.xOffset = 0; // the X offset of the minecarts sprite
-			mountData.yOffset = 0; // the Y offset of the minecarts sprite
-			mountData.bodyFrame = 6; // which body frame is being used from the player when the player is boarded on the minecart
-			mountData.playerHeadOffset = 0; // Affects where the player head is drawn on the map
+			MountData.playerYOffsets = new int[] { 0, 0, 0 }; // where is the players Y position on the mount for each frame of animation
+			MountData.xOffset = 0; // the X offset of the minecarts sprite
+			MountData.yOffset = 0; // the Y offset of the minecarts sprite
+			MountData.bodyFrame = 6; // which body frame is being used from the player when the player is boarded on the minecart
+			MountData.playerHeadOffset = 0; // Affects where the player head is drawn on the map
 
 			// Animation fields: The following is the mount animation values shared by vanilla minecarts. It can be edited if you know what you are doing.
-			mountData.totalFrames = 1;
-			mountData.standingFrameCount = 1;
-			mountData.standingFrameDelay = 12;
-			mountData.standingFrameStart = 0;
-			mountData.runningFrameCount = 1;
-			mountData.runningFrameDelay = 12;
-			mountData.runningFrameStart = 0;
-			mountData.flyingFrameCount = 0;
-			mountData.flyingFrameDelay = 0;
-			mountData.flyingFrameStart = 0;
-			mountData.inAirFrameCount = 0;
-			mountData.inAirFrameDelay = 0;
-			mountData.inAirFrameStart = 0;
-			mountData.idleFrameCount = 1;
-			mountData.idleFrameDelay = 10;
-			mountData.idleFrameStart = 0;
-			mountData.idleFrameLoop = false;
+			MountData.totalFrames = 1;
+			MountData.standingFrameCount = 1;
+			MountData.standingFrameDelay = 12;
+			MountData.standingFrameStart = 0;
+			MountData.runningFrameCount = 1;
+			MountData.runningFrameDelay = 12;
+			MountData.runningFrameStart = 0;
+			MountData.flyingFrameCount = 0;
+			MountData.flyingFrameDelay = 0;
+			MountData.flyingFrameStart = 0;
+			MountData.inAirFrameCount = 0;
+			MountData.inAirFrameDelay = 0;
+			MountData.inAirFrameStart = 0;
+			MountData.idleFrameCount = 1;
+			MountData.idleFrameDelay = 10;
+			MountData.idleFrameStart = 0;
+			MountData.idleFrameLoop = false;
 			if (Main.netMode != NetmodeID.Server)
 			{
-				mountData.textureWidth = mountData.frontTexture.Width;
-				mountData.textureHeight = mountData.frontTexture.Height;
+				MountData.textureWidth = MountData.frontTexture.Width();
+				MountData.textureHeight = MountData.frontTexture.Height();
 			}
 		}
 
@@ -85,7 +86,7 @@ namespace KingdomTerrahearts.Mounts
 			{
 				GreenSparks(player.Center);
             }
-			mountData.bodyFrame = (Math.Abs(player.velocity.X)>5)?6:16;
+			MountData.bodyFrame = (Math.Abs(player.velocity.X)>5)?6:16;
 
 			for (int i = 0; i < player.velocity.X / 5; i++)
 			{
@@ -93,7 +94,6 @@ namespace KingdomTerrahearts.Mounts
 			}
 
 			SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
-			sp.formColor = Color.LightBlue;
 		}
     }
 }

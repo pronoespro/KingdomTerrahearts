@@ -6,31 +6,32 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items.Weapons
 {
-    class Keyblade_dualDisk:Keyblade
+    class Keyblade_dualDisk:KeybladeBase
     {
 
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Dual disk");
 			Tooltip.SetDefault("A digital keyblade that summons magic disks");
+			base.SetStaticDefaults();
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 75;
-			item.melee = true;
-			item.width = 80;
-			item.height = 80;
-			item.scale = 0.75f;
-			item.useTime = 15;
-			item.useAnimation = 15;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.holdStyle = 4;
-			item.knockBack = 3;
-			item.value = 100;
-			item.rare = 2;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
+			base.SetDefaults();
+			Item.damage = 75;
+			Item.width = 80;
+			Item.height = 80;
+			Item.scale = 0.75f;
+			Item.useTime = 15;
+			Item.useAnimation = 15;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.holdStyle = 4;
+			Item.knockBack = 3;
+			Item.value = 100;
+			Item.rare = 2;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
 
 			SaveAtributes();
 			keyLevel = 3;
@@ -44,18 +45,11 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.EnchantedBoomerang,2);
-			recipe.AddIngredient(ItemID.Nanites,10);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-
-			recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.EnchantedBoomerang);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(ItemID.EnchantedBoomerang,2);
-			recipe.AddRecipe();
+			CreateRecipe()
+			.AddIngredient(ItemID.EnchantedBoomerang,2)
+			.AddIngredient(ItemID.Nanites,10)
+			.AddTile(TileID.Anvils)
+			.Register();
 		}
 
 		public override void ChangeKeybladeValues()

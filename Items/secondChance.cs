@@ -41,39 +41,20 @@ namespace KingdomTerrahearts.Items
             base.UpdateEquip(player);
         }
 
-        public override void UpdateInventory(Player player)
-        {
-            if (player == null)
-            {
-                abilityName = "Second Chance";
-                SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
-                sp.hasSecondChance = true;
-                sp.secondChanceInvulnerability = invulnerabilityFrames;
-                sp.secondChanceReload = reloadTime;
-                sp.hasAutoHP = autoHP;
-                sp.autoHPRecover = recoveredHp;
-                sp.autoHPReload = autoHPReload;
-                base.UpdateInventory(player);
-            }
-        }
-
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-
-            recipe.AddIngredient(ItemID.FallenStar, 2);
-
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe()
+            .AddIngredient(ItemID.FallenStar, 2)
+            .AddTile(TileID.WorkBenches)
+            .Register();
 
         }
 
         public override void RaiseLevel()
         {
             base.RaiseLevel();
-            SoraPlayer sp = Main.player[item.owner].GetModPlayer<SoraPlayer>();
+            SoraPlayer sp = Main.player[Item.playerIndexTheItemIsReservedFor].GetModPlayer<SoraPlayer>();
             sp.RaiseSecondChanceLevel(this);
         }
 

@@ -10,7 +10,7 @@ namespace KingdomTerrahearts.Tiles
 {
     class TwilightDoorOpen:ModTile
     {
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
 			Main.tileSolid[Type] = false;
@@ -61,10 +61,10 @@ namespace KingdomTerrahearts.Tiles
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Twilight Door");
 			AddMapEntry(new Color(200, 200, 200), name);
-			dustType = DustID.t_Honey;
-			disableSmartCursor = true;
-			adjTiles = new int[] { TileID.OpenDoor };
-			closeDoorID = mod.TileType("TwilightDoorClosed");
+			DustType = DustID.t_Honey;
+			TileID.Sets.DisableSmartCursor[Type] = true;
+			AdjTiles = new int[] { TileID.OpenDoor };
+			CloseDoorID = ModContent.TileType<TwilightDoorClosed>();
 		}
 
 		public override bool HasSmartInteract()
@@ -79,15 +79,15 @@ namespace KingdomTerrahearts.Tiles
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-			Item.NewItem(i * 16, j * 16, 32, 48, mod.ItemType("TwilightDoor"));
+			Item.NewItem(i * 16, j * 16, 32, 48, ModContent.ItemType<Items.Placeable.TwilightDoor>());
 		}
 
 		public override void MouseOver(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
 			player.noThrow = 2;
-			player.showItemIcon = true;
-			player.showItemIcon2 = mod.ItemType("TwilightDoor");
+			player.cursorItemIconEnabled = true;
+			player.cursorItemIconID = ModContent.ItemType<Items.Placeable.TwilightDoor>();
 		}
 	}
 }

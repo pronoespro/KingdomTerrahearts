@@ -26,6 +26,9 @@ namespace KingdomTerrahearts.Interface
     public class DialogSystem
     {
 
+        public const int BOSS_DIALOGTIME = 700;
+        public const int NPC_DIALOGTIME = 600;
+
         public static DialogSystem instance;
 
         public static Conversation[] conversations=new Conversation[0];
@@ -46,7 +49,9 @@ namespace KingdomTerrahearts.Interface
             {
                 conversations[0].talkTime--;
                 if (conversations[0].talkTime <= 0)
+                {
                     RemoveConversations(1);
+                }
             }
         }
 
@@ -77,12 +82,16 @@ namespace KingdomTerrahearts.Interface
                 return;
             Conversation[] newConv = conversations;
             conversations = new Conversation[newConv.Length + conv.Length];
-            for(int i = 0; i < conversations.Length; i++)
+            for (int i = 0; i < conversations.Length; i++)
             {
                 if (i < newConv.Length)
+                {
                     conversations[i] = newConv[i];
+                }
                 else
-                    conversations[i] = conv[i-newConv.Length];
+                {
+                    conversations[i] = conv[i - newConv.Length];
+                }
             }
         }
         public static void AddConversation(Conversation conv)
@@ -94,9 +103,13 @@ namespace KingdomTerrahearts.Interface
             for (int i = 0; i < conversations.Length; i++)
             {
                 if (i < newConv.Length)
+                {
                     conversations[i] = newConv[i];
+                }
                 else
+                {
                     conversations[i] = conv;
+                }
             }
         }
 

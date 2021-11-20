@@ -19,10 +19,6 @@ namespace KingdomTerrahearts.Items
                 "\nAllows you to avoid attacks, no invulnerability" +
                 "\nVery low speed" +
                 "\nCan only be used on the ground");
-            abilityTooltips = new string[]
-            {
-
-            };
         }
 
         public override void UpdateEquip(Player player)
@@ -33,6 +29,10 @@ namespace KingdomTerrahearts.Items
             sp.canDash = true;
             sp.canDashMidAir = canDashMidair;
             sp.ChangeDashReload(dashReaload);
+            abilityTooltips = new string[]
+            {
+                "Lets you dash "+(level>3?"a short distance": ((level>7)?"a long distance":"some distance"))+(canDashMidair?"and you can dash mid-air.":"but only on the ground.")
+            };
         }
 
         public override void UpdateInventory(Player player)
@@ -51,20 +51,17 @@ namespace KingdomTerrahearts.Items
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-
-            recipe.AddIngredient(ItemID.FallenStar, 2);
-
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe()
+            .AddIngredient(ItemID.FallenStar, 2)
+            .AddTile(TileID.WorkBenches)
+            .Register();
 
         }
 
         public override void RaiseLevel()
         {
             base.RaiseLevel();
-            SoraPlayer sp = Main.player[item.owner].GetModPlayer<SoraPlayer>();
+            SoraPlayer sp = Main.player[Item.playerIndexTheItemIsReservedFor].GetModPlayer<SoraPlayer>();
             sp.RaiseQuickRunLevel(this);
         }
 

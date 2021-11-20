@@ -1,8 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Utilities;
 
 namespace KingdomTerrahearts.NPCs
 {
@@ -13,17 +16,72 @@ namespace KingdomTerrahearts.NPCs
 
         public bool activated = false;
 
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Pot Spider");
+            Main.npcFrameCount[NPC.type] = 4;
+            // Influences how the NPC looks in the Bestiary
+            NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new NPCID.Sets.NPCBestiaryDrawModifiers(0)
+            {
+                Velocity = 0f, // Draws the NPC in the bestiary as if its walking +1 tiles in the x direction
+                Direction = -1 // -1 is left and 1 is right. NPCs are drawn facing the left by default but ExamplePerson will be drawn facing the right
+                              // Rotation = MathHelper.ToRadians(180) // You can also change the rotation of an NPC. Rotation is measured in radians
+                              // If you want to see an example of manually modifying these when the NPC is drawn, see PreDraw
+            };
+
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
+        }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            // We can use AddRange instead of calling Add multiple times in order to add multiple items at once
+            bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[] {
+				// Sets the preferred biomes of this town NPC listed in the bestiary.
+				// With Town NPCs, you usually set this to what biome it likes the most in regards to NPC happiness.
+				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Underground,
+
+				// Sets your NPC's flavor text in the bestiary.
+				new FlavorTextBestiaryInfoElement("Don't be fooled by this pot looking creature or it will come at you and take your money away.\nKeep hurting it to take it's money away instead.")
+            });
+        }
+
+        public override void SetDefaults()
+        {
+            NPC.aiStyle = -1;
+            NPC.lifeMax = 100;
+            NPC.damage = 20;
+            NPC.defense = 2;
+            NPC.knockBackResist = 1;
+            NPC.width = 30;
+            NPC.height = 30;
+            NPC.value = 0;
+            NPC.npcSlots = 0.1f;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath6;
+
+            canTeleport = false;
+        }
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            return SpawnCondition.Underground.Chance*(NPC.downedBoss1||NPC.downedBoss2||NPC.downedBoss3?1:0);
+        }
+
         public override void AI()
         {
 
-            npc.TargetClosest(false);
-            Player p = Main.player[npc.target];
+            NPC.TargetClosest(false);
+            Player p = Main.player[NPC.target];
 
 
             if (activated)
+            {
                 base.AI();
+            }
             else
-                activated = Vector2.Distance(npc.Center, p.Center) < attackRange;
+            {
+                activated = Vector2.Distance(NPC.Center, p.Center) < attackRange;
+            }
 
         }
 
@@ -62,79 +120,37 @@ namespace KingdomTerrahearts.NPCs
                 }
             }
 
-            npc.frame.Y = frameHeight * curFrame;
+            NPC.frame.Y = frameHeight * curFrame;
         }
 
-
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Pot Spider");
-            Main.npcFrameCount[npc.type] = 4;
-        }
-
-        public override void SetDefaults()
-        {
-            npc.aiStyle = -1;
-            npc.lifeMax = 100;
-            npc.damage = 20;
-            npc.defense = 2;
-            npc.knockBackResist = 1;
-            npc.width = 30;
-            npc.height = 30;
-            npc.value = 0;
-            npc.npcSlots = 0.1f;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath6;
-
-            canTeleport = false;
-        }
-
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return SpawnCondition.Underground.Chance*30;
-        }
 
         public override void HitEffect(int hitDirection, double damage)
         {
             activated = true;
-            Item.NewItem(npc.getRect(), ItemID.GoldCoin,(Main.rand.Next(1,30)/10+1));
+            Item.NewItem(NPC.getRect(), ItemID.CopperCoin,(Main.rand.Next(1,30)/10+1));
         }
 
-        public override void NPCLoot()
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            Random r = new Random();
-            switch (Main.rand.Next(5))
-            {
-                case 0:
-                default:
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("blazingShard"), Main.rand.Next(5) + 1);
-                    break;
-                case 1:
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("denseShard"), Main.rand.Next(5) + 1);
-                    break;
-                case 2:
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("frostShard"), Main.rand.Next(5) + 1);
-                    break;
-                case 3:
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("lucidShard"), Main.rand.Next(5) + 1);
-                    break;
-                case 4:
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("powerShard"), Main.rand.Next(5) + 1);
-                    break;
-                case 5:
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("pulsingShard"), Main.rand.Next(5) + 1);
-                    break;
-                case 6:
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("thunderShard"), Main.rand.Next(5) + 1);
-                    break;
-                case 7:
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("twilightShard"), Main.rand.Next(5) + 1);
-                    break;
-            }
-            Rectangle coinSpawnRect = npc.getRect();
+
+            //Bestiary
+            int[] possibleItems = new int[] { ModContent.ItemType<Items.Materials.blazingShard>(), ModContent.ItemType<Items.Materials.denseShard>() , ModContent.ItemType<Items.Materials.frostShard>() , ModContent.ItemType<Items.Materials.frostShard>() , ModContent.ItemType<Items.Materials.lucidShard>() , ModContent.ItemType<Items.Materials.powerShard>() , ModContent.ItemType<Items.Materials.pulsingShard>() , ModContent.ItemType<Items.Materials.thunderShard>() , ModContent.ItemType<Items.Materials.twilightShard>() };
+
+            npcLoot.Add(ItemDropRule.OneFromOptions(1,possibleItems));
+
+            possibleItems = new int[] { ItemID.CopperOre,ItemID.SilverOre,ItemID.GoldOre,ItemID.LeadOre,ItemID.IronOre,ItemID.TinOre};
+
+            npcLoot.Add(ItemDropRule.OneFromOptions(1, possibleItems));
+
+        }
+
+        public override bool PreKill()
+        {
+            Rectangle coinSpawnRect = NPC.getRect();
             coinSpawnRect.Width *= 4;
             coinSpawnRect.Height *= 4;
-            Item.NewItem(coinSpawnRect, ItemID.GoldCoin, (Main.rand.Next(1, 30) / 10 + 1));
+            Item.NewItem(coinSpawnRect, ItemID.GoldCoin, (Main.rand.Next(1, 4)  + 1));
+            return base.PreKill();
         }
 
     }

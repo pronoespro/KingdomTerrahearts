@@ -4,6 +4,7 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.DataStructures;
 
 namespace KingdomTerrahearts.Projectiles.Summons
 {
@@ -18,37 +19,39 @@ namespace KingdomTerrahearts.Projectiles.Summons
 
         public override void SetDefaults()
         {
-            projectile.width = 12;
-            projectile.height = 18;
-            projectile.aiStyle = -1;
-            projectile.friendly = true;
-            projectile.ignoreWater = true;
-            projectile.tileCollide = false;
-            projectile.maxPenetrate = -1;
-            projectile.penetrate = -1;
-            projectile.scale = 1.5f;
-            projectile.light = 1f;
-            projectile.timeLeft = 2000;
-            projectile.ai[1] = projectile.damage;
-            projectile.damage = 0;
+            Projectile.width = 12;
+            Projectile.height = 18;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = false;
+            Projectile.maxPenetrate = -1;
+            Projectile.penetrate = -1;
+            Projectile.scale = 1.5f;
+            Projectile.light = 1f;
+            Projectile.timeLeft = 2000;
+            Projectile.ai[1] = Projectile.damage;
+            Projectile.damage = 0;
         }
 
         public override void AI()
         {
-            projectile.Center = Main.player[projectile.owner].Center+new Vector2(0,-30);
+            Projectile.Center = Main.player[Projectile.owner].Center+new Vector2(0,-30);
             TargetEnemie();
 
-            projectile.spriteDirection = Main.player[projectile.owner].direction;
+            Projectile.spriteDirection = Main.player[Projectile.owner].direction;
 
             if (target != -1) {
 
 
-                projectile.ai[0]++;
-                if (projectile.ai[0] % 20 == 0)
+                Projectile.ai[0]++;
+                if (Projectile.ai[0] % 20 == 0)
                 {
-                    projectile.direction = (Main.npc[target].Center.X > projectile.Center.X) ? 1 : -1;
-                    dir = MathHelp.Normalize(Main.npc[target].Center - projectile.Center)*15;
-                    int proj=Projectile.NewProjectile(projectile.Center,dir, ProjectileID.BallofFire, (int)projectile.ai[1]+1, projectile.knockBack, projectile.owner);
+                    ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+
+                    Projectile.direction = (Main.npc[target].Center.X > Projectile.Center.X) ? 1 : -1;
+                    dir = MathHelp.Normalize(Main.npc[target].Center - Projectile.Center)*15;
+                    int proj=Projectile.NewProjectile(s,Projectile.Center,dir, ProjectileID.BallofFire, (int)Projectile.ai[1]+1, Projectile.knockBack, Projectile.owner);
                 }
             }
 

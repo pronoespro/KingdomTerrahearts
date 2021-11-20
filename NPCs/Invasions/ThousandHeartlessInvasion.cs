@@ -15,13 +15,11 @@ namespace KingdomTerrahearts.NPCs.Invasions
 
         static int invasionSize;
 
-        static Mod mod = ModLoader.GetMod("KingdomTerrahearts");
-
         public static int[] heartless =
         {
-            mod.NPCType("shadowHeartless"),
-            mod.NPCType("armoredKnightHeartless"),
-            mod.NPCType("SurveillanceRobotHeartless")
+            ModContent.NPCType<shadowHeartless>(),
+            ModContent.NPCType<armoredKnightHeartless>(),
+            ModContent.NPCType<SurveillanceRobotHeartless>()
         };
 
         public static int[] heartlessBosses ={};
@@ -39,7 +37,7 @@ namespace KingdomTerrahearts.NPCs.Invasions
             if (Main.invasionType == 0)
             {
                 int numPlayers = 0;
-                for(int i = 0; i < 255; i++)
+                for(int i = 0; i < Main.maxPlayers; i++)
                 {
                     numPlayers += (Main.player[i].active) ? 1 : 0;
                 }
@@ -79,10 +77,11 @@ namespace KingdomTerrahearts.NPCs.Invasions
             if (Main.invasionSize <= 0)
             {
                 text = "The thousand heartless have been defeated.";
+                KingdomWorld.downedCustomInvasion = true;
             }
             if (Main.netMode == NetmodeID.SinglePlayer)
             {
-                Main.NewText(text, 175, 75, 255, false);
+                Main.NewText(text, 175, 75, 255);
                 return;
             }
             if (Main.netMode == 2)
@@ -107,7 +106,7 @@ namespace KingdomTerrahearts.NPCs.Invasions
                 }
                 else if (Main.invasionSize <= invasionSize / 2)
                 {
-                    heartlessBosses = new int[] { mod.NPCType("Darkside") };
+                    heartlessBosses = new int[] { ModContent.NPCType<NPCs.Bosses.Darkside>() };
                 }
 
                 //Do not do the rest if invasion already at spawn
@@ -181,7 +180,8 @@ namespace KingdomTerrahearts.NPCs.Invasions
                     {
                         if (type == heartless[n])
                         {
-                            Rectangle value = new Rectangle((int)(Main.npc[i].position.X + (float)(Main.npc[i].width / 2)) - num, (int)(Main.npc[i].position.Y + (float)(Main.npc[i].height / 2)) - num, num * 2, num * 2);
+                            Rectangle value = new Rectangle((int)(Main.npc[i].position.X + (float)(Main.npc[i].width / 2f)) - num, (int)(Main.npc[i].position.Y + (float)(Main.npc[i].height / 2f)) - num, num * 2, num * 2);
+
                             if (rectangle.Intersects(value))
                             {
                                 flag = true;

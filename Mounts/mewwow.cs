@@ -7,73 +7,71 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Mounts
 {
-    public class mewwow:ModMountData
+    public class mewwow:ModMount
     {
 
         bool isGrounded = false;
         bool attacking = false;
         int timeOnGround = 0;
 
-        public override void SetDefaults()
+        public override void SetMount(Player player, ref bool skipDust)
         {
-            mountData.spawnDust = DustID.Confetti;
-            mountData.buff = mod.BuffType("mewwowBuff");
-            mountData.heightBoost = 30;
-            mountData.fallDamage = 0f;
-            mountData.runSpeed = 4f;
-            mountData.dashSpeed = 2f;
-            mountData.flightTimeMax = 0;
-            mountData.fatigueMax = 0;
-            mountData.jumpHeight = 10;
-            mountData.acceleration = 0.19f;
-            mountData.jumpSpeed = 10f;
-            mountData.blockExtraJumps = false;
-            mountData.totalFrames = 1;
-            mountData.constantJump = true;
-            int[] array = new int[mountData.totalFrames];
-            for(int i = 0; i < array.Length; i++)
+            MountData.spawnDust = DustID.Confetti;
+            MountData.buff = ModContent.BuffType<Buffs.mewwowBuff>();
+            MountData.heightBoost = 30;
+            MountData.fallDamage = 0f;
+            MountData.runSpeed = 4f;
+            MountData.dashSpeed = 2f;
+            MountData.flightTimeMax = 0;
+            MountData.fatigueMax = 0;
+            MountData.jumpHeight = 10;
+            MountData.acceleration = 0.19f;
+            MountData.jumpSpeed = 10f;
+            MountData.blockExtraJumps = false;
+            MountData.totalFrames = 1;
+            MountData.constantJump = true;
+            int[] array = new int[MountData.totalFrames];
+            for (int i = 0; i < array.Length; i++)
             {
                 array[i] = 30;
             }
-            mountData.playerYOffsets = array;
-            mountData.xOffset = 7;
-            mountData.yOffset = 10;
-            mountData.bodyFrame =0;
-            mountData.playerHeadOffset = 0;
-            mountData.standingFrameCount = 0;
-            mountData.standingFrameDelay = 0;
-            mountData.runningFrameCount = 0;
-            mountData.runningFrameDelay = 0;
-            mountData.runningFrameStart = 0;
-            mountData.flyingFrameCount = 0;
-            mountData.flyingFrameDelay = 0;
-            mountData.flyingFrameStart = 0;
-            mountData.inAirFrameCount = 0;
-            mountData.inAirFrameDelay = 0;
-            mountData.inAirFrameStart = 0;
-            mountData.idleFrameCount = 0;
-            mountData.idleFrameDelay = 0;
-            mountData.idleFrameStart = 0;
-            mountData.idleFrameLoop = false;
-            mountData.swimFrameCount = 0;
-            mountData.swimFrameDelay = 0;
-            mountData.swimFrameStart= 0;
+            MountData.playerYOffsets = array;
+            MountData.xOffset = 7;
+            MountData.yOffset = 10;
+            MountData.bodyFrame = 0;
+            MountData.playerHeadOffset = 0;
+            MountData.standingFrameCount = 0;
+            MountData.standingFrameDelay = 0;
+            MountData.runningFrameCount = 0;
+            MountData.runningFrameDelay = 0;
+            MountData.runningFrameStart = 0;
+            MountData.flyingFrameCount = 0;
+            MountData.flyingFrameDelay = 0;
+            MountData.flyingFrameStart = 0;
+            MountData.inAirFrameCount = 0;
+            MountData.inAirFrameDelay = 0;
+            MountData.inAirFrameStart = 0;
+            MountData.idleFrameCount = 0;
+            MountData.idleFrameDelay = 0;
+            MountData.idleFrameStart = 0;
+            MountData.idleFrameLoop = false;
+            MountData.swimFrameCount = 0;
+            MountData.swimFrameDelay = 0;
+            MountData.swimFrameStart = 0;
             if (Main.netMode != NetmodeID.Server)
             {
-                mountData.textureWidth = mountData.frontTexture.Width;
-                mountData.textureHeight = mountData.frontTexture.Height;
+                MountData.textureWidth = MountData.frontTexture.Width();
+                MountData.textureHeight = MountData.frontTexture.Height();
             }
-
         }
 
 
         public override void UpdateEffects(Player player)
         {
 
-            Point playerBottomPosition = (player.Center + new Vector2(0, player.gravDir * (float)player.height / 2f + player.gravDir * 2f)).ToTileCoordinates();
-            Point movementBottomPosition = (player.Center + new Vector2(player.velocity.X, player.gravDir * (float)player.height / 2f + player.gravDir * 2f)).ToTileCoordinates();
 
-            if (WorldGen.SolidOrSlopedTile(playerBottomPosition.X,playerBottomPosition.Y)|| WorldGen.SolidOrSlopedTile(movementBottomPosition.X, movementBottomPosition.Y))
+            SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
+            if (sp.Grounded())
             {
 
                 int dustAmmount = 10;
@@ -82,11 +80,11 @@ namespace KingdomTerrahearts.Mounts
                 {
                     if (Math.Abs(player.velocity.X) > 0.1f)
                     {
-                        Main.PlaySound(new LegacySoundStyle(2, 16), x: (int)player.Center.X, y: (int)player.Center.Y);
+                        SoundEngine.PlaySound(new LegacySoundStyle(2, 16), x: (int)player.Center.X, y: (int)player.Center.Y);
                         timeOnGround++;
                         if (timeOnGround > 2)
                         {
-                            player.velocity.Y = -mountData.jumpHeight / 2;
+                            player.velocity.Y = -MountData.jumpHeight / 2;
                             timeOnGround = 0;
                         }
                     }
@@ -100,7 +98,7 @@ namespace KingdomTerrahearts.Mounts
                     if (attacking)
                     {
                         dustAmmount *= 5;
-                        Main.PlaySound(new LegacySoundStyle(2, 14), x: (int)player.Center.X, y: (int)player.Center.Y);
+                        SoundEngine.PlaySound(new LegacySoundStyle(2, 14), x: (int)player.Center.X, y: (int)player.Center.Y);
                         for (int i = 0; i < Main.npc.Length; i++)
                         {
                             if (Main.npc[i] == null)
@@ -125,7 +123,7 @@ namespace KingdomTerrahearts.Mounts
 
                     for (int i = 0; i < dustAmmount; i++)
                     {
-                        int newDust = Dust.NewDust(new Vector2(rect.X, rect.Y), rect.Width, rect.Height, mountData.spawnDust = DustID.Confetti);
+                        int newDust = Dust.NewDust(new Vector2(rect.X, rect.Y), rect.Width, rect.Height, MountData.spawnDust = DustID.Confetti);
                         Main.dust[newDust].color = new Color(Main.rand.Next(50, 360), Main.rand.Next(50, 360), Main.rand.Next(50, 360));
                     }
 
@@ -141,9 +139,7 @@ namespace KingdomTerrahearts.Mounts
                     attacking = true;
                     player.immune = true;
                     player.immuneNoBlink = true; ;
-                    SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
-                    if (!sp.IsInvulnerable())
-                    sp.AddInvulnerability(2);
+                    sp.SetContactinvulnerability(3);
                 }
                 else
                 {

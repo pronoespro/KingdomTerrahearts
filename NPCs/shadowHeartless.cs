@@ -1,33 +1,35 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Utilities;
 
 namespace KingdomTerrahearts.NPCs
 {
-    class shadowHeartless : BasicGroundEnemy
+    public class shadowHeartless : BasicGroundEnemy
     {
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Shadow heartless");
-            Main.npcFrameCount[npc.type] = 5;
+            Main.npcFrameCount[NPC.type] = 5;
         }
 
         public override void SetDefaults()
         {
-            npc.aiStyle = -1;
-            npc.lifeMax = 50;
-            npc.damage = 20;
-            npc.defense = 1;
-            npc.knockBackResist = 1;
-            npc.width = 38;
-            npc.height = 30;
-            npc.value = 100;
-            npc.npcSlots = 0.1f;
-            npc.HitSound = SoundID.NPCHit1;
-            npc.DeathSound = SoundID.NPCDeath6;
+            NPC.aiStyle = -1;
+            NPC.lifeMax = 50;
+            NPC.damage = 20;
+            NPC.defense = 1;
+            NPC.knockBackResist = 1;
+            NPC.width = 38;
+            NPC.height = 30;
+            NPC.value = 100;
+            NPC.npcSlots = 0.1f;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath6;
 
             canTeleport = true;
         }
@@ -37,13 +39,9 @@ namespace KingdomTerrahearts.NPCs
             return  SpawnCondition.OverworldDaySlime.Chance;
         }
 
-        public override void NPCLoot()
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            Random r = new Random();
-            if (r.Next(10) <= 1)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("lucidShard"), Main.rand.Next(5)+1);
-            }
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lucidShard>(), 10, 1, 6));
         }
 
         public override void SpecialAction()

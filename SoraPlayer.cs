@@ -1,10 +1,14 @@
-﻿using KingdomTerrahearts.Interface;
+﻿using KingdomTerrahearts.Extra;
+using KingdomTerrahearts.Interface;
 using KingdomTerrahearts.Items;
 using KingdomTerrahearts.Items.Weapons;
+using KingdomTerrahearts.Logic;
+using KingdomTerrahearts.NPCs.Invasions;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -46,10 +50,6 @@ namespace KingdomTerrahearts
         public int castHealAmount = 0;
         public int castHealCost = 1000;
         public int reviveTime = 0;
-        //vanity related
-        public bool orgCoatAccesory=false;
-        public bool orgCoatHideVanity = false;
-        public bool orgCoatForceBanity = false;
         //time skip related
         public bool skipToDay = false;
         public bool skipTime = false;
@@ -57,6 +57,13 @@ namespace KingdomTerrahearts
         public bool enlightened = false;
         public bool fightingInBattleground = false;
         public Vector2 initPosTrap, endPosTrap;
+        //Costume related
+        public int curCostume = 0;
+
+        //Teleport related
+        public Vector2 originalSpawnPoint;
+        public bool canTPToSavePoints = false;
+        public DiscoveredSavePoint[] discoveredSavePoints=new DiscoveredSavePoint[0];
 
         //current abilities related
         float curGlideTime = 0;
@@ -73,14 +80,14 @@ namespace KingdomTerrahearts
 
         //keyblade related
         public int guardTime = -45;
-        int guardProj;
+        public int guardProj;
         public blockingType guardType=blockingType.none;
         public bool blockedAttack=false;
         public int levelUpShowingTime = 0;
         public static Projectile[] summonProjectiles = new Projectile[0];
+        public int noContactDamageTime = 0;
 
         //form related
-        public Color formColor;
         public bool usingForm;
 
         public Item lastHeldItem;
@@ -93,11 +100,25 @@ namespace KingdomTerrahearts
         //Biome related
         public bool inTwilightTown = false;
 
+        //Music related
+        public bool up, down, left, right;
+        public bool justPressUp, justPressDown, justPressLeft, justPressRight;
+        public Vector2 collisionPoints;
+
+        //Extra collision realated
+        public bool collisionUp, collisionDown, collisionLeft, collisionRight;
+
         //Personal and not KH related
         public bool invincible;
         public bool hasZafi;
 
         public bool playerCreated;
+        public bool playerDied;
+
+        public void SetContactinvulnerability(int time)
+        {
+            noContactDamageTime = time;
+        }
 
         public void AddInvulnerability(int time)
         {
@@ -118,6 +139,9 @@ namespace KingdomTerrahearts
 
         public override void ResetEffects()
         {
+
+            curCostume = -1;
+
             canGlide = false;
             glideTime = 0;
             glideFallSpeed = 10;
@@ -130,7 +154,7 @@ namespace KingdomTerrahearts
             canDoubleJump = false;
             doubleJumpHeight = 0;
             doubleJumpQuantity = 0;
-            
+
             hasSecondChance = false;
             secondChanceReload = 1000;
             hasAutoHP = false;
@@ -142,87 +166,130 @@ namespace KingdomTerrahearts
             castHealAmount = 0;
             castHealCost = 1000;
 
-            orgCoatAccesory = false;
-            orgCoatHideVanity = false;
-            orgCoatForceBanity = false;
-
             enlightened = false;
 
-            player.noFallDmg = false;
+            Player.noFallDmg = false;
 
             invincible = false;
             hasZafi = false;
+            canTPToSavePoints = false;
 
-    }
+            collisionRight = collisionLeft = collisionUp = collisionDown = false;
+
+        }
 
         public override void PlayerDisconnect(Player player)
         {
             inTwilightTown = false;
 
-            bool thereAreOtherPlayers = false;
-            for (int i = 0; i < Main.maxPlayers; i++)
+            if (player == Main.LocalPlayer)
             {
-                if (Main.player[i].active && Main.player[i] != Main.LocalPlayer)
+                DialogSystem.RemoveConversations(10000000);
+            }
+        }
+
+        public bool hasHealingPotion()
+        {
+
+            for(int i = 0; i < Player.inventory.Length; i++)
+            {
+                if(Player.inventory[i].consumable && Player.inventory[i].healLife > 0)
                 {
-                    thereAreOtherPlayers = true;
+                    return true;
                 }
             }
 
-            if (!thereAreOtherPlayers)
-            {
-                KingdomWorld kingdom = mod.GetModWorld(Main.worldName) as KingdomWorld;
-                kingdom.GoToMainDimension();
-            }
+            return false;
         }
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
             /*
+            Go To Space
+            KingdomWorld kingdom = mod.GetModWorld("KingdomWorld") as KingdomWorld;
+            Main.NewText(Main.worldName);
+            kingdom.GoToSpace();
+            Go To world
+            KingdomWorld kingdom = mod.GetModWorld("KingdomWorld") as KingdomWorld;
+            Main.NewText(Main.worldName);
+            kingdom.GoToMainDimension();
+            */
+
+            #region music
+            up = down = left = right = false;
+            justPressDown= justPressLeft= justPressRight= justPressUp= false;
+
             if (KingdomTerrahearts.MusicUpKey.JustPressed)
             {
-                Main.NewText("up");
-                KingdomWorld kingdom= mod.GetModWorld("KingdomWorld")as KingdomWorld;
-                Main.NewText(Main.worldName);
-                kingdom.GoToSpace();
+                justPressUp = true;
+                /*
+                Main.invasionDelay = 0;
+                Main.invasionProgress = 0;
+                Main.invasionProgressMax = 0;
+                Main.invasionSize = 0;
+                Main.invasionType = -1;
+                ThousandHeartlessInvasion.StartInvasion();
+                */
+
             } else if (KingdomTerrahearts.MusicLeftKey.JustPressed)
             {
-                Main.NewText("left");
+                justPressLeft = true;
             }
             else if (KingdomTerrahearts.MusicDownKey.JustPressed)
             {
-                Main.NewText("down");
-                KingdomWorld kingdom = mod.GetModWorld("KingdomWorld") as KingdomWorld;
-                Main.NewText(Main.worldName);
-                kingdom.GoToMainDimension();
+                justPressDown = true;
             }
             else if (KingdomTerrahearts.MusicRightKey.JustPressed)
             {
-                Main.NewText("right");
+                justPressRight = true;
             }
-            */
 
+            if (KingdomTerrahearts.MusicUpKey.Current)
+            {
+                up = true;
+            }
+            else if (KingdomTerrahearts.MusicLeftKey.Current)
+            {
+                left= true;
+            }
+            else if (KingdomTerrahearts.MusicDownKey.Current)
+            {
+                down= true;
+            }
+            else if (KingdomTerrahearts.MusicRightKey.Current)
+            {
+                right= true;
+            }
+
+            #endregion
+
+            #region party
             if (KingdomTerrahearts.PartySelectHotkey.JustPressed)
             {
                 KingdomTerrahearts.instance.TogglePartyUI();
             }
+            #endregion
 
-            if (player.mount.Type == -1)
+            #region movement
+
+            if (Player.mount.Type == -1)
             {
                 if(KingdomTerrahearts.GuardHotKey.JustPressed && guardTime < -30 && lastHeldKeyblade>0 && !invincible && curInvulnerabilityFrames<=0)
                 {
                     PlayGuardSound();
                     guardTime = 30;
                 }
-                if (canCastHeal && castHealAmount > 0 && player.statLife < (player.statLifeMax / 4 * 3))
+                if (canCastHeal && castHealAmount > 0 && Player.statLife < (Player.statLifeMax / 4 * 3) && !Player.HasBuff(BuffID.ManaSickness))
                 {
 
-                    if (triggersSet.QuickHeal && player.HasBuff(BuffID.PotionSickness) && (((player.statManaMax > 0) ? player.statMana / player.statManaMax * 100 : 1) > castHealCost/player.statManaMax || (player.statMana>=player.statManaMax/2 && castHealCost>player.statManaMax/2)))
+                    if (triggersSet.QuickHeal && (Player.HasBuff(BuffID.PotionSickness)|| hasHealingPotion()) && (((Player.statManaMax > 0) ? Player.statMana / Player.statManaMax * 100 : 1) > castHealCost/ Player.statManaMax || (Player.statMana>= Player.statManaMax/2 && castHealCost> Player.statManaMax/2)))
                     {
 
-                        player.statMana = 0;
-                        player.HealEffect((int)((float)castHealAmount / 100f * (float)player.statLifeMax));
-                        player.statLife += (int)((float)castHealAmount / 100f * (float)player.statLifeMax);
+                        Player.statMana = 0;
+                        Player.HealEffect((int)((float)castHealAmount / 100f * (float)Player.statLifeMax));
+                        Player.statLife += (int)((float)castHealAmount / 100f * (float)Player.statLifeMax);
                         curInvulnerabilityFrames = (curInvulnerabilityFrames < castHealInvulnerabilityTime) ? castHealInvulnerabilityTime : curInvulnerabilityFrames;
+                        Player.AddBuff(BuffID.ManaSickness, 500);
 
                     }
 
@@ -230,19 +297,19 @@ namespace KingdomTerrahearts
 
                 if (canGlide)
                 {
-                    if (triggersSet.Jump && curGlideTime > 0 && player.velocity.Y > glideFallSpeed)
+                    if (triggersSet.Jump && curGlideTime > 0 && Player.velocity.Y > glideFallSpeed)
                     {
                         curGlideTime--;
-                        player.velocity.Y = (player.velocity.Y > glideFallSpeed) ? glideFallSpeed : player.velocity.Y;
-                        player.slowFall = true;
-                        player.noFallDmg = true;
+                        Player.velocity.Y = (Player.velocity.Y > glideFallSpeed) ? glideFallSpeed : Player.velocity.Y;
+                        Player.slowFall = true;
+                        Player.noFallDmg = true;
                     }
                 }
 
                 curDashReload--;
                 curDashReload = (curDashReload > dashReloadSpeed) ? dashReloadSpeed : curDashReload;
 
-                if (canDash && player.dash <= 0 && curDashReload <= 0)
+                if (canDash && Player.dash <= 0 && curDashReload <= 0)
                 {
                     if (triggersSet.Left || triggersSet.Right)
                     {
@@ -250,11 +317,11 @@ namespace KingdomTerrahearts
                         tapTime++;
                         if (tapped)
                         {
-                            if (lastPress == curPress && (canDashMidAir || Math.Abs(player.velocity.Y) < 0.15f))
+                            if (lastPress == curPress && (canDashMidAir || Math.Abs(Player.velocity.Y) < 0.15f))
                             {
-                                if (Math.Abs(player.velocity.X) < dashSpeed + player.maxRunSpeed)
+                                if (Math.Abs(Player.velocity.X) < dashSpeed + Player.maxRunSpeed)
                                 {
-                                    player.velocity.X += (triggersSet.Left) ? -dashSpeed : dashSpeed;
+                                    Player.velocity.X += (triggersSet.Left) ? -dashSpeed : dashSpeed;
                                     curDashReload = dashReloadSpeed;
                                     AddInvulnerability(dashInvulnerability);
                                 }
@@ -290,7 +357,7 @@ namespace KingdomTerrahearts
                 if (canDoubleJump && doubleJumpHeight > 0)
                 {
 
-                    if (player.velocity.Y == 0)
+                    if (Player.velocity.Y == 0)
                     {
                         jumped = false;
                         jumpCount = 0;
@@ -298,36 +365,46 @@ namespace KingdomTerrahearts
                     else
                     {
 
-                        if (triggersSet.Jump && player.wingTime <= 0)
+                        if (triggersSet.Jump && Player.wingTime <= 0)
                         {
                             int initJump = 0;
                             int extradoubleJumps = 0;
-                            if (player.doubleJumpBlizzard)
+                            if (Player.canJumpAgain_Blizzard)
                             {
                                 extradoubleJumps++;
                                 initJump++;
                             }
-                            if (player.doubleJumpCloud)
+                            if (Player.canJumpAgain_Cloud)
                             {
                                 extradoubleJumps++;
                                 initJump++;
                             }
-                            if (player.doubleJumpFart)
+                            if (Player.canJumpAgain_Fart)
                             {
                                 extradoubleJumps++;
                                 initJump++;
                             }
-                            if (player.doubleJumpSail)
+                            if (Player.canJumpAgain_Sail)
                             {
                                 extradoubleJumps++;
                                 initJump++;
                             }
-                            if (player.doubleJumpSandstorm)
+                            if (Player.canJumpAgain_Sandstorm)
                             {
                                 extradoubleJumps++;
                                 initJump++;
                             }
-                            if (player.doubleJumpUnicorn)
+                            if (Player.canJumpAgain_Unicorn)
+                            {
+                                extradoubleJumps++;
+                                initJump++;
+                            }
+                            if (Player.canJumpAgain_WallOfFleshGoat)
+                            {
+                                extradoubleJumps++;
+                                initJump++;
+                            }
+                            if (Player.canJumpAgain_Basilisk)
                             {
                                 extradoubleJumps++;
                                 initJump++;
@@ -335,7 +412,7 @@ namespace KingdomTerrahearts
 
                             if (jumped && jumpCount < doubleJumpQuantity + extradoubleJumps)
                             {
-                                player.velocity.Y = (jumpCount >= initJump) ? -doubleJumpHeight : player.velocity.Y;
+                                Player.velocity.Y = (jumpCount >= initJump) ? -doubleJumpHeight : Player.velocity.Y;
                                 jumpCount++;
                             }
 
@@ -349,37 +426,40 @@ namespace KingdomTerrahearts
 
                 }
             }
+            #endregion
 
         }
 
         public void PlayGuardSound()
         {
             if (guardType == blockingType.reflect)
-                Main.PlaySound(SoundLoader.customSoundType, player.Center, mod.GetSoundSlot(SoundType.Item, "Sounds/keybladeBlocking"));
+            SoundEngine.PlaySound(SoundLoader.GetLegacySoundSlot(Mod, "Sounds/keybladeBlocking"));
             else if (guardType == blockingType.normal || guardType == blockingType.reversal)
-                Main.PlaySound(SoundID.Item1.SoundId, x: (int)player.Center.X, y: (int)player.Center.Y, volumeScale: 3);
+                SoundEngine.PlaySound(SoundID.Item1.SoundId, x: (int)Player.Center.X, y: (int)Player.Center.Y, volumeScale: 3);
         }
 
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
 
             if (invincible)
+            {
                 return false;
+            }
 
             //Second Chance && Auto-HP
-            if (SCcurReload == 0 && hasSecondChance && secondChanceReload != 1000 && player.statLife != 1)
+            if (SCcurReload == 0 && hasSecondChance && secondChanceReload != 1000 && Player.statLife != 1)
             {
 
                 if (AHPcurReload == 0 && hasAutoHP && autoHPRecover != 0)
                 {
-                    player.statLife += autoHPRecover;
-                    player.HealEffect(autoHPRecover);
+                    Player.statLife += autoHPRecover;
+                    Player.HealEffect(autoHPRecover);
 
-                    AHPcurReload = player.statLifeMax / ((autoHPReload!=0)? autoHPReload : 1 );
+                    AHPcurReload = Player.statLifeMax / ((autoHPReload!=0)? autoHPReload : 1 );
                 }
                 else
                 {
-                    player.statLife += 1;
+                    Player.statLife += 1;
                 }
 
                 SCcurReload = secondChanceReload;
@@ -390,18 +470,18 @@ namespace KingdomTerrahearts
             }
 
             //Kupo Coin
-            if (player.HasItem(mod.ItemType("KupoCoin")) && reviveTime <= 0)
+            if (Player.HasItem(ModContent.ItemType<KupoCoin>()) && reviveTime <= 0)
             {
-                player.ConsumeItem(mod.ItemType("KupoCoin"));
-                player.statLife = player.statLifeMax2;
-                player.HealEffect(player.statLifeMax2);
-                player.immune = true;
-                player.immuneTime = player.longInvince ? 180 : 120;
-                for (int k = 0; k < player.hurtCooldowns.Length; k++)
+                Player.ConsumeItem(ModContent.ItemType<KupoCoin>());
+                Player.statLife = Player.statLifeMax2;
+                Player.HealEffect(Player.statLifeMax2);
+                Player.immune = true;
+                Player.immuneTime = Player.longInvince ? 180 : 120;
+                for (int k = 0; k < Player.hurtCooldowns.Length; k++)
                 {
-                    player.hurtCooldowns[k] = player.longInvince ? 180 : 120;
+                    Player.hurtCooldowns[k] = Player.longInvince ? 180 : 120;
                 }
-                Main.PlaySound(SoundID.Item29, player.position);
+                SoundEngine.PlaySound(SoundID.Item29, Player.position);
                 reviveTime = 60 * 60 * 3;
                 return false;
             }
@@ -412,22 +492,32 @@ namespace KingdomTerrahearts
             return base.PreKill(damage, hitDirection, pvp, ref playSound, ref genGore, ref damageSource);
         }
 
-        public override void SetupStartInventory(IList<Item> items, bool mediumcoreDeath)
+        public override void ModifyStartingInventory(IReadOnlyDictionary<string, List<Item>> itemsByMod, bool mediumCoreDeath)
         {
-            items.RemoveAt(0);
+            base.ModifyStartingInventory(itemsByMod, mediumCoreDeath);
+            for(int i = 0; i < itemsByMod["Terraria"].Count; i++)
+            {
+                if (itemsByMod["Terraria"][i].type == ItemID.WoodenSword)
+                {
+                    itemsByMod["Terraria"].RemoveAt(i);
+                    itemsByMod["Terraria"].Add(new Item(ModContent.ItemType<Items.Weapons.Joke.woodenSword>()));
+                }
+            }
 
-            Item item = new Item();
-            item.SetDefaults(mod.ItemType("Keyblade_wood"));
-            item.stack = 1;
-            items.Insert(0,item);
         }
 
         public override void PreUpdate()
         {
+            inTwilightTown = KingdomWorld.twilightBiome > 75 && !Main.gameMenu;
+
             if (levelUpShowingTime > 0)
+            {
                 KingdomTerrahearts.instance.ShowLevelUpUI();
+            }
             else
+            {
                 KingdomTerrahearts.instance.HideLevelUpUI();
+            }
 
             if (skipTime && Main.dayTime!=skipToDay)
             {
@@ -440,11 +530,11 @@ namespace KingdomTerrahearts
 
             if (curInvulnerabilityFrames > 0)
             {
-                player.immune = true;
+                Player.immune = true;
                 curInvulnerabilityFrames--;
             }
 
-            if (player.velocity.Y == 0)
+            if (Player.velocity.Y == 0)
             {
                 curGlideTime = glideTime;
             }
@@ -452,28 +542,27 @@ namespace KingdomTerrahearts
             if (--secondChanceReload <= 0) secondChanceReload = 0;
             if (--autoHPReload <= 0) autoHPReload = 0;
 
-            player.noFallDmg = (tpFallImmunity > 0) ? true : player.noFallDmg;
+            Player.noFallDmg = (tpFallImmunity > 0) ? true : Player.noFallDmg;
 
             if (invincible)
             {
-                player.ghost =false;
-                player.statMana = player.statLifeMax;
-                player.statLife = player.statLifeMax;
-                player.maxMinions = 1000;
-                player.slotsMinions = 1000;
-                player.merman = true;
-                player.nightVision = true;
-                player.noKnockback = true;
-                player.blockRange = 1000;
-                player.wallSpeed = 1000;
-                player.tileSpeed = 1000;
-                player.cLight = 1;
-                player.blockRange = 1000;
-                player.autoJump = true;
-                player.extraAccessorySlots = 4;
-                player.wingTimeMax = 1000000;
-                player.wingTime = 1000000;
-                player.autoJump = true;
+                Player.ghost =false;
+                Player.statMana = Player.statLifeMax;
+                Player.statLife = Player.statLifeMax;
+                Player.maxMinions = 1000;
+                Player.slotsMinions = 1000;
+                Player.merman = true;
+                Player.nightVision = true;
+                Player.noKnockback = true;
+                Player.blockRange = 1000;
+                Player.wallSpeed = 1000;
+                Player.tileSpeed = 1000;
+                Player.cLight = 1;
+                Player.blockRange = 1000;
+                Player.autoJump = true;
+                Player.wingTimeMax = 1000000;
+                Player.wingTime = 1000000;
+                Player.autoJump = true;
 
                 /*For Rolling
                 
@@ -496,21 +585,27 @@ namespace KingdomTerrahearts
                 fightingInBattleground = newTrapped;
 
                 //effects
-                Vector2 nextPos = player.Center + player.velocity;
-                if (nextPos.X> endPosTrap.X || nextPos.X < initPosTrap.X)
-                    player.velocity.X = 0;
-                if (nextPos.Y > endPosTrap.Y || nextPos.Y < initPosTrap.Y)
-                    player.velocity.Y = 0;
+                Vector2 nextPos = Player.Center + Player.velocity;
 
-                Vector2 clampedPos = player.Center;
+                collisionPoints.X = Math.Clamp(nextPos.X,initPosTrap.X,endPosTrap.X);
+                collisionPoints.Y = Math.Clamp(nextPos.Y, initPosTrap.Y, endPosTrap.Y);
+
+                collisionRight = nextPos.X > endPosTrap.X;
+                collisionLeft = nextPos.X < initPosTrap.X;
+                collisionDown = nextPos.Y > endPosTrap.Y;
+                collisionUp = nextPos.Y < initPosTrap.Y;
+
+                Vector2 clampedPos = Player.Center;
                 clampedPos.X = Math.Min(endPosTrap.X, Math.Max(initPosTrap.X, clampedPos.X));
                 clampedPos.Y = Math.Min(endPosTrap.Y, Math.Max(initPosTrap.Y, clampedPos.Y));
-                player.Center = clampedPos;
+                Player.Center = clampedPos;
             }
             else
             {
                 initPosTrap = Vector2.Zero;
                 endPosTrap = Vector2.Zero;
+
+                collisionRight = collisionLeft = collisionDown = collisionUp = false;
             }
 
             tpFallImmunity -= (tpFallImmunity>0)?1:0;
@@ -529,8 +624,8 @@ namespace KingdomTerrahearts
 
             if (guardType != blockingType.none)
             {
-                player.velocity = Vector2.Zero;
-                int projType = mod.ProjectileType("Vergil_boubble");
+                Player.velocity = Vector2.Zero;
+                int projType = ModContent.ProjectileType<Projectiles.ScepTend.Vergil_Bubble>();
 
                 float projScale = 1;
                 switch (guardType)
@@ -539,7 +634,7 @@ namespace KingdomTerrahearts
                         projType = ProjectileID.Typhoon;
                         break;
                     case blockingType.reflect:
-                        projType = mod.ProjectileType("guardProjectile");
+                        projType = ModContent.ProjectileType<Projectiles.guardProjectile>();
                         break;
                     case blockingType.reversal:
                         projScale = 5;
@@ -548,7 +643,8 @@ namespace KingdomTerrahearts
 
                 if (guardProj == -1 || !Main.projectile[guardProj].active)
                 {
-                    guardProj = Projectile.NewProjectile(player.Center, player.velocity, projType, 0, 0,Owner:player.whoAmI);
+                    ProjectileSource_Item source = new ProjectileSource_Item(Player,Player.HeldItem);
+                    guardProj = Projectile.NewProjectile(source, Player.Center, Player.velocity, projType, 0, 0,Owner: Player.whoAmI);
                 }
                 Main.projectile[guardProj].scale = projScale;
                 Main.projectile[guardProj].timeLeft = guardTime;
@@ -575,11 +671,14 @@ namespace KingdomTerrahearts
 
         public override void PostUpdate()
         {
+            noContactDamageTime--;
+
+            DialogSystem.Update();
 
             NPC.MoonLordCountdown = (NPC.MoonLordCountdown > 250) ? 250 : NPC.MoonLordCountdown;
 
             if (invincible)
-                player.ghost = false;
+                Player.ghost = false;
 
             CommandLogic.instance.Update();
             if (Main.playerInventory)
@@ -602,8 +701,8 @@ namespace KingdomTerrahearts
 
             base.PostUpdate();
 
+            lastHeldItem = Player.HeldItem;
 
-            lastHeldItem = player.HeldItem;
         }
 
         public void ChangeGlideFallSpeed(float fallspeed)
@@ -616,63 +715,29 @@ namespace KingdomTerrahearts
             dashReloadSpeed = (dashReloadSpeed > reload) ? reload : dashReloadSpeed;
         }
 
-
-        public override void UpdateVanityAccessories()
+        public override void SaveData(TagCompound tag)
         {
-            for (int n = 13; n < 18 + player.extraAccessorySlots; n++)
+            tag["partyUpgrades"] = partyUpgrades;
+            if (playerCreated)
             {
-                Item item = player.armor[n];
-                if (item.type == mod.ItemType("orgCoat"))
-                {
-                    orgCoatHideVanity = false;
-                    orgCoatForceBanity = true;
-                }
+                tag["playerCreated"] = playerCreated;
             }
-            base.UpdateVanityAccessories();
+            if (playerDied)
+            {
+                tag["playerDied"] = playerDied;
+            }
+            tag["playerSpawn"] = originalSpawnPoint;
         }
 
-        public override void FrameEffects()
-        {
-            if ((orgCoatForceBanity || orgCoatAccesory) && !orgCoatHideVanity)
-            {
-                player.legs = mod.GetEquipSlot("orgCoatLegs", EquipType.Legs);
-                player.body = mod.GetEquipSlot("orgCoatBody", EquipType.Body);
-                player.head = mod.GetEquipSlot("orgCoatHead", EquipType.Head);
-            }
-            base.FrameEffects();
-        }
-
-        public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
-        {
-            if (usingForm)
-            {
-                r = formColor.R;
-                g = formColor.G;
-                b = formColor.B;
-                a = formColor.A;
-            }
-            else
-            {
-                r = 1;
-                g = 1;
-                b = 1;
-                a = 1;
-            }
-        }
-
-        public override TagCompound Save()
-        {
-            return new TagCompound
-            {
-                {"partyUpgrades", partyUpgrades},
-                {"playerCreated" ,playerCreated}
-            };
-        }
-
-        public override void Load(TagCompound tag)
+        public override void LoadData(TagCompound tag)
         {
             partyUpgrades = tag.GetIntArray("partyUpgrades");
             playerCreated = tag.GetBool("playerCreated");
+            playerDied = tag.GetBool("playerDied");
+            if (tag.ContainsKey("playerSpawn"))
+            {
+                originalSpawnPoint = tag.Get<Vector2>("playerSpawn");
+            }
             KingdomTerrahearts.instance.ShowDialogUI();
         }
 
@@ -681,21 +746,21 @@ namespace KingdomTerrahearts
             if (npcNum<Main.maxNPCs && Main.npc[npcNum].active && Main.npc[npcNum].townNPC )
             {
                 NPC npc = Main.npc[npcNum];
-                if (Main.npc[npcNum].HasBuff(mod.BuffType("PMemberBuff")))
+                if (PartyMemberLogic.IsPartyMember(Main.npc[npcNum].type)>=0)
                 {
-                    Conversation conv = new Conversation(GetMemberDialog(npc.type), Color.White, 20000, npc.GivenOrTypeName);
+                    Conversation conv = new Conversation(GetMemberDialog(npc.type), Color.White, DialogSystem.NPC_DIALOGTIME, npc.GivenOrTypeName);
                     DialogSystem.AddConversation(conv);
 
-                    npc.DelBuff(npc.FindBuffIndex(mod.BuffType("PMemberBuff")));
+                    PartyMemberLogic.RemovePartyMember(npc.type);
                     npc.color = Color.White;
                     npc.Teleport(new Vector2(npc.homeTileX * 16, npc.homeTileY * 16 - npc.height)-npc.velocity);
                     npc.velocity = new Vector2();
                 }
                 else
                 {
-                    Conversation conv = new Conversation(GetMemberDialog(npc.type,true), Color.White, 20000, npc.GivenOrTypeName);
+                    Conversation conv = new Conversation(GetMemberDialog(npc.type,true), Color.White, DialogSystem.NPC_DIALOGTIME, npc.GivenOrTypeName);
                     DialogSystem.AddConversation(conv);
-                    npc.AddBuff(mod.BuffType("PMemberBuff"), 1000000000);
+                    PartyMemberLogic.AddPartyMember(npc.type, Player.name);
                 }
             }
         }
@@ -720,6 +785,10 @@ namespace KingdomTerrahearts
                         return "I'll help you out. Don't get too cooky though";
                     case NPCID.PartyGirl:
                         return "Let's party!";
+                    case NPCID.Painter:
+                        return "Let's paint the world crymson red! Or maybe a slight green would be better?";
+                    case NPCID.Angler:
+                        return "You may be my errand monkey, but sometimes I need to spread my legs as well";
                     default:
                         return "Hello, thanks for letting me join you";
                 }
@@ -733,38 +802,30 @@ namespace KingdomTerrahearts
                     case NPCID.Clothier:
                         return "Come to my shop if you need a new set of clothes after all this fighting you do!";
                     case NPCID.Dryad:
-                        return "I like helping, but try to do things yourself, jeez";
+                        return "I like helping, but try to do things yourself, jeez!";
                     case NPCID.ArmsDealer:
                         return "I hope the ladies were looking";
                     case NPCID.Mechanic:
-                        return (NPC.downedMechBossAny) ? "That wasn't as bad as I thought" :"I hope I can fix the mistakes I made some day";
+                        return (NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3) ? "That wasn't as bad as I thought" :"I hope I can fix the mistakes I made some day";
                     case NPCID.PartyGirl:
                         return "Till next time!! Don't party without me, you hear me?";
                     case NPCID.Nurse:
                         return "Don't get too hurt, I want to see you in one pice when you get back";
+                    case NPCID.Painter:
+                        return "Time to wait for the paint to dry";
+                    case NPCID.Angler:
+                        return "I'm going to fish some bigger fish somewhere else";
                     default:
                         return "Godbye!";
                 }
             }
         }
 
-        public bool NPCisPartyMember(int npcType)
-        {
-            for (int i = 0; i < Main.maxNPCTypes; i++)
-            {
-                if (i < Main.maxNPCs && Main.npc[i].active && Main.npc[i].townNPC && Main.npc[i].type == npcType)
-                {
-                    return Main.npc[i].HasBuff(mod.BuffType("PMemberBuff"));
-                }
-            }
-            return false;
-        }
-
         public NPC GetModdedNPC(string name)
         {
             for(int i = 0; i < Main.maxNPCTypes; i++)
             {
-                if (Main.npc[i].active && Main.npc[i].type == mod.NPCType(name)) { 
+                if (Main.npc[i].active && Main.npc[i].type.ToString() == name) { 
                     return Main.npc[i]; 
                 }
             }
@@ -773,8 +834,10 @@ namespace KingdomTerrahearts
 
         public override bool CanSellItem(NPC vendor, Item[] shopInventory, Item item)
         {
-            if (item.type == mod.ItemType("KuppoCoin"))
+            if (item.type == ModContent.ItemType<KupoCoin>())
+            {
                 return false;
+            }
             return base.CanSellItem(vendor, shopInventory, item);
         }
 
@@ -790,73 +853,96 @@ namespace KingdomTerrahearts
             AddInvulnerability(15);
         }
 
-        public override bool ConsumeAmmo(Item weapon, Item ammo)
+        public override void ModifyWeaponDamage(Item item, ref StatModifier damage, ref float flat)
         {
-            return (invincible)?false:base.ConsumeAmmo(weapon, ammo);
+            base.ModifyWeaponDamage(item, ref damage, ref flat);
+            if (invincible)
+            {
+                damage *= 1000000;
+            }
         }
 
-        public override void GetFishingLevel(Item fishingRod, Item bait, ref int fishingLevel)
+        public override bool CanConsumeAmmo(Item weapon, Item ammo)
         {
-            fishingLevel += (player.HasBuff(mod.BuffType("EnlightenedBuff"))) ? 50 : 0;
+            return (invincible) ? false : base.CanConsumeAmmo(weapon, ammo);
+        }
+
+        public override void GetFishingLevel(Item fishingRod, Item bait, ref float fishingLevel)
+        {
+            fishingLevel += (Player.HasBuff(ModContent.BuffType<Buffs.EnlightenedBuff>())) ? 50 : fishingLevel;
             fishingLevel = (invincible) ? 1000 : fishingLevel;
         }
 
         public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
         {
             if (invincible)
-                player.dead = false;
-        }
-
-        public override float MeleeSpeedMultiplier(Item item)
-        {
-            return (player.HasBuff(mod.BuffType("EnlightenedBuff"))) ?1.75f:base.MeleeSpeedMultiplier(item); 
+            {
+                Player.dead = false;
+                Player.statLife = Player.statLifeMax;
+            }
         }
 
         public override void OnEnterWorld(Player player)
         {
+            PartyMemberLogic.Reset();
+
             if (!playerCreated)
             {
                 playerCreated = true;
-                Conversation[] conv = new Conversation[] { new Conversation("", Color.Blue, 15000, ""), new Conversation("I need your help, we'll talk soon", Color.Blue, 75000, "Sora"), new Conversation("I've given you the power to use a Keyblade", Color.Blue, 75000, "Sora"), new Conversation("I hope to meet you soon", Color.Blue, 75000, "Sora") };
+                Conversation[] conv = new Conversation[] { new Conversation("", Color.Blue, DialogSystem.NPC_DIALOGTIME, ""), new Conversation("I need your help, we'll talk soon", Color.Blue, DialogSystem.NPC_DIALOGTIME, "Sora"), new Conversation("I've given you the power to use a Keyblade", Color.Blue, DialogSystem.NPC_DIALOGTIME, "Sora"), new Conversation("I hope to meet you soon", Color.Blue, DialogSystem.NPC_DIALOGTIME, "Sora") };
                 DialogSystem.AddConversation(conv);
             }
             else
             {
-                Conversation[] conv = new Conversation[] { new Conversation("I trully hope to meet you soon", Color.Blue, 75000, "Sora") };
+                Conversation[] conv = new Conversation[] { new Conversation("I trully hope to meet you soon", Color.Blue, DialogSystem.NPC_DIALOGTIME, "Sora") };
                 DialogSystem.AddConversation(conv);
             }
+
+            if (MathHelp.Magnitude(originalSpawnPoint)==0)
+            {
+                originalSpawnPoint = player.position;
+            }
+
         }
 
         public override void OnRespawn(Player player)
         {
-            Conversation[] conv = new Conversation[] {new Conversation("So you can come back from death? How can you do that?", Color.Blue, 75000, "Sora") };
-            DialogSystem.AddConversation(conv);
+            if (!playerDied)
+            {
+                Conversation[] conv = new Conversation[] { new Conversation("So you can come back from death? How can you do that?", Color.Blue, DialogSystem.NPC_DIALOGTIME, "Sora") };
+                DialogSystem.AddConversation(conv);
+                playerDied = true;
+            }
         }
 
-        public override bool Shoot(Item item, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        public override bool Shoot(Item item, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             if (invincible)
             {
-                Vector2 vel = new Vector2(speedX, speedY);
                 Vector2 offset = new Vector2(10, 0);
-                Projectile.NewProjectile(position + offset, vel, type, damage / 2, knockBack, player.whoAmI);
-                Projectile.NewProjectile(position - offset, vel, type, damage / 2, knockBack, player.whoAmI);
 
-                offset = new Vector2(0, 10);
-                Projectile.NewProjectile(position + offset, vel, type, damage / 2, knockBack, player.whoAmI);
-                Projectile.NewProjectile(position - offset, vel, type, damage / 2, knockBack, player.whoAmI);
+                Projectile.NewProjectile(source,position + offset, velocity, type, damage, knockback, Player.whoAmI);
+                Projectile.NewProjectile(source,position - offset, velocity, type, damage, knockback, Player.whoAmI);
+                                                                                                   
+                offset = new Vector2(0, 10);                                                       
+                Projectile.NewProjectile(source,position + offset, velocity, type, damage, knockback, Player.whoAmI);
+                Projectile.NewProjectile(source,position - offset, velocity, type, damage, knockback, Player.whoAmI);
             }
 
-            return base.Shoot(item, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
+            return base.Shoot(item, source,position,velocity,type, damage, knockback);
         }
 
         public override float UseTimeMultiplier(Item item)
         {
-            return (invincible)?3f:base.UseTimeMultiplier(item);
+            return (invincible)?0.1f:base.UseTimeMultiplier(item);
         }
 
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
+            if (noContactDamageTime > 0 && damageSource.SourceNPCIndex>=0 && damageSource.SourceProjectileIndex<0)
+            {
+                return false;
+            }
             if (curInvulnerabilityFrames > 0 || invincible)
             {
                 return false;
@@ -876,8 +962,67 @@ namespace KingdomTerrahearts
 
         public override void OnHitAnything(float x, float y, Entity victim)
         {
-            if(lastHeldKeyblade>0)
+            if (lastHeldKeyblade > 0)
+            {
                 CommandLogic.instance.HitAttack();
+            }
+        }
+
+        public int GetClosestEnemy(int radius)
+        {
+            int closest=-1;
+            for(int i = 0; i <Main.maxNPCs;i++)
+            {
+                if(Main.npc[i].active && ((!Main.npc[i].friendly && Main.npc[i].damage>0) || Main.npc[i].boss) && Vector2.Distance(Main.npc[i].Center,Player.Center)<radius)
+                {
+                    if(closest==-1 || Vector2.Distance(Main.npc[i].Center,Player.Center)< Vector2.Distance(Main.npc[closest].Center, Player.Center))
+                    {
+                        closest = i;
+                    }
+                }
+            }
+            return closest;
+        }
+        public void RaiseSoulLevel(WielderSoul item)
+        {
+            item.healAmmount += 5;
+            if (item.level > 3)
+            {
+                item.minManaCost -= 5;
+                item.invulnerability += 2;
+            }
+
+            item.invulnerabilityFrames += 2;
+            item.reloadTime -= 10;
+            if (item.level > 5)
+            {
+                item.autoHP = true;
+                item.autoHPReload -= 60 * 15;
+                item.recoveredHp += 10;
+            }
+
+            item.jumpHeight += 0.5f;
+            if (item.level % 4 == 1)
+            {
+                item.jumpCount++;
+            }
+
+            item.glideTime += 60;
+            if (item.level > 3)
+            {
+                item.noFallDamage = true;
+            }
+
+            item.dashSpeed += 1.5f;
+            item.dashReaload -= 20;
+            if (item.dashReaload <= 10)
+            {
+                item.dashReaload = 10;
+            }
+            if (item.level > 2)
+            {
+                item.canDashMidair = true;
+            }
         }
 
         public void RaiseMobilityLevel(MaxMobility item)
@@ -980,11 +1125,6 @@ namespace KingdomTerrahearts
             mult = (invincible) ? 0 : mult;
         }
 
-        public override void UpdateBiomes()
-        {
-            inTwilightTown = KingdomWorld.twilightBiome > 75 && !Main.gameMenu;
-        }
-
         public virtual int CheckPlayerLevel()
         {
             int level = 0;
@@ -1001,6 +1141,8 @@ namespace KingdomTerrahearts
                 level++;
             if (Main.hardMode)
                 level++;
+            if (NPC.downedQueenSlime)
+                level++;
             if (NPC.downedMechBossAny)
                 level++;
             if (NPC.downedMechBoss1)
@@ -1008,6 +1150,8 @@ namespace KingdomTerrahearts
             if (NPC.downedMechBoss2)
                 level++;
             if (NPC.downedMechBoss3)
+                level++;
+            if (NPC.downedEmpressOfLight)
                 level++;
             if (NPC.downedPlantBoss)
                 level++;
@@ -1019,5 +1163,41 @@ namespace KingdomTerrahearts
             return level;
         }
 
+        public override void FrameEffects()
+        {
+            switch (curCostume)
+            {
+                case 0:
+                    Player.body = KingdomTerrahearts.orgCoatSlots[0];
+                    Player.legs = KingdomTerrahearts.orgCoatSlots[1];
+                    Player.head = KingdomTerrahearts.orgCoatSlots[2];
+                    break;
+                case 1:
+                    Player.body = KingdomTerrahearts.orgCoatSlots[0];
+                    Player.legs = KingdomTerrahearts.orgCoatSlots[1];
+                    break;
+            }
+        }
+
+        public bool Grounded()
+        {
+
+            Vector2 feetpos = Player.position+new Vector2(0,Player.height+5);
+
+            if (Collision.IsWorldPointSolid(feetpos))
+            {
+                return true;
+            }
+
+            feetpos += new Vector2(Player.width, 0);
+
+            if (Collision.IsWorldPointSolid(feetpos))
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
+    
 }

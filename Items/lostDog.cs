@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,7 +10,7 @@ namespace KingdomTerrahearts.Items
 {
     class lostDog : ModItem
 	{
-		Color[] itemNameCycleColors = new Color[]{
+		Color[] ItemNameCycleColors = new Color[]{
 			new Color(254, 105, 47),
 			new Color(190, 30, 209),
 			new Color(34, 221, 151),
@@ -21,46 +22,39 @@ namespace KingdomTerrahearts.Items
 			DisplayName.SetDefault("Lost Dog");
 			Tooltip.SetDefault("Summons a dog" +
 				"\nI hope someone is taking good care of you..." +
-				"\nwherever you are.");
+				"\nwherever you are." +
+				"\nFixes keyblades (there's a bug that is yet to be understood, please use this pet)");
+			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 0;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.shoot = mod.ProjectileType("zafi");
-			item.width = 16;
-			item.height = 30;
-			item.UseSound = SoundID.Item2;
-			item.useAnimation = 20;
-			item.useTime = 20;
-			item.rare = ItemRarityID.Lime;
-			item.noMelee = true;
-			item.value = Item.sellPrice(0, 5, 50, 0);
-			item.buffType = mod.BuffType("zafiBuff");
+			Item.damage = 0;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.shoot = ModContent.ProjectileType<Projectiles.Pets.zafi>();
+			Item.width = 16;
+			Item.height = 30;
+			Item.UseSound = SoundID.Item2;
+			Item.useAnimation = 20;
+			Item.useTime = 20;
+			Item.rare = ItemRarityID.Lime;
+			Item.noMelee = true;
+			Item.value = Item.sellPrice(0, 5, 50, 0);
+			Item.buffType = ModContent.BuffType<Buffs.zafiBuff>();
 		}
 
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(mod.ItemType("foodBowl"));
-			recipe.AddIngredient(ItemID.Book);
-			recipe.AddIngredient(ItemID.FallenStar,6);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-		}
-
-		public override void UseStyle(Player player)
+        public override bool? UseItem(Player player)
 		{
 			if (player.whoAmI == Main.myPlayer && player.itemTime == 0)
 			{
-				player.AddBuff(item.buffType, 3600, true);
+				player.AddBuff(Item.buffType, 3600, true);
 			}
-		}
+			return base.UseItem(player);
+        }
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			TooltipLine tooltip = new TooltipLine(mod, "ModderItem", "Modder Item");
+			TooltipLine tooltip = new TooltipLine(Mod, "ModderItem", "Modder Item");
 			tooltip.overrideColor = Color.LightBlue;
 			if (!tooltips.Contains(tooltip))
 			{
@@ -68,11 +62,11 @@ namespace KingdomTerrahearts.Items
 			}
 			foreach (TooltipLine line2 in tooltips)
 			{
-				if (line2.mod == mod.Name && line2.Name == "ModderItem")
+				if (line2.mod == Mod.Name && line2.Name == "ModderItem")
 				{
 					float fade = Main.GameUpdateCount % 60 / 60f;
 					int index = (int)(Main.GameUpdateCount / 60 % 4);
-					line2.overrideColor = Color.Lerp(itemNameCycleColors[index], itemNameCycleColors[(index + 1) % 4], fade);
+					line2.overrideColor = Color.Lerp(ItemNameCycleColors[index], ItemNameCycleColors[(index + 1) % 4], fade);
 				}
 			}
 		}

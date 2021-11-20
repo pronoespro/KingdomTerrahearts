@@ -4,11 +4,12 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items.Weapons.Custom
 {
-    public class Keyblade_Slime:Keyblade
+    public class Keyblade_Slime:KeybladeBase
     {
 
 		public override void SetStaticDefaults()
 		{
+			base.SetStaticDefaults();
 			DisplayName.SetDefault("Ninja Slime's Blade");
 			Tooltip.SetDefault("Slimming-quick teleport? Razor-sharp spikes? Slimy clones?" +
 				"\nOh, yeah, that's a ninja");
@@ -16,24 +17,24 @@ namespace KingdomTerrahearts.Items.Weapons.Custom
 
 		public override void SetDefaults()
 		{
-			item.damage = 35;
-			item.melee = true;
-			item.width = 50;
-			item.height = 50;
-			item.scale = 0.85f;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.holdStyle = 4;
-			item.knockBack = 3;
-			item.value = 100;
-			item.rare = ItemRarityID.Green;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
-			item.useAnimation =item.useTime= 20;
+			base.SetDefaults();
+			Item.damage = 35;
+			Item.width = 50;
+			Item.height = 50;
+			Item.scale = 0.85f;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.holdStyle = 4;
+			Item.knockBack = 3;
+			Item.value = 100;
+			Item.rare = ItemRarityID.Green;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
+			Item.useAnimation =Item.useTime= 20;
 			
 			keyLevel = 2;
 			magic = keyMagic.ice;
 			keyTransformations = new keyTransformation[] { keyTransformation.yoyo, keyTransformation.hammer };
-			transSprites = new string[] { "Items/Weapons/Keyblade_demonite", "Items/Weapons/Keyblade_destiny" };
+			transSprites = new string[] { "Items/Weapons/Custom/Transformations/Slime_Yoyo", "Items/Weapons/Custom/Transformations/Slime_Hammer" };
 			formChanges = new keyDriveForm[] { keyDriveForm.element };
 			animationTimes = new int[] { 20, 10 ,30};
 			SaveAtributes();
@@ -45,7 +46,7 @@ namespace KingdomTerrahearts.Items.Weapons.Custom
 			comboMax = 4;
 			magic = keyMagic.ice;
 			keyTransformations = new keyTransformation[] { keyTransformation.yoyo, keyTransformation.hammer };
-			transSprites = new string[] { "Items/Weapons/Keyblade_demonite", "Items/Weapons/Keyblade_destiny" };
+			transSprites = new string[] { "Items/Weapons/Custom/Transformations/Slime_Yoyo", "Items/Weapons/Custom/Transformations/Slime_Hammer" };
 			formChanges = new keyDriveForm[] { keyDriveForm.element };
 			animationTimes = new int[] { 20, 10, 30 };
 		}

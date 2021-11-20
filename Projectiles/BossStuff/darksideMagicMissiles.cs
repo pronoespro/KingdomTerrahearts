@@ -17,66 +17,66 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Missile");
-            Main.npcFrameCount[npc.type] = 3;
+            Main.npcFrameCount[NPC.type] = 3;
         }
 
         public override void SetDefaults()
         {
-            npc.width = 15;
-            npc.height = 25;
-            npc.aiStyle = -1;
-            npc.lifeMax = 2;
-            npc.damage = 25;
-            npc.defense = 0;
-            npc.npcSlots = 0.1f;
-            npc.lavaImmune = false;
-            npc.noGravity = true;
-            npc.noTileCollide = false;
-            npc.velocity = new Vector2(0, -5);
-            npc.timeLeft = 1000;
+            NPC.width = 15;
+            NPC.height = 25;
+            NPC.aiStyle = -1;
+            NPC.lifeMax = 2;
+            NPC.damage = 25;
+            NPC.defense = 0;
+            NPC.npcSlots = 0.1f;
+            NPC.lavaImmune = false;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+            NPC.velocity = new Vector2(0, -5);
+            NPC.timeLeft = 1000;
         }
 
         public override void AI()
         {
-            if(npc.collideX || npc.collideY)
+            if(NPC.collideX || NPC.collideY)
             {
-                npc.timeLeft = 0;
+                NPC.timeLeft = 0;
             }
 
-            npc.immortal = false;
-            npc.damage = 25;
+            NPC.immortal = false;
+            NPC.damage = 25;
             Target();
             Player p;
-            if(!npc.friendly)
-                p = Main.player[npc.target];
+            if(!NPC.friendly)
+                p = Main.player[NPC.target];
 
             if (DespawnHandler())
             {
                 return;
             }
             Move(new Vector2(0, 0));
-            npc.rotation = (float)Math.Atan2((double)npc.velocity.Y, (double)npc.velocity.X) + 1.57f;
+            NPC.rotation = (float)Math.Atan2((double)NPC.velocity.Y, (double)NPC.velocity.X) + 1.57f;
 
         }
 
         public override void FindFrame(int frameHeight)
         {
-            npc.frameCounter++;
-            npc.frameCounter %= 10;
-            int frame = (int)(npc.frameCounter / 2);
-            if (frame >= Main.npcFrameCount[npc.type]) frame = 0;
-            npc.frame.Y = frame * frameHeight;
+            NPC.frameCounter++;
+            NPC.frameCounter %= 10;
+            int frame = (int)(NPC.frameCounter / 2);
+            if (frame >= Main.npcFrameCount[NPC.type]) frame = 0;
+            NPC.frame.Y = frame * frameHeight;
         }
 
         void Target()
         {
-            if (!npc.friendly)
+            if (!NPC.friendly)
             {
-                player = Main.player[npc.target];
+                player = Main.player[NPC.target];
             }
             else
             {
-                int boss = NPC.FindFirstNPC(mod.NPCType("Darkside"));
+                int boss = NPC.FindFirstNPC(ModContent.NPCType<NPCs.Bosses.Darkside>());
                 if (boss > 0)
                 {
                     target = Main.npc[boss];
@@ -90,22 +90,22 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
         {
             float turnResistance = 50;
             Vector2 moveTo;
-            if(npc.friendly)
-                moveTo = (target.Center + offset) - npc.Center;
+            if(NPC.friendly)
+                moveTo = (target.Center + offset) - NPC.Center;
             else
-                moveTo = (player.Center+offset)-npc.Center;
+                moveTo = (player.Center+offset)-NPC.Center;
             float magnitude = Magnitude(moveTo);
             if (magnitude > speed)
             {
                 moveTo *= speed / magnitude;
             }
-            moveTo = (npc.velocity * turnResistance + moveTo) / (turnResistance + 1f);
+            moveTo = (NPC.velocity * turnResistance + moveTo) / (turnResistance + 1f);
             magnitude = Magnitude(moveTo);
             if (magnitude > speed)
             {
                 moveTo *= speed / magnitude;
             }
-            npc.velocity = moveTo;
+            NPC.velocity = moveTo;
         }
 
         float Magnitude(Vector2 vector)
@@ -115,26 +115,26 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
 
         bool DespawnHandler()
         {
-            if (npc.friendly)
+            if (NPC.friendly)
             {
                 if (target == null)
                 {
-                    npc.timeLeft = 0;
-                    npc.position += new Vector2(0, 10000);
+                    NPC.timeLeft = 0;
+                    NPC.position += new Vector2(0, 10000);
                     return true;
                 }
                 else
                 {
-                    if (Vector2.Distance(target.Center, npc.Center) < 50)
+                    if (Vector2.Distance(target.Center, NPC.Center) < 50)
                     {
-                        target.life -= npc.damage;
+                        target.life -= NPC.damage;
                         if (target.life <= 0) target.life = 1;
-                        npc.life = 0;
-                        npc.timeLeft = 1;
+                        NPC.life = 0;
+                        NPC.timeLeft = 1;
 
                         for (int i = 0; i < 50; i++)
                         {
-                            int dust = Dust.NewDust(npc.position, npc.width, npc.height, 65, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10));
+                            int dust = Dust.NewDust(NPC.position, NPC.width, NPC.height, 65, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10));
                             Main.dust[dust].color = Color.Black;
                             Main.dust[dust].noGravity = true;
                         }
@@ -145,16 +145,16 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
             {
                 if (!player.active || player.dead)
                 {
-                    npc.TargetClosest(false);
-                    player = Main.player[npc.target];
+                    NPC.TargetClosest(false);
+                    player = Main.player[NPC.target];
                     if (!player.active || player.dead)
                     {
-                        npc.timeLeft = 1;
-                        npc.position += new Vector2(0, 10000);
+                        NPC.timeLeft = 1;
+                        NPC.position += new Vector2(0, 10000);
 
                         for (int i = 0; i < 50; i++)
                         {
-                            int dust = Dust.NewDust(npc.position, npc.width, npc.height, 65, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10));
+                            int dust = Dust.NewDust(NPC.position, NPC.width, NPC.height, 65, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10));
                             Main.dust[dust].color = Color.Black;
                             Main.dust[dust].noGravity = true;
                         }
@@ -167,7 +167,7 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
 
         public override void DrawEffects(ref Color drawColor)
         {
-            int dust = Dust.NewDust(npc.position, npc.width, npc.height, 65, -npc.velocity.X/2, -npc.velocity.Y/2);
+            int dust = Dust.NewDust(NPC.position, NPC.width, NPC.height, 65, -NPC.velocity.X/2, -NPC.velocity.Y/2);
             Main.dust[dust].color = Color.Black;
             Main.dust[dust].noGravity = true;
         }
@@ -179,12 +179,12 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
 
         void HitPlayerInAnyWay()
         {
-            if (npc.timeLeft > 10)
-                npc.timeLeft = 1;
+            if (NPC.timeLeft > 10)
+                NPC.timeLeft = 1;
 
             for (int i = 0; i < 50; i++)
             {
-                int dust = Dust.NewDust(npc.position, npc.width, npc.height, 65, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10));
+                int dust = Dust.NewDust(NPC.position, NPC.width, NPC.height, 65, Main.rand.Next(-10, 10), Main.rand.Next(-10, 10));
                 Main.dust[dust].color = Color.Black;
                 Main.dust[dust].noGravity = true;
             }
@@ -198,26 +198,26 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
         public override bool CheckDead()
         {
 
-            if (npc.timeLeft == 1)
+            if (NPC.timeLeft == 1)
             {
                 for (int i = 0; i < 50; i++)
                 {
-                    int dust = Dust.NewDust(npc.position, npc.width, npc.height, 65, Main.rand.Next(-2, 2), Main.rand.Next(-2, 2));
+                    int dust = Dust.NewDust(NPC.position, NPC.width, NPC.height, 65, Main.rand.Next(-2, 2), Main.rand.Next(-2, 2));
                     Main.dust[dust].color = Color.Black;
                     Main.dust[dust].noGravity = true;
                 }
                 return true;
             }
 
-            if (!npc.friendly)
+            if (!NPC.friendly)
             {
-                npc.friendly = true;
-                npc.velocity = new Vector2(0, -5);
-                npc.lifeMax *= 5;
-                npc.life = npc.lifeMax;
+                NPC.friendly = true;
+                NPC.velocity = new Vector2(0, -5);
+                NPC.lifeMax *= 5;
+                NPC.life = NPC.lifeMax;
                 
             }
-            npc.life = npc.lifeMax / 2;
+            NPC.life = NPC.lifeMax / 2;
             return false;
         }
 

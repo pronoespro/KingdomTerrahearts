@@ -4,6 +4,7 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.DataStructures;
 
 namespace KingdomTerrahearts.Projectiles.ScepTend
 {
@@ -14,42 +15,44 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Escuregot projectile");
-            Main.projFrames[projectile.type] = 6;
+            DisplayName.SetDefault("Escuregot Projectile");
+            Main.projFrames[Projectile.type] = 6;
         }
 
         public override void SetDefaults()
         {
-            projectile.netImportant = true;
-            projectile.width = 42;
-            projectile.height = 20;
-            projectile.friendly = true;
-            projectile.penetrate =3;
-            projectile.tileCollide = true;
-            projectile.timeLeft = 1700;
-            projectile.light = 1;
-            Player p = Main.player[projectile.owner];
-            Projectile.NewProjectile(p.Center, p.velocity, mod.ProjectileType("Escuregot_explosion"), 0, 0);
-            projectile.damage =(int)(projectile.damage* 0.25f);
+            ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+
+            Projectile.netImportant = true;
+            Projectile.width = 42;
+            Projectile.height = 20;
+            Projectile.friendly = true;
+            Projectile.penetrate =3;
+            Projectile.tileCollide = true;
+            Projectile.timeLeft = 1700;
+            Projectile.light = 1;
+            Player p = Main.player[Projectile.owner];
+            Projectile.NewProjectile(s,p.Center, p.velocity, ModContent.ProjectileType<Escuregot_explosion>(), 0, 0);
+            Projectile.damage =(int)(Projectile.damage* 0.25f);
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            projectile.velocity=Vector2.Zero;
-            projectile.ai[1] = 1;
+            Projectile.velocity=Vector2.Zero;
+            Projectile.ai[1] = 1;
             return false;
         }
 
         public override void AI()
         {
 
-            if (projectile.ai[1] == 0)
-                projectile.velocity.Y++;
+            if (Projectile.ai[1] == 0)
+                Projectile.velocity.Y++;
 
             playerNear = false;
-            for(int i = 0; i < Main.ActivePlayersCount; i++)
+            for(int i = 0; i < Main.maxPlayers; i++)
             {
-                if (Main.player[i].active && Vector2.Distance(Main.player[i].Center, projectile.Center) < 400)
+                if (Main.player[i].active && !Main.player[i].dead && Vector2.Distance(Main.player[i].Center, Projectile.Center) < 400)
                 {
                     Main.player[i].lifeRegen += 50;
                     Main.player[i].manaRegenDelay -= 10;
@@ -63,7 +66,7 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
             }
             for (int i = 0; i < Main.maxNPCs; i++)
             {
-                if (Main.npc[i].active && Vector2.Distance(Main.npc[i].Center, projectile.Center) < 500)
+                if (Main.npc[i].active && Vector2.Distance(Main.npc[i].Center, Projectile.Center) < 500)
                 {
                     if (Main.npc[i].friendly || Main.npc[i].townNPC)
                         Main.npc[i].lifeRegen += 50;
@@ -83,20 +86,21 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
             if (playerNear)
             {
-                projectile.ai[0]=(projectile.ai[0]>=30)?0:projectile.ai[0]+1;
-                projectile.frame = (int)(projectile.ai[0] / 20)+3;
+                Projectile.ai[0]=(Projectile.ai[0]>=30)?0:Projectile.ai[0]+1;
+                Projectile.frame = (int)(Projectile.ai[0] / 20)+3;
             }
             else
             {
-                projectile.ai[0] = (projectile.ai[0] >= 30) ? 0 : projectile.ai[0] + 1;
-                projectile.frame = (int)(projectile.ai[0] / 20);
+                Projectile.ai[0] = (Projectile.ai[0] >= 30) ? 0 : Projectile.ai[0] + 1;
+                Projectile.frame = (int)(Projectile.ai[0] / 20);
             }
 
         }
 
         public override bool PreKill(int timeLeft)
         {
-            Projectile.NewProjectile(projectile.Center, Vector2.Zero, mod.ProjectileType("Escuregot_explosion"), 0, 0);
+            ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+            Projectile.NewProjectile(s,Projectile.Center, Vector2.Zero, ModContent.ProjectileType<Escuregot_explosion>(), 0, 0);
             return base.PreKill(timeLeft);
         }
 

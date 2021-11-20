@@ -18,14 +18,14 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Captain of the Royal Knights");
-            Main.npcFrameCount[npc.type] = 26;
+            Main.npcFrameCount[NPC.type] = 26;
         }
 
         public override void SetDefaults()
         {
-            animationType = NPCID.Guide;
-            npc.townNPC = true;
-            npc.CloneDefaults(NPCID.Guide);
+            AnimationType = NPCID.Guide;
+            NPC.townNPC = true;
+            NPC.CloneDefaults(NPCID.Guide);
         }
 
         public override bool CanTownNPCSpawn(int numTownNPCs, int money)
@@ -35,12 +35,12 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return (spawnInfo.playerInTown && !NPC.AnyNPCs(npc.type)) ? 10 : 0;
+            return (spawnInfo.playerInTown && !NPC.AnyNPCs(NPC.type)) ? 10 : 0;
         }
 
         public override void FindFrame(int frameHeight)
         {
-            npc.spriteDirection = npc.direction;
+            NPC.spriteDirection = NPC.direction;
         }
 
         public override void AI()
@@ -60,12 +60,12 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
 
             if (!firstTalked)
             {
-                dialogOptions.Add("I'm " + npc.FullName + ", but you can call me Goofy.");
+                dialogOptions.Add("I'm " + NPC.FullName + ", but you can call me Goofy.");
                 firstTalked = true;
             }
             else
             {
-                if (NPC.AnyNPCs(mod.NPCType("donald")))
+                if (NPC.AnyNPCs(ModContent.NPCType<donald>()))
                 {
                     dialogOptions.Add("Donald might overdo it a little, but he is my friend.");
                 }

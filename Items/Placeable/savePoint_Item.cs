@@ -1,4 +1,5 @@
-﻿using Terraria.ID;
+﻿using Terraria.GameContent.Creative;
+using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
@@ -9,32 +10,34 @@ namespace KingdomTerrahearts.Items.Placeable
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Save spot");
-			Tooltip.SetDefault("A place where you can collect your thoughts");
+			Tooltip.SetDefault("A place where you can collect your thoughts" +
+				"\nStay near it to recover your health and mana" +
+				"\nUse to save your game, set your spawn point and skip time");
+			CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
 		}
 
 		public override void SetDefaults()
 		{
-			item.width = 28;
-			item.height = 20;
-			item.maxStack = 99;
-			item.useTurn = true;
-			item.autoReuse = true;
-			item.useAnimation = 15;
-			item.useTime = 10;
-			item.useStyle = 1;
-			item.consumable = true;
-			item.value = 2000;
-			item.createTile = TileType<Tiles.savepoint>();
+			Item.width = 28;
+			Item.height = 20;
+			Item.maxStack = 99;
+			Item.useTurn = true;
+			Item.autoReuse = true;
+			Item.useAnimation = 15;
+			Item.useTime = 10;
+			Item.useStyle = 1;
+			Item.consumable = true;
+			Item.value = 2000;
+			Item.createTile = TileType<Tiles.savepoint>();
 		}
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Bed);
-			recipe.AddIngredient(ItemID.FallenStar, 15);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe()
+			.AddIngredient(ItemID.Bed)
+			.AddIngredient(ItemID.FallenStar, 15)
+			.AddTile(TileID.WorkBenches)
+			.Register();
 		}
 	}
 }

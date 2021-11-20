@@ -3,6 +3,8 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
+using Terraria.GameContent.Creative;
 
 namespace KingdomTerrahearts.Items
 {
@@ -13,44 +15,42 @@ namespace KingdomTerrahearts.Items
         {
             DisplayName.SetDefault("Seasalt Icecream");
             Tooltip.SetDefault("This ice cream's flavor mixes both a salty and a sweet taste");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.maxStack = 20;
-            item.value = 10;
-            item.rare = ItemRarityID.Blue;
-            item.useAnimation = 40;
-            item.useTime = 45;
-            item.useStyle = ItemUseStyleID.HoldingUp;
-            //item.consumable = true;
+            Item.width = 20;
+            Item.height = 20;
+            Item.maxStack = 20;
+            Item.value = 10;
+            Item.rare = ItemRarityID.Blue;
+            Item.useAnimation = 40;
+            Item.useTime = 45;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            //Item.consumable = true;
         }
 
         public override bool CanUseItem(Player player)
         {
-            bool alreadySpawned = NPC.AnyNPCs(mod.NPCType("xion_firstPhase"));
+            bool alreadySpawned = NPC.AnyNPCs(ModContent.NPCType<NPCs.Bosses.Org13.xion_firstPhase>())|| NPC.AnyNPCs(ModContent.NPCType<NPCs.Bosses.Org13.xion_secondPhase>()) || NPC.AnyNPCs(ModContent.NPCType<NPCs.Bosses.Org13.xion_finalPhase>());
             return !alreadySpawned;
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
-            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("xion_firstPhase"));
-            Main.PlaySound(SoundID.FemaleHit, player.position, 0);
+            NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<NPCs.Bosses.Org13.xion_firstPhase>());
+            SoundEngine.PlaySound(SoundID.FemaleHit, player.position, 0);
             return true;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-
-            recipe.AddIngredient(mod.ItemType("twilightShard"), 3);
-            recipe.AddIngredient(ItemID.IceBlock,5);
-
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe()
+            .AddIngredient(ModContent.ItemType<Items.Materials.twilightShard>(), 3)
+            .AddIngredient(ItemID.IceBlock,5)
+            .AddTile(TileID.WorkBenches)
+            .Register();
 
         }
 

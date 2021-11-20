@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using KingdomTerrahearts.Extra;
+using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -18,48 +19,48 @@ namespace KingdomTerrahearts.Projectiles
         }
         public override void SetDefaults()
         {
-            projectile.width = 40;
-            projectile.height = 40;
-            projectile.scale = 1f;
-            projectile.damage = 0;
-            projectile.friendly = true;
-            projectile.ignoreWater = true;
-            projectile.melee = true;
-            projectile.timeLeft = 60;
-            projTimeLeft = projectile.timeLeft;
+            Projectile.width = 40;
+            Projectile.height = 40;
+            Projectile.scale = 1f;
+            Projectile.damage = 0;
+            Projectile.friendly = true;
+            Projectile.ignoreWater = true;
+            Projectile.DamageType = ModContent.GetInstance<KeybladeDamage>();
+            Projectile.timeLeft = 60;
+            projTimeLeft = Projectile.timeLeft;
         }
 
         public override void AI()
         {
 
             projTimeLeft--;
-            projectile.rotation += 1;
+            Projectile.rotation += 1;
 
-            float light = 4f * projectile.scale;
-            Lighting.AddLight(projectile.Center, light, light, light);
+            float light = 4f * Projectile.scale;
+            Lighting.AddLight(Projectile.Center, light, light, light);
 
-            if (projectile.frameCounter%10==0)
+            if (Projectile.frameCounter%10==0)
             {
-                int dust=Dust.NewDust(projectile.Center, projectile.width, projectile.height, 70);
-                //ModDust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, mod, "Sparkle", projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
+                int dust=Dust.NewDust(Projectile.Center, Projectile.width, Projectile.height, 70);
+                //ModDust.NewDust(Projectile.position + Projectile.velocity, Projectile.width, Projectile.height, mod, "Sparkle", Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f);
             }
         }
 
         public override void Kill(int timeLeft)
 		{
-            if (projectile.timeLeft == 0 )
+            if (Projectile.timeLeft == 0 )
             {
                 if (projTimeLeft > 0 && projTimeLeft <= projInitTP)
                 {
-                    if (projectile.owner == Main.myPlayer)
+                    if (Projectile.owner == Main.myPlayer)
                     {
-                        Player player = Main.player[projectile.owner];
+                        Player player = Main.player[Projectile.owner];
                         SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
                         sp.tpFallImmunity = 5;
-                        player.Center = projectile.position - Vector2.Normalize(projectile.velocity) * player.height / 2;
+                        player.Center = Projectile.position - Vector2.Normalize(Projectile.velocity) * player.height / 2;
                         player.velocity = new Vector2();
 
-                        //Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, mod.GetSoundSlot(SoundType.Item, "Sounds/Item/BubblinePopSound"));
+                        //Main.PlaySound(2, (int)Projectile.position.X, (int)Projectile.position.Y, mod.GetSoundSlot(SoundType.Item, "Sounds/Item/BubblinePopSound"));
                     }
                 }
                 else
@@ -68,7 +69,7 @@ namespace KingdomTerrahearts.Projectiles
                     {
                         float xRand = Main.rand.NextFloat(-3, 3);
                         float yRand = Main.rand.NextFloat(-3, 3);
-                        int dust = Dust.NewDust(projectile.Center, projectile.width, projectile.height, 70,xRand,yRand);
+                        int dust = Dust.NewDust(Projectile.Center, Projectile.width, Projectile.height, 70,xRand,yRand);
                     }
                 }
             }

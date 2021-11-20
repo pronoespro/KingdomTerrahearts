@@ -7,12 +7,15 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using System.IO;
 using KingdomTerrahearts.NPCs.Invasions;
-using Terraria.World.Generation;
 using Terraria.GameContent.Generation;
+using Microsoft.Xna.Framework;
+using KingdomTerrahearts.Extra;
+using Terraria.UI;
 
 namespace KingdomTerrahearts
 {
-    public class KingdomWorld : ModWorld
+
+    public class KingdomWorld : ModSystem
     {
         //Setting up variables for invasion
         public static bool customInvasionUp = false;
@@ -20,97 +23,35 @@ namespace KingdomTerrahearts
 
         //Setting up variables for bosses
         public static bool downedDarkside = false;
-        public static bool[] downedXionPhases = new bool[] { false,false};
+        public static bool[] downedXionPhases = new bool[] { false,false,false};
 
         //biome related
         public static int twilightBiome;
 
-        //Dimension related
-        public static bool inAnotherDimension = false;
-        public Tile[,] tiles;
 
         //Initialize all variables to their default values
-        public override void Initialize()
+        public void Initialize()
         {
-            Main.invasionSize = 0;
-            customInvasionUp = false;
+
+            customInvasionUp = true;
             downedCustomInvasion = false;
-        }
 
-        public void GoToMainDimension()
-        {
-            inAnotherDimension = false;
-            for (int i = 0; i < Main.tile.GetLength(0); i++)
-            {
-                for (int j = 0; j < Main.tile.GetLength(1); j++)
-                {
-                    Main.tile[i, j] = tiles[i,j];
-                }
-            }
-        }
-
-        public void GoToSpace()
-        {
-            if (!inAnotherDimension)
-            {
-                tiles = new Tile[Main.tile.GetLength(0), Main.tile.GetLength(1)];
-                for (int i = 0; i < Main.tile.GetLength(0); i++)
-                {
-                    for (int j = 0; j < Main.tile.GetLength(1); j++)
-                    {
-                        
-                        tiles[i,j]=Main.tile[i, j];
-                    }
-                }
-            }
-
-            for (int i = 0; i < Main.tile.GetLength(0); i++)
-            {
-                for(int j=0;j< Main.tile.GetLength(1); j++)
-                {
-                    Main.tile[i, j] = new Tile();
-                }
-            }
-            inAnotherDimension = true;
-        }
-
-        //Save downed data
-        public override TagCompound Save()
-        {
-
-            var downed = new List<string>();
-            if (downedCustomInvasion) downed.Add("thousandHeartless");
-            if (downedDarkside) downed.Add("Darkside");
-
-            for(int i = 0; i < downedXionPhases.Length; i++)
-            {
-                if (downedXionPhases[i])
-                    downed.Add("XionPhase"+i.ToString());
-            }
-
-            return new TagCompound {
-                {"downed", downed}
-            };
-        }
-
-        //Load downed data
-        public override void Load(TagCompound tag)
-        {
-            var downed = tag.GetList<string>("downed");
-            downedCustomInvasion = downed.Contains("thousandHeartless");
-            downedDarkside = downed.Contains("Darkside");
-
-            for (int i = 0; i < downedXionPhases.Length; i++)
-            {
-                downedXionPhases[i] = downed.Contains("XionPhase" + i.ToString());
-            }
         }
 
         //Sync downed data
         public override void NetSend(BinaryWriter writer)
         {
+            int flagNum = 0;
+
             BitsByte flags = new BitsByte();
-            flags[0] = downedCustomInvasion;
+            
+            flags[flagNum++] = downedCustomInvasion;
+            flags[flagNum++] = downedDarkside;
+            for(int i = 0; i < downedXionPhases.Length; i++)
+            {
+                flags[flagNum++] = downedXionPhases[i];
+            }
+            flags[flagNum++] = customInvasionUp;
             writer.Write(flags);
         }
 
@@ -119,11 +60,33 @@ namespace KingdomTerrahearts
         {
             BitsByte flags = reader.ReadByte();
             downedCustomInvasion = flags[0];
+            downedDarkside = flags[1];
+            for (int i = 0; i < downedXionPhases.Length; i++) {
+                downedXionPhases[i] =flags[2+i];
+            }
+            customInvasionUp = flags[3];
         }
 
-        //Allow to update invasion while game is running
-        public override void PostUpdate()
+        //bool createdDonald;
+
+        public override void PreUpdateWorld()
         {
+            /*
+            if (!createdDonald)
+            {
+                Mod crowdMod = ModLoader.GetMod("MobNPCs");
+                if (crowdMod != null)
+                {
+                    crowdMod.Call("CreateCrowdSpace", ("NPCs/TownNPCs/donald"), 36, 1456 / 26, 0, 0, 500, 1, 1, 1f, 1f);
+                }
+                else
+                {
+                    Main.NewText("No crowd");
+                }
+                createdDonald = true;
+            }
+            */
+
             if (customInvasionUp)
             {
                 if (Main.invasionX == (double)Main.spawnTileX)
@@ -136,25 +99,10 @@ namespace KingdomTerrahearts
             }
         }
 
-        /*
-        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
-        {
-            int genIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Shinies"));
-            if (genIndex == -1)
-                return;
-            tasks.Insert(genIndex + 1, new PassLegacy("Athens", delegate (GenerationProgress progress)
-            {
-                int x = WorldGen.genRand.Next(1, Main.maxTilesX - 300);
-                int y = WorldGen.genRand.Next((int)WorldGen.rockLayer - 200, Main.maxTilesY - 200);
-                int TileType = mod.TileType("twilightTownBlock");
 
-                WorldGen.TileRunner(x, y, 350, WorldGen.genRand.Next(500, 700), TileType, false, 0, 0, true, true); 
-            }));
-        }*/
-
-        public override void TileCountsAvailable(int[] tileCounts)
+        public override void TileCountsAvailable(ReadOnlySpan<int> tileCounts)
         {
-            twilightBiome = tileCounts[mod.TileType("twilightTownBlock")];
+            twilightBiome = tileCounts[ModContent.TileType<Tiles.twilightTownBlock>()];
         }
 
     }

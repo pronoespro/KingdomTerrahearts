@@ -10,32 +10,24 @@ namespace KingdomTerrahearts
     class ItemOverride : GlobalItem
     {
 
-        public override void HoldItem(Item item, Player player)
+        public override bool? UseItem(Item Item, Player player)
         {
-            SoraPlayer sora=player.GetModPlayer<SoraPlayer>();
-        }
-
-        public override bool UseItem(Item item, Player player)
-        {
-
-            SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
-
-            switch (item.type)
+            switch (Item.type)
             {
                 case ItemID.FallenStar:
 
-                    player.AddBuff(mod.BuffType("EnlightenedBuff"),30*60);
+                    player.AddBuff(ModContent.BuffType<Buffs.EnlightenedBuff>(), 30*60);
 
                     break;
             }
 
-            return base.UseItem(item, player);
+            return base.UseItem(Item, player);
         }
 
-        public override bool CanUseItem(Item item, Player player)
+        public override bool CanUseItem(Item Item, Player player)
         {
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
-            switch (item.type)
+            switch (Item.type)
             {
                 case ItemID.WormFood:
                     if (sp.fightingInBattleground)
@@ -43,73 +35,72 @@ namespace KingdomTerrahearts
                     break;
             }
 
-            return base.CanUseItem(item, player);
+            return base.CanUseItem(Item, player);
         }
 
-        public override void GrabRange(Item item, Player player, ref int grabRange)
+        public override void GrabRange(Item Item, Player player, ref int grabRange)
         {
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
             if (sp.invincible)
             {
-                grabRange *= 50;
+                grabRange *= 500;
             }
         }
 
-        public override bool GrabStyle(Item item, Player player)
+        public override bool GrabStyle(Item Item, Player player)
         {
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
-            if (sp.invincible)
+            if (sp.invincible && player.CanAcceptItemIntoInventory(Item))
             {
-                item.velocity = (MathHelp.Magnitude(player.Center - item.Center) <= 30) ?  Vector2.Zero: (MathHelp.Normalize(player.Center - item.Center) * 30);
-                if (MathHelp.Magnitude(player.Center - item.Center) <= 45)
-                    item.Center = player.Center;
+                Item.velocity = (MathHelp.Magnitude(player.Center - Item.Center) <= 30) ?  Vector2.Zero: (MathHelp.Normalize(player.Center - Item.Center) * 30);
+                if (MathHelp.Magnitude(player.Center - Item.Center) <= 45)
+                    Item.Center = player.Center;
                 return false;
             }
-            return base.GrabStyle(item, player);
+            return base.GrabStyle(Item, player);
         }
 
-        public override void UpdateInventory(Item item, Player player)
+        public override void UpdateInventory(Item Item, Player player)
         {
 
-            switch (item.type)
+            switch (Item.type)
             {
                 case ItemID.Keybrand:
-                    item.useAnimation = item.useTime = 10;
-                    item.damage = (player.HasBuff(mod.BuffType("EnlightenedBuff"))) ? 500 : 150;
-                    item.shoot = ProjectileID.MagicMissile;
+                    Item.useAnimation = Item.useTime = 10;
+                    Item.damage = (player.HasBuff(ModContent.BuffType<Buffs.EnlightenedBuff>())) ? 550 : 250;
+                    Item.shoot = ProjectileID.MagicMissile;
                     break;
             }
         }
 
-        public override bool ConsumeItem(Item item, Player player)
+        public override bool ConsumeItem(Item Item, Player player)
         {
-            return player.GetModPlayer<SoraPlayer>().invincible || base.ConsumeItem(item, player);
+            return !player.GetModPlayer<SoraPlayer>().invincible && base.ConsumeItem(Item, player);
         }
 
-        public override bool ConsumeAmmo(Item item, Player player)
+        public override bool CanBeConsumedAsAmmo(Item ammo, Player player)
         {
-            return player.GetModPlayer<SoraPlayer>().invincible || base.ConsumeAmmo(item, player);
+            return !player.GetModPlayer<SoraPlayer>().invincible && base.CanBeConsumedAsAmmo(ammo, player);
         }
 
-        public override void GetWeaponCrit(Item item, Player player, ref int crit)
+        public override void ModifyWeaponCrit(Item Item, Player player, ref int crit)
         {
             crit = player.GetModPlayer<SoraPlayer>().invincible ? 10000 : crit;
         }
 
-        public override void GetWeaponKnockback(Item item, Player player, ref float knockback)
+        public override void ModifyWeaponKnockback(Item Item, Player player, ref StatModifier knockback, ref float flat)
         {
-            knockback = (player.GetModPlayer<SoraPlayer>().invincible) ? 10000 : knockback;
+            StatModifier knock = new StatModifier(10000000);
+            knockback = player.GetModPlayer<SoraPlayer>().invincible ? knock : knockback;
         }
 
-        public override bool ReforgePrice(Item item, ref int reforgePrice, ref bool canApplyDiscount)
+        public override float UseTimeMultiplier(Item Item, Player player)
         {
-            reforgePrice = Main.player[item.owner].GetModPlayer<SoraPlayer>().invincible ? 0 : reforgePrice;
-            return base.ReforgePrice(item, ref reforgePrice, ref canApplyDiscount);
-        }
-
-        public override float UseTimeMultiplier(Item item, Player player)
-        {
-            return (player.GetModPlayer<SoraPlayer>().invincible ? 5f : 1);
+            if (Item.pick>0 || Item.axe>0 || Item.hammer>0 || Item.consumable) 
+            {
+                return base.UseTimeMultiplier(Item, player);
+            }
+            return (player.GetModPlayer<SoraPlayer>().invincible ? 0.05f : 1);
         }
 
     }

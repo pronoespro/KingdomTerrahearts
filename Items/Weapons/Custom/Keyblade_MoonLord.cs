@@ -4,10 +4,11 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items.Weapons.Custom
 {
-    public class Keyblade_MoonLord: Keyblade
+    public class Keyblade_MoonLord: KeybladeBase
 	{
 		public override void SetStaticDefaults()
 		{
+			base.SetStaticDefaults();
 			DisplayName.SetDefault("Moon's Bane");
 			Tooltip.SetDefault("Inpending doom of heart approaches" +
 				"\nMoon lazer included");
@@ -15,18 +16,18 @@ namespace KingdomTerrahearts.Items.Weapons.Custom
 
 		public override void SetDefaults()
 		{
-			item.damage = 750;
-			item.melee = true;
-			item.width = 50;
-			item.height = 50;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.holdStyle = 4;
-			item.knockBack = 3;
-			item.value = 100;
-			item.rare = ItemRarityID.Green;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
-			item.useAnimation = item.useTime = 20;
+			base.SetDefaults();
+			Item.damage = 750;
+			Item.width = 50;
+			Item.height = 50;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.holdStyle = 4;
+			Item.knockBack = 3;
+			Item.value = 100;
+			Item.rare = ItemRarityID.Green;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
+			Item.useAnimation = Item.useTime = 20;
 
 			SaveAtributes();
 			keyLevel = 5;

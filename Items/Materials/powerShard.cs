@@ -12,16 +12,16 @@ namespace KingdomTerrahearts.Items.Materials
         {
             DisplayName.SetDefault("Mythril Shard");
             Tooltip.SetDefault("A mineral shard containing rare metal" +
-                "\nUsed for item synthesis");
+                "\nUsed for Item synthesis");
         }
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.rare = ItemRarityID.Blue;
-            item.value = 200;
-            item.maxStack = 999;
+            Item.width = 20;
+            Item.height = 20;
+            Item.rare = ItemRarityID.Blue;
+            Item.value = 200;
+            Item.maxStack = 999;
         }
     }
 }

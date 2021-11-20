@@ -8,7 +8,7 @@ namespace KingdomTerrahearts.Tiles
 {
     class TwilightWorkbench:ModTile
 	{
-		public override void SetDefaults()
+		public override void SetStaticDefaults()
 		{
 			Main.tileSolidTop[Type] = true;
 			Main.tileFrameImportant[Type] = true;
@@ -22,8 +22,8 @@ namespace KingdomTerrahearts.Tiles
 			ModTranslation name = CreateMapEntryName();
 			name.SetDefault("Twilight Workbench");
 			AddMapEntry(new Color(200, 150, 50), name);
-			disableSmartCursor = true;
-			adjTiles = new int[] { TileID.WorkBenches };
+			TileID.Sets.DisableSmartCursor[Type] = true;
+			AdjTiles = new int[] { TileID.WorkBenches };
 		}
 	}
 }

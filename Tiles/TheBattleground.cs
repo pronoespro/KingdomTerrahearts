@@ -14,7 +14,7 @@ namespace KingdomTerrahearts.Tiles
     public class TheBattleground :ModTile
     {
 
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             Main.tileLighted[Type] = true;
             Main.tileBlockLight[Type] = false;
@@ -36,7 +36,7 @@ namespace KingdomTerrahearts.Tiles
                 TileObjectData.newTile.CoordinateHeights[i] = 16;
             }
             TileObjectData.newTile.Origin = new Point16(9, 27);
-            TileObjectData.newTile.AnchorBottom= new AnchorData(AnchorType.SolidWithTop,4, TileObjectData.newTile.Width / 2 -2);
+            TileObjectData.newTile.AnchorBottom= new AnchorData(AnchorType.SolidTile,4, TileObjectData.newTile.Width / 2 -2);
             TileObjectData.newTile.AnchorTop = AnchorData.Empty;
             TileObjectData.newTile.AnchorLeft = AnchorData.Empty;
             TileObjectData.newTile.AnchorRight = AnchorData.Empty;
@@ -49,16 +49,16 @@ namespace KingdomTerrahearts.Tiles
             name.SetDefault("The Battleground");
             AddMapEntry(new Color(150, 30, 30), name);
 
-            animationFrameHeight = 504;
-            dustType = 11;
-            disableSmartCursor = true;
-            minPick = 2;
-            mineResist = 3;
+            AnimationFrameHeight = 504;
+            DustType = 11;
+            TileID.Sets.DisableSmartCursor[Type] = true;
+            MinPick = 2;
+            MineResist = 3;
         }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(i*16,j*16,9,28,mod.ItemType("TheBattlegroundItem"));
+            Item.NewItem(i*16,j*16,9,28,ModContent.ItemType<TheBattlegroundItem>());
         }
 
         public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)
@@ -74,10 +74,10 @@ namespace KingdomTerrahearts.Tiles
             float x = i * 16;
             float y = j * 16;
 
-            if (player.position.X > x - (16 * 9) && player.position.X < x + (16 * 9) && player.position.Y < y - (16 * 28))
+            if ((player.position.X > x - (16 * 9) && player.position.X < x + (16 * 9) && player.position.Y < y - (16 * 28)) || sp.fightingInBattleground)
             {
                 Vector2 init = new Vector2(x - (16 * 9), y - (16 * 29) * 2);
-                Vector2 end = new Vector2(x + (16 * 9) - 9, y - (16 * 29) + 16);
+                Vector2 end = new Vector2(x + (16 * 9) - 9, y - (16 * 29) + 16-player.height/2);
                 sp.SetTrapLimits(init,end);
 
                 bool playerIsTrapped = false;
@@ -101,9 +101,9 @@ namespace KingdomTerrahearts.Tiles
                         player.AddBuff(BuffID.PotionSickness, 30, false);
                     }
 
-                    if (!player.HasBuff(mod.BuffType("EnlightenedBuff")))
+                    if (!player.HasBuff(ModContent.BuffType<Buffs.EnlightenedBuff>()))
                     {
-                        player.AddBuff(mod.BuffType("EnlightenedBuff"),50,true);
+                        player.AddBuff(ModContent.BuffType<Buffs.EnlightenedBuff>(), 50,true);
                     }
                 }
                 sp.fightingInBattleground = (playerIsTrapped || sp.fightingInBattleground)&& !player.dead;
@@ -125,26 +125,25 @@ namespace KingdomTerrahearts.Tiles
 
         public override void SetDefaults()
         {
-            item.width = 32;
-            item.height = 32;
-            item.maxStack = 13;
-            item.useTurn = true;
-            item.autoReuse = true;
-            item.useAnimation = 15;
-            item.useTime = 10;
-            item.useStyle = 1;
-            item.rare = 1;
-            item.createTile = mod.TileType("TheBattleground");
-            item.placeStyle = 0;
-            item.consumable = true;
+            Item.width = 32;
+            Item.height = 32;
+            Item.maxStack = 13;
+            Item.useTurn = true;
+            Item.autoReuse = true;
+            Item.useAnimation = 15;
+            Item.useTime = 10;
+            Item.useStyle = 1;
+            Item.rare = 1;
+            Item.createTile = ModContent.TileType<Tiles.TheBattleground>();
+            Item.placeStyle = 0;
+            Item.consumable = true;
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod.ItemType("DarkenedHeart"));
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe()
+            .AddIngredient(ModContent.ItemType<Items.DarkenedHeart>())
+            .AddTile(TileID.WorkBenches)
+            .Register();
         }
     }
 }

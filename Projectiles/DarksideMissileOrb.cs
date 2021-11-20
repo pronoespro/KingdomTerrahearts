@@ -13,19 +13,19 @@ namespace KingdomTerrahearts.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Dark orb");
-            Main.projFrames[projectile.type] = 3;
+            Main.projFrames[Projectile.type] = 3;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 50;
-            projectile.height = 50;
+            Projectile.width = 50;
+            Projectile.height = 50;
         }
 
         public override void AI()
         {
 
-            if (++projectile.frameCounter >= 5)
+            if (++Projectile.frameCounter >= 5)
             {
                 Vector2 randRot= new Vector2(Main.rand.NextFloat(-1, 1), Main.rand.NextFloat(-1, 1));
                 randRot.Normalize();
@@ -35,15 +35,15 @@ namespace KingdomTerrahearts.Projectiles
                     randRot.Normalize();
                 }
 
-                int dust = Dust.NewDust(projectile.Center + randRot, projectile.width, projectile.height, 200, randRot.X, randRot.Y, 125);
+                int dust = Dust.NewDust(Projectile.Center + randRot, Projectile.width, Projectile.height, 200, randRot.X, randRot.Y, 125);
                 Main.dust[dust].color = Color.Black;
                 Main.dust[dust].noGravity = true;
 
-                projectile.frameCounter = 0;
-                projectile.rotation += Main.rand.Next(-90, 90);
-                if (++projectile.frame >= 3)
+                Projectile.frameCounter = 0;
+                Projectile.rotation += Main.rand.Next(-90, 90);
+                if (++Projectile.frame >= 3)
                 {
-                    projectile.frame = 0;
+                    Projectile.frame = 0;
                 }
             }
 

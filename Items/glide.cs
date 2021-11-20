@@ -52,19 +52,16 @@ namespace KingdomTerrahearts.Items
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-
-            recipe.AddIngredient(ItemID.FallenStar, 2);
-
-            recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe()
+            .AddIngredient(ItemID.FallenStar, 2)
+            .AddTile(TileID.WorkBenches)
+            .Register();
 
         }
         public override void RaiseLevel()
         {
             base.RaiseLevel();
-            SoraPlayer sp = Main.player[item.owner].GetModPlayer<SoraPlayer>();
+            SoraPlayer sp = Main.player[Item.playerIndexTheItemIsReservedFor].GetModPlayer<SoraPlayer>();
             sp.RaiseGlideLevel(this);
         }
 

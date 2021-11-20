@@ -13,35 +13,35 @@ namespace KingdomTerrahearts.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("guardProjectile");
-            Main.projFrames[projectile.type] = 3;
+            Main.projFrames[Projectile.type] = 3;
         }
 
         public override void SetDefaults()
         {
-            projectile.width = 52;
-            projectile.height = 156/3;
-            projectile.scale = 2;
-            projectile.penetrate = -1;
-            projectile.tileCollide = false;
-            projectile.light = 1.2f;
-            projectile.timeLeft = 5;
-            projectile.ignoreWater = true;
-            projectile.rotation = 0;
-            projectile.alpha = 250;
+            Projectile.width = 52;
+            Projectile.height = 156/3;
+            Projectile.scale = 2;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.light = 1.2f;
+            Projectile.timeLeft = 5;
+            Projectile.ignoreWater = true;
+            Projectile.rotation = 0;
+            Projectile.alpha = 250;
         }
 
         public override void AI()
         {
-            SoraPlayer sp = Main.player[projectile.owner].GetModPlayer<SoraPlayer>();
+            SoraPlayer sp = Main.player[Projectile.owner].GetModPlayer<SoraPlayer>();
 
-            projectile.position = Main.player[projectile.owner].position-new Vector2(projectile.width/4.6f,0);
+            Projectile.position = Main.player[Projectile.owner].position-new Vector2(Projectile.width/4.6f,0);
 
-            projectile.ai[0]++;
-            projectile.ai[0] = (projectile.ai[0] >= 30) ? 0 : projectile.ai[0];
-            projectile.frame = (int)(projectile.ai[0] / 10);
+            Projectile.ai[0]++;
+            Projectile.ai[0] = (Projectile.ai[0] >= 30) ? 0 : Projectile.ai[0];
+            Projectile.frame = (int)(Projectile.ai[0] / 10);
 
-            projectile.alpha = (sp.guardTime>15)?0: 150-sp.guardTime;
-            projectile.scale = 1.5f;
+            Projectile.alpha = (sp.guardTime>15)?0: 150-sp.guardTime;
+            Projectile.scale = 1.5f;
         }
 
     }

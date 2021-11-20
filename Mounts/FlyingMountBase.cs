@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Mounts
 {
-    public abstract class FlyingMountBase:ModMountData
+    public abstract class FlyingMountBase:ModMount
     {
 
         public float mountVel=5;

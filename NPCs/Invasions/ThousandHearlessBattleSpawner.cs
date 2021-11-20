@@ -3,6 +3,7 @@ using KingdomTerrahearts.NPCs.Invasions;
 using Microsoft.Xna.Framework;
 
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -16,42 +17,48 @@ namespace KingdomTerrahearts.NPCs.Invasions
             DisplayName.SetDefault("Powerfull Heart");
             Tooltip.SetDefault("A heart so powerfull heartless need it" +
                 "\nCalls a thousand heartless");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 32;
-            item.height = 32;
-            item.scale = 1;
-            item.maxStack = 99;
-            item.useTime = 30;
-            item.useAnimation = 30;
-            item.UseSound = SoundID.Item1;
-            item.useStyle = 1;
-            item.consumable = true;
-            item.value = Item.buyPrice(0, 1, 0, 0);
-            item.rare = 3;
+            Item.width = 32;
+            Item.height = 32;
+            Item.scale = 1;
+            Item.maxStack = 99;
+            Item.useTime = 30;
+            Item.useAnimation = 30;
+            Item.UseSound = SoundID.Item1;
+            Item.useStyle = ItemUseStyleID.HoldUp;
+            Item.consumable = true;
+            Item.value = Item.buyPrice(0, 1, 0, 0);
+            Item.rare = 3;
         }
 
-        public override bool UseItem(Player player)
+        public override bool? UseItem(Player player)
         {
-            if (!KingdomWorld.customInvasionUp)
+            if (player.whoAmI == Main.myPlayer)
             {
-                Main.NewText("A thousand heartless are approaching", 175, 75, 255, false);
-                ThousandHeartlessInvasion.StartInvasion();
-                return true;
+                if (!KingdomWorld.customInvasionUp)
+                {
+                    Main.NewText("A thousand heartless are approaching", 175, 75, 255);
+                    ThousandHeartlessInvasion.StartInvasion();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
-            {
-                return false;
-            }
+            return null;
         }
+
+
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod.ItemType("lucidShard"), 5);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(ModContent.ItemType<Items.Materials.lucidShard>(), 5);
+            recipe.Register();
         }
 
     }

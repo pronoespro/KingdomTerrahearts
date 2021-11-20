@@ -160,7 +160,7 @@ namespace KingdomTerrahearts.Interface
             }
             else
             {
-                commandBackground[1].BackgroundColor = (CommandLogic.instance.selectedCommand == 1 && sora.player.statMana >= sora.lastHeldItem.mana) ? Color.Blue : commandColor;
+                commandBackground[1].BackgroundColor = (CommandLogic.instance.selectedCommand == 1 && sora.Player.statMana >= sora.lastHeldItem.mana) ? Color.Blue : commandColor;
                 //comandPanel.Append(commandBackground[1]);
                 commandText[1].TextColor = (CommandLogic.instance.CanUseCommand(1)) ? Color.White : Color.Gray;
                 //commandBackground[1].Append(commandText[1]);
@@ -224,7 +224,7 @@ namespace KingdomTerrahearts.Interface
             }
             else
             {
-                commandBackground[3].BackgroundColor = (CommandLogic.instance.selectedCommand == 3 && sora.player.statMana >= sora.player.statManaMax) ? Color.Blue : commandColor;
+                commandBackground[3].BackgroundColor = (CommandLogic.instance.selectedCommand == 3 && sora.Player.statMana >= sora.Player.statManaMax*0.8f) ? Color.Blue : commandColor;
                 //comandPanel.Append(commandBackground[3]);
                 commandText[3].TextColor = (CommandLogic.instance.CanUseCommand(3)) ? Color.White : Color.Gray;
                 //commandBackground[3].Append(commandText[3]);

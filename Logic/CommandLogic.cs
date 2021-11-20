@@ -43,7 +43,7 @@ namespace KingdomTerrahearts
 
         public void UseReaction()
         {
-            if (sora.player.HeldItem != null && reactionItem.active)
+            if (sora.Player.HeldItem != null && reactionItem.active)
             {
                 curHitAmmount = 0;
                 reactionItem = new Item();
@@ -59,7 +59,7 @@ namespace KingdomTerrahearts
                 if (curHitAmmount >= hitsToReaction)
                 {
                     reactionActive = true;
-                    reactionItem = sora.player.HeldItem;
+                    reactionItem = sora.Player.HeldItem;
                 }
             }
         }
@@ -93,7 +93,7 @@ namespace KingdomTerrahearts
                         return p.statMana >= p.statManaMax;
                 }
             }
-            return true;
+            return false;
         }
 
         public void MoveCommandCursor(bool up=false)

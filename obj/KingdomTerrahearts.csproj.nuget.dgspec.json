@@ -1,32 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\cesar\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\KingdomTerrahearts\\KingdomTerrahearts.csproj": {}
+    "C:\\Users\\cesar\\Documents\\My Games\\Terraria\\ModLoader\\Beta\\Mod Sources\\KingdomTerrahearts\\KingdomTerrahearts.csproj": {}
   },
   "projects": {
-    "C:\\Users\\cesar\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\KingdomTerrahearts\\KingdomTerrahearts.csproj": {
+    "C:\\Users\\cesar\\Documents\\My Games\\Terraria\\ModLoader\\Beta\\Mod Sources\\KingdomTerrahearts\\KingdomTerrahearts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\cesar\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\KingdomTerrahearts\\KingdomTerrahearts.csproj",
+        "projectUniqueName": "C:\\Users\\cesar\\Documents\\My Games\\Terraria\\ModLoader\\Beta\\Mod Sources\\KingdomTerrahearts\\KingdomTerrahearts.csproj",
         "projectName": "KingdomTerrahearts",
-        "projectPath": "C:\\Users\\cesar\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\KingdomTerrahearts\\KingdomTerrahearts.csproj",
+        "projectPath": "C:\\Users\\cesar\\Documents\\My Games\\Terraria\\ModLoader\\Beta\\Mod Sources\\KingdomTerrahearts\\KingdomTerrahearts.csproj",
         "packagesPath": "C:\\Users\\cesar\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\cesar\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\KingdomTerrahearts\\obj\\",
+        "outputPath": "C:\\Users\\cesar\\Documents\\My Games\\Terraria\\ModLoader\\Beta\\Mod Sources\\KingdomTerrahearts\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\cesar\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net45"
+          "net5.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net45": {
-            "targetAlias": "net45",
+          "net5.0": {
+            "targetAlias": "net5.0",
             "projectReferences": {}
           }
         },
@@ -37,15 +37,30 @@
         }
       },
       "frameworks": {
-        "net45": {
-          "targetAlias": "net45",
+        "net5.0": {
+          "targetAlias": "net5.0",
           "dependencies": {
             "tModLoader.CodeAssist": {
               "target": "Package",
               "version": "[0.1.*, )"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.403\\RuntimeIdentifierGraph.json"
         }
       }
     }

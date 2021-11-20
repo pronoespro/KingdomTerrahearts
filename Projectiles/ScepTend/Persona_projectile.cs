@@ -5,6 +5,8 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.DataStructures;
+using Terraria.Audio;
 
 namespace KingdomTerrahearts.Projectiles.ScepTend
 {
@@ -13,33 +15,34 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override void SetDefaults()
         {
-            projectile.netImportant = true;
-            projectile.width = 10;
-            projectile.height = 24;
-            projectile.friendly = true;
-            projectile.tileCollide = true;
-            projectile.timeLeft = 80;
+            Projectile.netImportant = true;
+            Projectile.width = 10;
+            Projectile.height = 24;
+            Projectile.friendly = true;
+            Projectile.tileCollide = true;
+            Projectile.timeLeft = 80;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            projectile.velocity = Vector2.Zero;
+            Projectile.velocity = Vector2.Zero;
             return false;
         }
 
         public override void AI()
         {
-            if (MathHelp.Magnitude(projectile.velocity)>0)
+            if (MathHelp.Magnitude(Projectile.velocity)>0)
             {
-                projectile.velocity.Y += 0.1f;
+                Projectile.velocity.Y += 0.1f;
             }
         }
 
         public override void Kill(int timeLeft)
         {
-            int proj = Projectile.NewProjectile(projectile.Center, Vector2.Zero, mod.ProjectileType("persona_fire"), projectile.damage * 4, projectile.knockBack + 1);
-            Main.projectile[proj].owner = projectile.owner;
-            Main.PlaySound(SoundID.Item7.SoundId, x: (int)projectile.Center.X, y: (int)projectile.Center.Y, volumeScale: 3);
+            ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+
+            int proj = Projectile.NewProjectile(s,Projectile.Center, Vector2.Zero, ModContent.ProjectileType<persona_fire>(), Projectile.damage * 4, Projectile.knockBack + 1,Projectile.owner);
+            SoundEngine.PlaySound(SoundID.Item7.SoundId, x: (int)Projectile.Center.X, y: (int)Projectile.Center.Y, volumeScale: 3);
         }
 
     }

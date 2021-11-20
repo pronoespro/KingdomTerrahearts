@@ -4,27 +4,28 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items.Weapons.Joke
 {
-	public class Keyblade_umbrella : Keyblade
+	public class Keyblade_umbrella : KeybladeBase
 	{
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Casual Gear 'Amburera'");
 			Tooltip.SetDefault("This looks awfully familiar...");
+			base.SetStaticDefaults();
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 40;
-			item.melee = true;
-			item.width = 26;
-			item.height = 26;
-			item.scale = 2f;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.holdStyle = 4;
-			item.knockBack = 0;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
-			item.useAnimation = item.useTime = 20;
+			base.SetDefaults();
+			Item.damage = 40;
+			Item.width = 26;
+			Item.height = 26;
+			Item.scale = 2f;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.holdStyle = 4;
+			Item.knockBack = 0;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
+			Item.useAnimation = Item.useTime = 20;
 
 			SaveAtributes();
 			magic = keyMagic.balloon;
@@ -39,12 +40,11 @@ namespace KingdomTerrahearts.Items.Weapons.Joke
 
 		public override void AddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Umbrella);
-			recipe.AddIngredient(mod.ItemType("twilightShard"),100);
-			recipe.AddTile(TileID.MythrilAnvil);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
+			CreateRecipe()
+			.AddIngredient(ItemID.Umbrella)
+			.AddIngredient(ModContent.ItemType<Items.Materials.twilightShard>(),100)
+			.AddTile(TileID.MythrilAnvil)
+			.Register();
 		}
 
 		public override void ChangeKeybladeValues()

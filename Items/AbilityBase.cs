@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items
 {
+
     public abstract class AbilityBase : ModItem
     {
 
@@ -22,15 +24,16 @@ namespace KingdomTerrahearts.Items
         {
             DisplayName.SetDefault("Missing ability");
             Tooltip.SetDefault("");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
 
-            item.accessory = true;
-            item.width = 10;
-            item.height = 10;
-            item.scale = 0.1f;
+            Item.accessory = true;
+            Item.width = 10;
+            Item.height = 10;
+            Item.scale = 0.1f;
 
         }
 
@@ -48,7 +51,7 @@ namespace KingdomTerrahearts.Items
         {
             level = initLvl;
             ResetLevelEffects();
-            SoraPlayer sp = Main.player[item.owner].GetModPlayer<SoraPlayer>();
+            SoraPlayer sp = Main.player[Item.playerIndexTheItemIsReservedFor].GetModPlayer<SoraPlayer>();
             for (int i = 0; i < sp.CheckPlayerLevel(); i++)
             {
                 RaiseLevel();
@@ -70,14 +73,14 @@ namespace KingdomTerrahearts.Items
         {
 
             int lvl = (level >= abilityTooltips.Length) ? abilityTooltips.Length-1 : level;
-            TooltipLine line = new TooltipLine(mod, "level tooltip", abilityTooltips[lvl]);
+            TooltipLine line = new TooltipLine(Mod, "level tooltip", abilityTooltips[lvl]);
 
             tooltips.Add(line);
         }
 
         public virtual void ChangeNameByLevel()
         {
-            item.SetNameOverride(abilityName + " level " + (level+1));
+            Item.SetNameOverride(abilityName + " level " + (level+1));
         }
 
     }

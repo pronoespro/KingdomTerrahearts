@@ -22,7 +22,7 @@ namespace KingdomTerrahearts.Items
         {
             abilityName = "Max Mobility";
             DisplayName.SetDefault(abilityName + " level " + (level + 1).ToString());
-            Tooltip.SetDefault("An ability that combines all previous ones" +
+            Tooltip.SetDefault("An ability that combines all previous mobility ones" +
                 "\nAllows you to jump again in midair" +
                 "\nAllows you to dash" +
                 "\nAllows you to glide");
@@ -83,22 +83,19 @@ namespace KingdomTerrahearts.Items
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-
-            recipe.AddIngredient(mod.ItemType("doubleJump"));
-            recipe.AddIngredient(mod.ItemType("glide"));
-            recipe.AddIngredient(mod.ItemType("quickRun"));
-
-            recipe.AddTile(TileID.TinkerersWorkbench);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            CreateRecipe()
+            .AddIngredient(ModContent.ItemType<doubleJump>())
+            .AddIngredient(ModContent.ItemType<glide>())
+            .AddIngredient(ModContent.ItemType<quickRun>())
+            .AddTile(TileID.TinkerersWorkbench)
+            .Register();
 
         }
 
         public override void RaiseLevel()
         {
             base.RaiseLevel();
-            SoraPlayer sp = Main.player[item.owner].GetModPlayer<SoraPlayer>();
+            SoraPlayer sp = Main.player[Item.playerIndexTheItemIsReservedFor].GetModPlayer<SoraPlayer>();
             sp.RaiseMobilityLevel(this);
         }
 

@@ -6,38 +6,39 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Items.Weapons
 {
-    class Keyblade_destiny:Keyblade
+    class Keyblade_destiny:KeybladeBase
 	{
 
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Destiny's Embrace");
 			Tooltip.SetDefault("A keyblade made from the heart of a princess of light");
+			base.SetStaticDefaults();
 		}
 
 		public override void SetDefaults()
 		{
-			item.damage = 30;
-			item.melee = true;
-			item.width = 80;
-			item.height = 80;
-			item.scale = 0.75f;
-			item.useTime = 20;
-			item.useAnimation = 20;
-			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.holdStyle = 4;
-			item.knockBack = 3;
-			item.value = 150000;
-			item.rare = ItemRarityID.Green;
-			item.UseSound = SoundID.Item1;
-			item.autoReuse = true;
+			base.SetDefaults();
+			Item.damage = 30;
+			Item.width = 80;
+			Item.height = 80;
+			Item.scale = 0.75f;
+			Item.useTime = 20;
+			Item.useAnimation = 20;
+			Item.useStyle = ItemUseStyleID.Swing;
+			Item.holdStyle = 4;
+			Item.knockBack = 3;
+			Item.value = 150000;
+			Item.rare = ItemRarityID.Green;
+			Item.UseSound = SoundID.Item1;
+			Item.autoReuse = true;
 
 			SaveAtributes();
 			keyLevel = 2;
 			magic = keyMagic.reflect;
 			magicCost = 15;
 			keyTransformations = new keyTransformation[] {keyTransformation.staff };
-            transSprites = new string[] { "Items/Weapons/Keyblade_destiny" };
+            transSprites = new string[] { "Items/Weapons/Transformations/Kairi_Staff" };
 			formChanges = new keyDriveForm[] {keyDriveForm.limit };
 			animationTimes = new int[] {20,20};
 			guardType = blockingType.reflect;
@@ -54,7 +55,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			magic = keyMagic.reflect;
 			magicCost = 15;
 			keyTransformations = new keyTransformation[] { keyTransformation.staff };
-			transSprites = new string[] { "Items/Weapons/Keyblade_destiny" };
+			transSprites = new string[] { "Items/Weapons/Transformations/Kairi_Staff" };
 			formChanges = new keyDriveForm[] { keyDriveForm.limit };
 			animationTimes = new int[] { 20, 20 };
 			guardType = blockingType.reflect;

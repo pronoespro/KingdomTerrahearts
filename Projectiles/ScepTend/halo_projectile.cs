@@ -5,6 +5,8 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.DataStructures;
+using Terraria.Audio;
 
 namespace KingdomTerrahearts.Projectiles.ScepTend
 {
@@ -16,39 +18,39 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override void SetStaticDefaults()
         {
-            Main.projFrames[projectile.type] = 6;
+            Main.projFrames[Projectile.type] = 6;
         }
 
         public override void SetDefaults()
         {
-            projectile.netImportant = true;
-            projectile.width = 22;
-            projectile.height = 30;
-            projectile.friendly = true;
-            projectile.tileCollide = true;
-            projectile.timeLeft = 120;
+            Projectile.netImportant = true;
+            Projectile.width = 22;
+            Projectile.height = 30;
+            Projectile.friendly = true;
+            Projectile.tileCollide = true;
+            Projectile.timeLeft = 120;
         }
 
         public override void AI()
         {
-            projectile.scale = 0.5f;
-            if (projectile.ai[0] < 30)
+            Projectile.scale = 0.5f;
+            if (Projectile.ai[0] < 30)
             {
-                projectile.velocity.Y -= 0.1f;
-                projectile.velocity *= (MathHelp.Magnitude(projectile.velocity) > 1) ? 0.9f : 1f;
-                projectile.ai[0]++;
+                Projectile.velocity.Y -= 0.1f;
+                Projectile.velocity *= (MathHelp.Magnitude(Projectile.velocity) > 1) ? 0.9f : 1f;
+                Projectile.ai[0]++;
             }
             else
             {
                 if (CheckTarget())
                 {
-                    projectile.velocity = MathHelp.Normalize(targetLastPos - projectile.Center) * 7;
-                    if (Vector2.Distance(targetLastPos, projectile.Center) < projectile.width)
-                        projectile.timeLeft = 1;
+                    Projectile.velocity = MathHelp.Normalize(targetLastPos - Projectile.Center) * 7;
+                    if (Vector2.Distance(targetLastPos, Projectile.Center) < Projectile.width)
+                        Projectile.timeLeft = 1;
                 }
                 else
                 {
-                    projectile.velocity *= (MathHelp.Magnitude(projectile.velocity)>1)?0.9f:1f;
+                    Projectile.velocity *= (MathHelp.Magnitude(Projectile.velocity)>1)?0.9f:1f;
                 }
             }
         }
@@ -71,7 +73,7 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
                                 target = i;
                                 targetLastPos = postarget.Center;
                             }
-                            else if (Vector2.Distance(projectile.Center, postarget.Center) < Vector2.Distance(projectile.Center, Main.npc[target].Center))
+                            else if (Vector2.Distance(Projectile.Center, postarget.Center) < Vector2.Distance(Projectile.Center, Main.npc[target].Center))
                             {
                                 target = i;
                                 targetLastPos = postarget.Center;
@@ -85,9 +87,10 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override void Kill(int timeLeft)
         {
-            int proj = Projectile.NewProjectile(projectile.Center, Vector2.Zero, mod.ProjectileType("halo_explosion"), projectile.damage*4, projectile.knockBack + 1);
-            Main.projectile[proj].owner = projectile.owner;
-            Main.PlaySound(SoundID.Item14,projectile.Center);
+            ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+
+            int proj = Projectile.NewProjectile(s,Projectile.Center, Vector2.Zero, ModContent.ProjectileType<halo_explosion>(), Projectile.damage*4, Projectile.knockBack + 1,Projectile.owner);
+            SoundEngine.PlaySound(SoundID.Item14,Projectile.Center);
         }
 
     }

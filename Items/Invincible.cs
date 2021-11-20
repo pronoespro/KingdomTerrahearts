@@ -22,9 +22,9 @@ namespace KingdomTerrahearts.Items
         public override void SetDefaults()
         {
 
-            item.accessory = true;
-            item.width = 26;
-            item.height = 26;
+            Item.accessory = true;
+            Item.width = 26;
+            Item.height = 26;
 
         }
 
@@ -109,7 +109,6 @@ namespace KingdomTerrahearts.Items
                     case BuffID.Honey:
                     case BuffID.HornetMinion:
                     case BuffID.IceBarrier:
-                    case BuffID.Horrified:
                     case BuffID.Hunter:
                     case BuffID.Inferno:
                     case BuffID.Invisibility:
@@ -198,21 +197,95 @@ namespace KingdomTerrahearts.Items
                     case BuffID.Wisp:
                     case BuffID.Wrath:
                     case BuffID.ZephyrFish:
+                    case BuffID.BabyBird:
+                    case BuffID.BabyRedPanda:
+                    case BuffID.BabyWerewolf:
+                    case BuffID.BatOfLight:
+                    case BuffID.BrainOfCthulhuPet:
+                    case BuffID.CatBast:
+                    case BuffID.CoolWhipPlayerBuff:
+                    case BuffID.DarkHorseMount:
+                    case BuffID.DarkMageBookMount:
+                    case BuffID.DestroyerPet:
+                    case BuffID.DukeFishronPet:
+                    case BuffID.DynamiteKitten:
+                    case BuffID.EaterOfWorldsPet:
+                    case BuffID.EmpressBlade:
+                    case BuffID.EverscreamPet:
+                    case BuffID.EyeOfCthulhuPet:
+                    case BuffID.FairyQueenPet:
+                    case BuffID.FennecFox:
+                    case BuffID.Flamingo:
+                    case BuffID.FlinxMinion:
+                    case BuffID.GlitteryButterfly:
+                    case BuffID.GolemPet:
+                    case BuffID.GolfCartMount:
+                    case BuffID.IceQueenPet:
+                    case BuffID.ImpMinion:
+                    case BuffID.KingSlimePet:
+                    case BuffID.LavaSharkMount:
+                    case BuffID.LeafCrystal:
+                    case BuffID.LilHarpy:
+                    case BuffID.Lucky:
+                    case BuffID.LunaticCultistPet:
+                    case BuffID.MajesticHorseMount:
+                    case BuffID.MartianPet:
+                    case BuffID.Merfolk:
+                    case BuffID.MiniMinotaur:
+                    case BuffID.MonsterBanner:
+                    case BuffID.MoonLordPet:
+                    case BuffID.PaintedHorseMount:
+                    case BuffID.PaladinsShield:
+                    case BuffID.PirateShipMount:
+                    case BuffID.PlanteraPet:
+                    case BuffID.Plantero:
+                    case BuffID.PogoStickMount:
+                    case BuffID.PumpkingPet:
+                    case BuffID.QueenBeePet:
+                    case BuffID.QueenSlimeMount:
+                    case BuffID.QueenSlimePet:
+                    case BuffID.SantankMount:
+                    case BuffID.SharkPup:
+                    case BuffID.SkeletronPet:
+                    case BuffID.SkeletronPrimePet:
+                    case BuffID.SpookyWoodMount:
+                    case BuffID.Squashling:
+                    case BuffID.StormTiger:
+                    case BuffID.SugarGlider:
+                    case BuffID.TwinsPet:
+                    case BuffID.UpbeatStar:
+                    case BuffID.VampireFrog:
+                    case BuffID.VoltBunny:
+                    case BuffID.WallOfFleshGoatMount:
+                    case BuffID.WellFed2:
+                    case BuffID.WellFed3:
+                    case BuffID.WitchBroom:
                         continue;
                 }
-                if(i==mod.BuffType("EnlightenedBuff")|| i == mod.BuffType("mewwowBuff")||i==mod.BuffType("zafiBuff"))
+                if(i==ModContent.BuffType<Buffs.EnlightenedBuff>()|| i == ModContent.BuffType<Buffs.mewwowBuff>()||i==ModContent.BuffType<Buffs.zafiBuff>())
                     continue;
+                #endregion
+
+                #region badBuffs
+                switch (i)
+                {
+                    case BuffID.NoBuilding:
+                    case BuffID.Horrified:
+                        return;
+                }
                 #endregion
                 player.buffImmune[i] = true;
             }
 
             player.armorPenetration = int.MaxValue;
-            player.allDamage = 1000;
+            player.GetDamage(DamageClass.Generic)+=1000000;
+            
             player.pickSpeed = int.MaxValue;
             player.breath = player.breathMax;
             player.gills = true;
             player.waterWalk = true;
-            player.moveSpeed = 100; 
+            player.moveSpeed= 3;
+            player.blockRange = 1000000;
             player.maxRunSpeed = 10000;
             player.maxFallSpeed = 10000;
             //player.HeldItem.consumable = false;
