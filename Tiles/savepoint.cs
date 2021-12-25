@@ -33,6 +33,7 @@ namespace KingdomTerrahearts.Tiles
 			AdjTiles = new int[] { TileID.Beds };
 			AnimationFrameHeight = 38;
 		}
+
 		public override void SetSpriteEffects(int i, int j, ref SpriteEffects spriteEffects)
 		{
 			// Flips the sprite if x coord is odd. Makes the tile more interesting.

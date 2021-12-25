@@ -44,7 +44,7 @@ namespace KingdomTerrahearts.Items.Weapons
 		{
 			CreateRecipe()
 			.AddIngredient(ItemID.LunarBar, 15)
-			.AddIngredient(ModContent.ItemType<Items.Materials.Orichalchum>())
+			.AddIngredient(ModContent.ItemType<Items.Materials.OrichalchumPlus>())
 			.AddIngredient(ItemID.Sapphire)
 			.AddIngredient(ItemID.SoulofNight,15)
 			.AddIngredient(ItemID.SoulofMight, 15)

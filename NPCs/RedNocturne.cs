@@ -41,6 +41,21 @@ namespace KingdomTerrahearts.NPCs
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
         }
 
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            // We can use AddRange instead of calling Add multiple times in order to add multiple items at once
+            bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[] {
+				// Sets the preferred biomes of this town NPC listed in the bestiary.
+				// With Town NPCs, you usually set this to what biome it likes the most in regards to NPC happiness.
+				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Surface,
+
+				// Sets your NPC's flavor text in the bestiary.
+				new FlavorTextBestiaryInfoElement("Spellcasting Heartless" +
+                "\nWhile hovering about, they attack by casting Fire" +
+                "\nHaving low HP, they keep their distance from their opponents, making them difficult to attack")
+            });
+        }
+
         public override void SetDefaults()
         {
             NPC.lifeMax = 50;

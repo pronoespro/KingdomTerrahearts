@@ -32,9 +32,9 @@ namespace KingdomTerrahearts.Items.Weapons
 			SaveAtributes();
 			magic = keyMagic.balloon;
 			keyTransformations = new keyTransformation[] { keyTransformation.guns, keyTransformation.cannon };
-			transSprites = new string[] { "Items/Weapons/Transformations/Lionheart_Gun", "Items/Weapons/Keyblade_oblivion" };
+			transSprites = new string[] { "Items/Weapons/Transformations/Honey_Gun", "Items/Weapons/Transformations/Honey_Cannon" };
 			formChanges = new keyDriveForm[] { keyDriveForm.element, keyDriveForm.element };
-			animationTimes = new int[] { 20, 10, 15 };
+			animationTimes = new int[] { 20, 10, 35 };
 			projectileTime = 1000;
 			keyLevel = 1;
 			keySummon = summonType.bambi;
@@ -47,9 +47,10 @@ namespace KingdomTerrahearts.Items.Weapons
 			keySummon = summonType.bambi;
 			magic = keyMagic.balloon;
 			keyTransformations = new keyTransformation[] { keyTransformation.guns, keyTransformation.cannon };
-			transSprites = new string[] { "Items/Weapons/Transformations/Lionheart_Cannon" };
+			transSprites = new string[] { "Items/Weapons/Transformations/Honey_Gun", "Items/Weapons/Transformations/Honey_Cannon" };
 			formChanges = new keyDriveForm[] { keyDriveForm.element, keyDriveForm.element };
-			animationTimes = new int[] { 20, 10, 15 };
+			animationTimes = new int[] { 20, 13, 75 };
+            transProj =new int[]{ ProjectileID.Bee,ProjectileID.Beenade};
 			projectileTime = 1000;
 		}
 	}

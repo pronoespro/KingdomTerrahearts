@@ -400,7 +400,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
                 npcLoot.Add(ItemDropRule.OneFromOptions(3, dropOptions));
 
 
-                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.twilightShard>(), 1, 5, 15));
+                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.twilightStone>(), 1, 5, 15));
             }
         }
 
@@ -524,6 +524,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
                 if (defeatTime == 5)
                 {
                     Projectile.NewProjectile(s,NPC.Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.darkPortal>(), 0, 0);
+                    NPC.NPCLoot();
                 }
                 else if (defeatTime <= 0)
                 {
@@ -765,17 +766,19 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
             }
         }
 
+        public override void BossLoot(ref string name, ref int potionType)
+        {
+            base.BossLoot(ref name, ref potionType);
+        }
+
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
 
-            if (!NPC.downedMoonlord)
-            {
-                int[] dropOptions = new int[] { ModContent.ItemType<Items.Weapons.Keyblade_Kingdom>(), ModContent.ItemType<Items.Armor.orgCoat>(), ModContent.ItemType<Items.seasaltIcecream>() };
-                npcLoot.Add(ItemDropRule.OneFromOptions(3, dropOptions));
+            int[] dropOptions = new int[] { ModContent.ItemType<Items.Weapons.Keyblade_Kingdom>(), ModContent.ItemType<Items.Armor.orgCoat>(), ModContent.ItemType<Items.seasaltIcecream>() };
+            npcLoot.Add(ItemDropRule.OneFromOptions(3, dropOptions));
 
 
-                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.twilightShard>(), 1, 15, 35));
-            }
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.twilightGem>(), 1, 15, 35));
         }
 
         public override bool CheckDead()
@@ -913,7 +916,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
         {
             if (Projectile.hide)
             {
-                Color clr = new Color(1, 1, 1, 0f);
+                Color clr =Projectile.GetAlpha(new Color(1, 1, 1, 0f));
                 Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
                 Rectangle rect = new Rectangle(0, 0, texture.Width, texture.Height);
 
@@ -1284,7 +1287,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
             int[] dropOptions = new int[] { ModContent.ItemType<Items.Weapons.Keyblade_FinalXion>(),ModContent.ItemType<Items.Armor.orgCoat>(),ModContent.ItemType<Items.seasaltIcecream>()};
             npcLoot.Add(ItemDropRule.OneFromOptions(3,dropOptions));
 
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.twilightShard>(), 1, 50, 137));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.twilightCrystal>(), 1, 50, 137));
 
             npcLoot.Add(ItemDropRule.Common(ItemID.BlueSolution, 1, 10, 15));
         }

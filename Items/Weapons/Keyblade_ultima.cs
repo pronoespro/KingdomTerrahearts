@@ -48,7 +48,7 @@ namespace KingdomTerrahearts.Items.Weapons
 		{
 			CreateRecipe()
 			.AddIngredient(ItemID.LunarBar, 150)
-			.AddIngredient(ModContent.ItemType<Items.Materials.Orichalchum>(), 15)
+			.AddIngredient(ModContent.ItemType<Items.Materials.OrichalchumPlus>(), 15)
 			.AddTile(TileID.MythrilAnvil)
 			.Register();
 		}

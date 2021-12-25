@@ -92,7 +92,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
                 {
                     NPC.Center = Main.player[NPC.target].Center + new Vector2(0, -300);
 
-                    Conversation[] conv = new Conversation[] { new Conversation("Whatever it takes!", Color.Red, DialogSystem.BOSS_DIALOGTIME, "Axel") };
+                    Conversation[] conv = new Conversation[] { new Conversation("You asked for it", Color.Red, DialogSystem.BOSS_DIALOGTIME, "Axel") };
                     DialogSystem.AddConversation(conv);
 
                     weaponProj[i] = Projectile.NewProjectile(s, NPC.Center, NPC.velocity, weaponType, attacksDamage[curAttack], 1);
@@ -382,7 +382,18 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
 
         public override void DespawnQuote()
         {
-            Conversation[] conv = new Conversation[] { new Conversation("Sorry, kid. No one axes Axel", Color.Red, DialogSystem.BOSS_DIALOGTIME, "Axel") };
+            Conversation[] conv;
+
+            switch (Main.rand.Next(0, 4))
+            {
+                default:
+                case 0:
+                    conv = new Conversation[] { new Conversation("Sorry, kid. No one axes Axel", Color.Red, DialogSystem.BOSS_DIALOGTIME, "Axel") };
+                    break;
+                case 1:
+                    conv = new Conversation[] { new Conversation("Don't say I didn't warn you!", Color.Red, DialogSystem.BOSS_DIALOGTIME, "Axel") };
+                    break;
+            }
             DialogSystem.AddConversation(conv);
         }
 

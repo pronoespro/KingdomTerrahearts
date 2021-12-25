@@ -29,6 +29,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
         public Vector2 specialPos;
         public Vector2 lastSpecialPos;
         public float desRotation=0;
+        public float cannonScale=1.25f;
 
         public bool opositeSides;
         public bool createdProjectile;
@@ -253,6 +254,9 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                             player.bodyFrame.Y = player.bodyFrame.Height*3;
 
                             Projectile.rotation = (float)Math.Atan2(mouseDir.Y, mouseDir.X) + (float)Math.PI / 4;
+
+                            Projectile.scale = cannonScale;
+
                             break;
                         case keyTransformation.guns:
 
@@ -357,7 +361,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                                     }
                                     else
                                     {
-                                        Vector2 newWeaponDir = MathHelp.Normalize(mouseDir) * (1.25f - percentageDone*3) * 40;
+                                        Vector2 newWeaponDir = MathHelp.Normalize(mouseDir) * (cannonScale - percentageDone*3) * 40;
                                         Projectile.Center += newWeaponDir;
                                         newWeaponDir = MathHelp.Normalize(mouseDir);
                                         Projectile.rotation = (float)Math.Atan2(newWeaponDir.Y, newWeaponDir.X) -((float)Math.PI/2*player.direction*(0.5f-(1-percentageDone*2)));
@@ -1358,7 +1362,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                 }
 
                 Projectile.ai[0]--;
-                if (Projectile.ai[0] <= 0)
+                if (Projectile.ai[0] < -1)
                 {
                     midAttack = false;
                     player = null;
@@ -1518,10 +1522,10 @@ namespace KingdomTerrahearts.Projectiles.Weapons
             Projectile.rotation = 0;
             if (!midAttack)
             {
+                transform = tranformation;
                 Projectile.ai[0] = Projectile.ai[1] = duration;
                 Projectile.timeLeft = duration;
                 midAttack = true;
-                transform = tranformation;
                 initMouseDir = MathHelp.Normalize(Main.screenPosition + new Vector2(Main.mouseX, Main.mouseY) - player.Center);
                 flipVertically = false;
                 Projectile.direction = player.direction;
@@ -1545,6 +1549,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                     Projectile.Center += MathHelp.Normalize(Main.screenPosition + new Vector2(Main.mouseX, Main.mouseY) - player.Center) * 5;
 
                     Projectile.rotation = (float)Math.Atan2(-mouseDir.Y, -mouseDir.X) + (float)Math.PI / 4*(flipVertically?1:-3);
+                    Projectile.scale = cannonScale;
 
                     break;
                 case keyTransformation.shield:
@@ -1816,7 +1821,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                         rect = new Rectangle(0, player.bodyFrame.Y, texture.Width, player.bodyFrame.Height);
                         textureOffset = new Vector2(-1f,-3);
 
-                        Main.spriteBatch.Draw(texture, player.Center+textureOffset - Main.screenPosition, rect, lightColor, player.fullRotation, new Vector2(texture.Width/2, player.bodyFrame.Height/2), 1f,
+                        Main.spriteBatch.Draw(texture, player.Center+textureOffset - Main.screenPosition, rect, lightColor, player.fullRotation, new Vector2(texture.Width/2, player.bodyFrame.Height/2),Projectile.scale,
                             (player.direction<0)?SpriteEffects.FlipHorizontally:SpriteEffects.None,
                             1);
                     }
@@ -1830,7 +1835,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                         {
                             rect = new Rectangle(0, player.legFrame.Y, texture.Width, player.bodyFrame.Height);
 
-                            Main.spriteBatch.Draw(texture, player.Center + textureOffset - Main.screenPosition, rect, lightColor, player.fullRotation, new Vector2(texture.Width / 2, player.bodyFrame.Height / 2), 1f,
+                            Main.spriteBatch.Draw(texture, player.Center + textureOffset - Main.screenPosition, rect, lightColor, player.fullRotation, new Vector2(texture.Width / 2, player.bodyFrame.Height / 2), Projectile.scale,
                                 (player.direction < 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
                                 1);
                         }

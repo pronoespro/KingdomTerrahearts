@@ -34,9 +34,9 @@ namespace KingdomTerrahearts.Items.Weapons.Custom
 			projectileTime *= 4;
 			magic = keyMagic.ice;
 			keyTransformations = new keyTransformation[] { keyTransformation.staff, keyTransformation.swords };
-			transSprites = new string[] { "Items/Weapons/Keyblade_demonite", "Items/Weapons/Keyblade_destiny" };
+			transSprites = new string[] { "Items/Weapons/Custom/Transformations/Moon_Staff", "Items/Weapons/Custom/Transformations/Moon_Swords" };
 			formChanges = new keyDriveForm[] { keyDriveForm.element };
-			animationTimes = new int[] { 7, 5, 7 };
+			animationTimes = new int[] { 7, 5, 30 };
 		}
 
 		public override void ChangeKeybladeValues()
@@ -46,9 +46,9 @@ namespace KingdomTerrahearts.Items.Weapons.Custom
 			projectileTime *= 4;
 			magic = keyMagic.ice;
 			keyTransformations = new keyTransformation[] { keyTransformation.staff, keyTransformation.swords };
-			transSprites = new string[] { "Items/Weapons/Keyblade_demonite", "Items/Weapons/Keyblade_destiny" };
+			transSprites = new string[] { "Items/Weapons/Custom/Transformations/Moon_Staff", "Items/Weapons/Custom/Transformations/Moon_Swords" };
 			formChanges = new keyDriveForm[] { keyDriveForm.element };
-			animationTimes = new int[] { 7, 5, 7 };
+			animationTimes = new int[] { 7, 5, 30 };
 		}
 
     }

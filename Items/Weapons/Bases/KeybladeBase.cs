@@ -153,6 +153,10 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public string[] transSprites= { };
 
+		public int[] transProj = { };
+		public float[] transShootSpeed = { };
+		public LegacySoundStyle[] transSounds = { SoundID.Item1 };
+
 		public int curTransformation=-1;
 		public int curForm = -1;
 		public int weaponDisplayProjectile;
@@ -315,7 +319,7 @@ namespace KingdomTerrahearts.Items.Weapons
 					KeybladeHoldDisplay display = (KeybladeHoldDisplay)Main.projectile[weaponDisplayProjectile].ModProjectile;
 					if (display != null)
 					{
-						display.Attack(Item.useTime, Main.player[Item.playerIndexTheItemIsReservedFor], keyTransformations[curTransformation]);
+						display.Attack(Item.useTime+5, Main.player[Item.playerIndexTheItemIsReservedFor], keyTransformations[curTransformation]);
 
 						display.SetComboAttack(combo);
 						Main.projectile[weaponDisplayProjectile].damage = Item.damage;
@@ -380,6 +384,10 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public bool MeleeAttack(Player player)
 		{
+			Item.UseSound = (transSounds.Length > 0) ? 
+				transSounds[Math.Clamp(curTransformation, 0, transSounds.Length-1)] 
+				: SoundID.Item1;
+
 			Item.shoot = ProjectileID.None;
 			if (curTransformation >= 0 && keyTransformations[curTransformation] != keyTransformation.none && keyTransformations[curTransformation] != keyTransformation.yoyo)
 			{
@@ -530,23 +538,20 @@ namespace KingdomTerrahearts.Items.Weapons
 			switch (keyTransformations[curTransformation])
 			{
 				case keyTransformation.cannon:
-					Item.shoot = ProjectileID.CannonballFriendly;
-					Item.shootSpeed = 10;
+					TransformedShoot(ProjectileID.CannonballFriendly, 10);
 					Item.useStyle = ItemUseStyleID.Rapier;
 					break;
 				case keyTransformation.guns:
-					Item.shoot = ProjectileID.JestersArrow;
-					Item.shootSpeed = 50;
+					TransformedShoot(ProjectileID.JestersArrow, 30);
 					Item.useStyle = ItemUseStyleID.Rapier;
 					break;
 				case keyTransformation.staff:
-					Item.shoot =ProjectileID.MagicMissile;
-					Item.shootSpeed = 25;
+					TransformedShoot(ProjectileID.MagicMissile, 20);
 					Item.useStyle = ItemUseStyleID.RaiseLamp;
 					break;
 				case keyTransformation.yoyo:
 					Item.noMelee = true;
-					Item.shoot =ProjectileID.RedsYoyo;
+					TransformedShoot(ProjectileID.RedsYoyo,Item.shootSpeed);
 					Item.channel = true;
 					Item.noUseGraphic = true;
 					break;
@@ -559,7 +564,7 @@ namespace KingdomTerrahearts.Items.Weapons
 					break;
 				case keyTransformation.shield:
 					Item.channel = true;
-					Item.shoot = ModContent.ProjectileType<shieldGuardProjectile>();
+					TransformedShoot(ModContent.ProjectileType<shieldGuardProjectile>(),Item.shootSpeed);
 					GetCloserToEnemy(player);
 					Item.useStyle = ItemUseStyleID.Swing;
 					break;
@@ -587,7 +592,28 @@ namespace KingdomTerrahearts.Items.Weapons
 			}
 		}
 
-        #region Transformed combos
+		#region Transformed combos
+
+		void TransformedShoot(int defaultProj,float defaultSpeed)
+		{
+			if (transProj.Length > curTransformation && transProj[curTransformation] > 0)
+			{
+				Item.shoot = transProj[curTransformation];
+			}
+			else
+			{
+				Item.shoot = defaultProj;
+			}
+			if(transShootSpeed.Length>curTransformation && transShootSpeed[curTransformation] >= 0)
+            {
+				Item.shootSpeed = transShootSpeed[curTransformation];
+            }
+            else
+			{
+				Item.shootSpeed = defaultSpeed;
+			}
+		}
+
         void UltimateSwordsCombo()
         {
             switch (combo)
@@ -1017,6 +1043,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			{
 				if (weaponDisplayProjectile >= 0 && Main.projectile[weaponDisplayProjectile].active && Main.projectile[weaponDisplayProjectile].type == ModContent.ProjectileType<KeybladeHoldDisplay>())
 				{
+					Main.projectile[weaponDisplayProjectile].scale = Item.scale;
 
 					KeybladeHoldDisplay display = (KeybladeHoldDisplay)Main.projectile[weaponDisplayProjectile].ModProjectile;
 					if (display != null)
@@ -1029,10 +1056,10 @@ namespace KingdomTerrahearts.Items.Weapons
 					ProjectileSource_Item s = new ProjectileSource_Item(Main.player[Item.playerIndexTheItemIsReservedFor], Item);
 
 					weaponDisplayProjectile = Projectile.NewProjectile(s, Main.player[Item.playerIndexTheItemIsReservedFor].position, Vector2.Zero, ModContent.ProjectileType<KeybladeHoldDisplay>(), 0, 0, Item.playerIndexTheItemIsReservedFor);
+					Main.projectile[weaponDisplayProjectile].scale = Item.scale;
 				}
 
 				Main.projectile[weaponDisplayProjectile].spriteDirection = Item.direction;
-				Main.projectile[weaponDisplayProjectile].scale = Item.scale;
 			}
 			else
 			{
@@ -1219,9 +1246,9 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public override bool Shoot(Player player, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			if (player.whoAmI == Main.myPlayer && lastUsedTime<Item.useTime && CommandLogic.instance.selectedCommand == 0)
+			if (player.whoAmI == Main.myPlayer && lastUsedTime<Item.useTime)
 			{
-				if ((curTransformation == -1 || keyTransformations[curTransformation] == keyTransformation.none))
+				if ((curTransformation == -1 || keyTransformations[curTransformation] == keyTransformation.none)&& CommandLogic.instance.selectedCommand == 0)
 				{
 					Vector2 vel = Main.screenPosition + new Vector2(Main.mouseX, Main.mouseY) - player.Center;
 					vel = MathHelp.Normalize(vel) * Item.shootSpeed;
@@ -1230,6 +1257,24 @@ namespace KingdomTerrahearts.Items.Weapons
 					Main.projectile[proj].friendly = true;
 					Main.projectile[proj].hostile = false;
 					Item.shoot = ProjectileID.None;
+					return false;
+				}
+				if(curTransformation>=0 && keyTransformations[curTransformation] == keyTransformation.cannon && CommandLogic.instance.selectedCommand==0)
+				{
+					Vector2 vel = Main.screenPosition + new Vector2(Main.mouseX, Main.mouseY) - player.Center;
+					vel = MathHelp.Normalize(vel) * Item.shootSpeed;
+					int proj = Projectile.NewProjectile(source, position, vel, type, damage*3, knockback*3, Item.playerIndexTheItemIsReservedFor);
+					Main.projectile[proj].friendly = true;
+					Main.projectile[proj].hostile = false;
+					return false;
+				}
+                if (CommandLogic.instance.selectedCommand == 1)
+				{
+					Vector2 vel = Main.screenPosition + new Vector2(Main.mouseX, Main.mouseY) - player.Center;
+					vel = MathHelp.Normalize(vel) * Item.shootSpeed;
+					int proj = Projectile.NewProjectile(source, position, vel, type, damage * 3, knockback * 3, Item.playerIndexTheItemIsReservedFor);
+					Main.projectile[proj].friendly = true;
+					Main.projectile[proj].hostile = false;
 					return false;
 				}
 			}

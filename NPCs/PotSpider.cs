@@ -41,7 +41,8 @@ namespace KingdomTerrahearts.NPCs
 				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Underground,
 
 				// Sets your NPC's flavor text in the bestiary.
-				new FlavorTextBestiaryInfoElement("Don't be fooled by this pot looking creature or it will come at you and take your money away.\nKeep hurting it to take it's money away instead.")
+				new FlavorTextBestiaryInfoElement("Don't be fooled by this pot looking creature or it will come at you and take your money away" +
+                "\nKeep hurting it to take it's money away instead.")
             });
         }
 
@@ -134,7 +135,7 @@ namespace KingdomTerrahearts.NPCs
         {
 
             //Bestiary
-            int[] possibleItems = new int[] { ModContent.ItemType<Items.Materials.blazingShard>(), ModContent.ItemType<Items.Materials.denseShard>() , ModContent.ItemType<Items.Materials.frostShard>() , ModContent.ItemType<Items.Materials.frostShard>() , ModContent.ItemType<Items.Materials.lucidShard>() , ModContent.ItemType<Items.Materials.powerShard>() , ModContent.ItemType<Items.Materials.pulsingShard>() , ModContent.ItemType<Items.Materials.thunderShard>() , ModContent.ItemType<Items.Materials.twilightShard>() };
+            int[] possibleItems = new int[] { ModContent.ItemType<Items.Materials.blazingShard>(), ModContent.ItemType<Items.Materials.betwixtShard>() , ModContent.ItemType<Items.Materials.frostShard>() , ModContent.ItemType<Items.Materials.frostShard>() , ModContent.ItemType<Items.Materials.lucidShard>() , ModContent.ItemType<Items.Materials.mythrilShard>() , ModContent.ItemType<Items.Materials.pulsingShard>() , ModContent.ItemType<Items.Materials.lightningShard>() , ModContent.ItemType<Items.Materials.twilightShard>() };
 
             npcLoot.Add(ItemDropRule.OneFromOptions(1,possibleItems));
 

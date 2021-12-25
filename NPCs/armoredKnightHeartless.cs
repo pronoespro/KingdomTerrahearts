@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.NPCs
 {
@@ -39,7 +41,7 @@ namespace KingdomTerrahearts.NPCs
 				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Surface,
 
 				// Sets your NPC's flavor text in the bestiary.
-				new FlavorTextBestiaryInfoElement("Armored to the bone, this heartless carries a sword and is weak to a sun rising.\nWill only appear in really large groups alongsode Surveilance Robots.")
+				new FlavorTextBestiaryInfoElement("Armored to the bone, this heartless carries a sword and is weak to a sun rising.\nWill only appear in really large groups alongsode Surveilance Robots")
             });
         }
 
@@ -74,6 +76,11 @@ namespace KingdomTerrahearts.NPCs
                 specialAttackTime = 0;
                 specialAttackCooldown = initAttackCooldownTime;
             }
+        }
+
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningGem>(), 10));
         }
 
     }

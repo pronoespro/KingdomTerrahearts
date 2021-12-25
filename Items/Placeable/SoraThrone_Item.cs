@@ -34,14 +34,14 @@ namespace KingdomTerrahearts.Items.Placeable
 			CreateRecipe()
 			.AddIngredient(ItemID.Throne)
 			.AddIngredient(ModContent.ItemType<Materials.blazingShard>(),100)
-			.AddIngredient(ModContent.ItemType<Materials.denseShard>(),100)
+			.AddIngredient(ModContent.ItemType<Materials.betwixtShard>(),100)
 			.AddIngredient(ModContent.ItemType<Materials.frostShard>(),100)
 			.AddIngredient(ModContent.ItemType<Materials.lucidShard>(),100)
-			.AddIngredient(ModContent.ItemType<Materials.powerShard>(), 100)
+			.AddIngredient(ModContent.ItemType<Materials.mythrilShard>(), 100)
 			.AddIngredient(ModContent.ItemType<Materials.pulsingShard>(),100)
-			.AddIngredient(ModContent.ItemType<Materials.thunderShard>(), 100)
+			.AddIngredient(ModContent.ItemType<Materials.lightningShard>(), 100)
 			.AddIngredient(ModContent.ItemType<Materials.twilightShard>(), 100)
-			.AddIngredient(ModContent.ItemType<Materials.Orichalchum>())
+			.AddIngredient(ModContent.ItemType<Materials.OrichalchumPlus>())
 			.AddTile(TileID.Anvils)
 			.Register();
 		}

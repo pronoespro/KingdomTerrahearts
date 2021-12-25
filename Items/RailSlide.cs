@@ -27,7 +27,7 @@ namespace KingdomTerrahearts.Items
             Item.rare = ItemRarityID.Pink;
             Item.UseSound = SoundID.Item79;
             Item.noMelee = true;
-            Item.mountType = ModContent.MountType<Mounts.FlowmotionPath>();
+            Item.mountType = ModContent.MountType<Mounts.FlowmotionRailSlide>();
         }
 
         public override void AddRecipes()

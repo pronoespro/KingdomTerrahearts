@@ -385,13 +385,13 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
 
         public override void DefeatQuote()
         {
-            Conversation[] conv = new Conversation[] { new Conversation("If only I had a keyblade...", Color.Yellow, DialogSystem.BOSS_DIALOGTIME, "Xigbar") };
+            Conversation[] conv = new Conversation[] { new Conversation("Hey, not bad!", Color.Yellow, DialogSystem.BOSS_DIALOGTIME, "Xigbar") };
             DialogSystem.AddConversation(conv);
         }
 
         public override void DespawnQuote()
         {
-            Conversation[] conv = new Conversation[] { new Conversation("Shoot you later, kiddo!", Color.Yellow, DialogSystem.BOSS_DIALOGTIME, "Xigbar") };
+            Conversation[] conv = new Conversation[] { new Conversation("You had your fun?", Color.Yellow, DialogSystem.BOSS_DIALOGTIME, "Xigbar") };
             DialogSystem.AddConversation(conv);
         }
 

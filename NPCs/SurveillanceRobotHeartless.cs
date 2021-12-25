@@ -4,6 +4,8 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
+using Terraria.GameContent.ItemDropRules;
+using Terraria.GameContent.Bestiary;
 
 namespace KingdomTerrahearts.NPCs
 {
@@ -16,6 +18,19 @@ namespace KingdomTerrahearts.NPCs
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Watcher Heartless");
+        }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            // We can use AddRange instead of calling Add multiple times in order to add multiple items at once
+            bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[] {
+				// Sets the preferred biomes of this town NPC listed in the bestiary.
+				// With Town NPCs, you usually set this to what biome it likes the most in regards to NPC happiness.
+				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Surface,
+
+				// Sets your NPC's flavor text in the bestiary.
+				new FlavorTextBestiaryInfoElement("These small flying drone Heartless fire lasers that can be returned with a block, but they will respond with an even stronger power laser")
+            });
         }
 
         public override void SetDefaults()
@@ -97,6 +112,11 @@ namespace KingdomTerrahearts.NPCs
         {
             NPC.spriteDirection = NPC.direction;
             NPC.frame.Y = frameHeight * 0;
+        }
+
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningGem>(), 10));
         }
 
     }

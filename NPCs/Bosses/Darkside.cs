@@ -174,7 +174,7 @@ namespace KingdomTerrahearts.NPCs.Bosses
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.DarkenedHeart>(),1,2,2));
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lucidShard>(),1,5,15));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lucidStone>(),1,5,15));
             npcLoot.Add(ItemDropRule.Common(ItemID.FallenStar,1, 15,15));
         }
 

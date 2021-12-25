@@ -1047,20 +1047,20 @@ namespace KingdomTerrahearts
                     break;
                 case NPCID.WallofFlesh:
 
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.powerShard>(), 1, 10, 15));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.mythrilShard>(), 1, 10, 15));
                     npcLoot.Add(ItemDropRule.Common(ItemID.GuideVoodooDoll));
                     break;
                 case NPCID.Retinazer:
                 case NPCID.Spazmatism:
 
-                    npcLoot.Add(ItemDropRule.ByCondition(new Conditions.MissingTwin(), ModContent.ItemType<Items.Materials.powerShard>(), 1, 10, 20));
-                    npcLoot.Add(ItemDropRule.ByCondition(new Conditions.MissingTwin(), ModContent.ItemType<Items.Materials.thunderShard>(), 1, 10, 20));
+                    npcLoot.Add(ItemDropRule.ByCondition(new Conditions.MissingTwin(), ModContent.ItemType<Items.Materials.mythrilShard>(), 1, 10, 20));
+                    npcLoot.Add(ItemDropRule.ByCondition(new Conditions.MissingTwin(), ModContent.ItemType<Items.Materials.lightningShard>(), 1, 10, 20));
                     npcLoot.Add(ItemDropRule.ByCondition(new Conditions.MissingTwin(), ItemID.MechanicalEye, 1, 10, 15));
                     break;
                 case NPCID.TheDestroyer:
 
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.powerShard>(), 1, 10, 15));
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.thunderShard>(), 1, 10, 15));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.mythrilShard>(), 1, 10, 15));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningShard>(), 1, 10, 15));
                     npcLoot.Add(ItemDropRule.Common(ItemID.MechanicalWorm, 1, 10, 15));
                     break;
                 case NPCID.Probe:
@@ -1068,8 +1068,8 @@ namespace KingdomTerrahearts
                     break;
                 case NPCID.SkeletronPrime:
 
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.powerShard>(), 1, 10, 15));
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.thunderShard>(), 1, 10, 15));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.mythrilShard>(), 1, 10, 15));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningShard>(), 1, 10, 15));
                     npcLoot.Add(ItemDropRule.Common(ItemID.MechanicalSkull, 1, 10, 15));
                     break;
                 case NPCID.Plantera:
@@ -1082,19 +1082,19 @@ namespace KingdomTerrahearts
                     break;
                 case NPCID.Golem:
 
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.powerShard>(), 1, 10, 15));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.mythrilShard>(), 1, 10, 15));
                     npcLoot.Add(ItemDropRule.Common(ItemID.LihzahrdPowerCell, 1, 10, 15));
                     break;
                 case NPCID.CultistBoss:
 
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.thunderShard>(), 1, 10, 15));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningShard>(), 1, 10, 15));
                     break;
 
                 case NPCID.DukeFishron:
 
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Weapons.Custom.Keyblade_DukeFish>(), 2));
                     npcLoot.Add(ItemDropRule.Common(ItemID.TruffleWorm, 1, 10, 15));
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.thunderShard>(), 1, 10, 40));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningShard>(), 1, 10, 40));
                     break;
 
                 case NPCID.QueenSlimeBoss:
@@ -1114,7 +1114,7 @@ namespace KingdomTerrahearts
                     npcLoot.Add(ItemDropRule.Common(ItemID.FragmentSolar, 1, 50, 50));
                     npcLoot.Add(ItemDropRule.Common(ItemID.FragmentStardust, 1, 50, 50));
                     npcLoot.Add(ItemDropRule.Common(ItemID.FragmentVortex, 1, 50, 50));
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.Orichalchum>()));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.OrichalchumPlus>()));
                     break;
                 case NPCID.MoonLordHead:
                 case NPCID.MoonLordHand:
@@ -1131,7 +1131,7 @@ namespace KingdomTerrahearts
 
                 //Vortex
                 case NPCID.LunarTowerVortex:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.thunderShard>(), 1, 30, 50));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningShard>(), 1, 30, 50));
                     npcLoot.Add(ItemDropRule.Common(ItemID.SniperScope));
                     break;
 
@@ -1140,7 +1140,7 @@ namespace KingdomTerrahearts
                 case NPCID.VortexLarva:
                 case NPCID.VortexRifleman:
                 case NPCID.VortexSoldier:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.thunderShard>(), 3, 1, 3));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningShard>(), 3, 1, 3));
                     npcLoot.Add(ItemDropRule.Common(ItemID.FragmentVortex, 1, 1, 2));
                     break;
 
@@ -1202,7 +1202,7 @@ namespace KingdomTerrahearts
                 case NPCID.Wraith:
                 case NPCID.WanderingEye:
                 case NPCID.Reaper:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.denseShard>(), 2, 1, 3));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.betwixtShard>(), 2, 1, 3));
                     break;
 
                 //frost
@@ -1230,7 +1230,7 @@ namespace KingdomTerrahearts
                 case NPCID.Derpling:
                 case NPCID.GiantTortoise:
                 case NPCID.GiantFlyingFox:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.powerShard>(), 2, 1, 3));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.mythrilShard>(), 2, 1, 3));
                     break;
 
                 //pulsing
@@ -1260,7 +1260,7 @@ namespace KingdomTerrahearts
                 case NPCID.WyvernHead:
                 case NPCID.Frankenstein:
                 case NPCID.DeadlySphere:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.thunderShard>(), 2, 1, 3));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningShard>(), 2, 1, 3));
                     break;
 
                 //twilight

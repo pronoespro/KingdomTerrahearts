@@ -77,7 +77,7 @@ namespace KingdomTerrahearts.Projectiles
                     originalPos = p.Center;
                 }
 
-                if (targetsLocked.Count > 0 && curTarget<targetsLocked.Count)
+                if (targetsLocked.Count > 0 && curTarget<targetsLocked.Count && Main.npc[targetsLocked[curTarget]].active)
                 {
                     p.Center =Vector2.Lerp(originalPos, Main.npc[targetsLocked[curTarget]].Center,Math.Clamp(Projectile.ai[1]/4f,0,1));
                     p.velocity = Vector2.Zero;

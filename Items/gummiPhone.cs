@@ -36,7 +36,7 @@ namespace KingdomTerrahearts.Items
         {
             CreateRecipe()
             .AddIngredient(ItemID.CellPhone)
-            .AddIngredient(ModContent.ItemType<Materials.thunderShard>(),10)
+            .AddIngredient(ModContent.ItemType<Materials.lightningShard>(),10)
             .AddTile(TileID.TinkerersWorkbench)
             .Register();
         }
@@ -49,7 +49,7 @@ namespace KingdomTerrahearts.Items
             }
             else
             {
-                player.Teleport(player.GetModPlayer<SoraPlayer>().originalSpawnPoint);
+                player.Teleport(new Vector2(Main.spawnTileX*16,Main.spawnTileY*16)-new Vector2(player.width,player.height));
             }
             player.velocity = Vector2.Zero;
 

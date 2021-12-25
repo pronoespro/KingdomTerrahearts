@@ -281,7 +281,7 @@ namespace KingdomTerrahearts.NPCs.Bosses
                         NPC.timeLeft = 10;
                         for (int i = 0; i < curProjs.Length; i++)
                         {
-                            if (Main.projectile[curProjs[i]].active)
+                            if (curProjs[i]<Main.maxProjectiles && curProjs[i]>=0 && Main.projectile[curProjs[i]].active)
                             {
                                 Main.projectile[curProjs[i]].timeLeft = 1;
                             }
@@ -295,7 +295,8 @@ namespace KingdomTerrahearts.NPCs.Bosses
         {
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<elsasHeart>(), 1, 2, 5));
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Weapons.Keyblade_ice>()));
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.frostShard>(), 1, 15, 50));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.frostCrystal>(), 1, 1, 15));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.frostStone>(), 1, 15, 50));
         }
 
         public override void FindFrame(int frameHeight)
@@ -343,16 +344,7 @@ namespace KingdomTerrahearts.NPCs.Bosses
         public override bool CheckDead()
         {
 
-            if (curProjs != null)
-            {
-                for (int i = 0; i < curProjs.Length; i++)
-                {
-                    if (curProjs[i]<Main.maxProjectiles && Main.projectile[curProjs[i]].active)
-                    {
-                        Main.projectile[curProjs[i]].timeLeft = 1;
-                    }
-                }
-            }
+            DespawnHandler();
 
             return base.CheckDead();
         }

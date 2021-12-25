@@ -385,7 +385,7 @@ namespace KingdomTerrahearts
 			recipe.Register();
 
 			recipe = CreateRecipe(ItemID.ShinyRedBalloon);
-			recipe.AddIngredient(ModContent.ItemType<Items.Materials.thunderShard>(), 20);
+			recipe.AddIngredient(ModContent.ItemType<Items.Materials.lightningShard>(), 20);
 			recipe.AddIngredient(ItemID.PinkGel, 10);
 			recipe.AddTile(TileID.SkyMill);
 			recipe.Register();
@@ -421,19 +421,19 @@ namespace KingdomTerrahearts
 			recipe.Register();
 
 			recipe = CreateRecipe(ItemID.Starfury);
-			recipe.AddIngredient(ModContent.ItemType<Items.Materials.powerShard>(), 20);
+			recipe.AddIngredient(ModContent.ItemType<Items.Materials.mythrilShard>(), 20);
 			recipe.AddIngredient(ItemID.FallenStar, 50);
 			recipe.AddTile(TileID.MythrilAnvil);
 			recipe.Register();
 
 			recipe = CreateRecipe(ItemID.Aglet);
-			recipe.AddIngredient(ModContent.ItemType <Items.Materials.thunderShard>(), 10);
+			recipe.AddIngredient(ModContent.ItemType <Items.Materials.lightningShard>(), 10);
 			recipe.AddIngredient(ItemID.IronBar, 1);
 			recipe.AddTile(TileID.MythrilAnvil);
 			recipe.Register();
 
 			recipe = CreateRecipe(ItemID.AnkletoftheWind);
-			recipe.AddIngredient(ModContent.ItemType < Items.Materials.thunderShard>(), 20);
+			recipe.AddIngredient(ModContent.ItemType < Items.Materials.lightningShard>(), 20);
 			recipe.AddIngredient(ItemID.Silk, 20);
 			recipe.AddTile(TileID.MythrilAnvil);
 			recipe.Register();
@@ -450,12 +450,12 @@ namespace KingdomTerrahearts
 
 			recipe = CreateRecipe(ItemID.TitaniumOre, 5);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.blazingShard>(), 10);
-			recipe.AddIngredient(ModContent.ItemType < Items.Materials.denseShard>(), 10);
+			recipe.AddIngredient(ModContent.ItemType < Items.Materials.betwixtShard>(), 10);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.frostShard>(), 10);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.lucidShard>(), 10);
-			recipe.AddIngredient(ModContent.ItemType < Items.Materials.powerShard>(), 10);
+			recipe.AddIngredient(ModContent.ItemType < Items.Materials.mythrilShard>(), 10);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.pulsingShard>(), 10);
-			recipe.AddIngredient(ModContent.ItemType < Items.Materials.thunderShard>(), 10);
+			recipe.AddIngredient(ModContent.ItemType < Items.Materials.lightningShard>(), 10);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.twilightShard>(), 10);
 			recipe.AddTile(TileID.AdamantiteForge);
 			recipe.Register();
@@ -465,12 +465,12 @@ namespace KingdomTerrahearts
 			recipe.AddTile(TileID.Furnaces);
 			recipe.Register();
 
-			recipe = CreateRecipe(ModContent.ItemType<Items.Materials.denseShard>(), 5);
+			recipe = CreateRecipe(ModContent.ItemType<Items.Materials.betwixtShard>(), 5);
 			recipe.AddIngredient(ItemID.IronOre);
 			recipe.AddTile(TileID.Furnaces);
 			recipe.Register();
 
-			recipe = CreateRecipe(ModContent.ItemType<Items.Materials.denseShard>(), 5);
+			recipe = CreateRecipe(ModContent.ItemType<Items.Materials.betwixtShard>(), 5);
 			recipe.AddIngredient(ItemID.LeadOre);
 			recipe.AddTile(TileID.Furnaces);
 			recipe.Register();
@@ -496,7 +496,7 @@ namespace KingdomTerrahearts
 			recipe.Register();
 
 			recipe = CreateRecipe(ItemID.RainCloud, 99);
-			recipe.AddIngredient(ModContent.ItemType < Items.Materials.thunderShard>(), 10);
+			recipe.AddIngredient(ModContent.ItemType < Items.Materials.lightningShard>(), 10);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.twilightShard>(), 10);
 			recipe.AddTile(TileID.SkyMill);
 			recipe.Register();
@@ -507,7 +507,7 @@ namespace KingdomTerrahearts
 			recipe.Register();
 
 			recipe = CreateRecipe(ItemID.SkyMill);
-			recipe.AddIngredient(ModContent.ItemType <Items.Materials.thunderShard>(), 20);
+			recipe.AddIngredient(ModContent.ItemType <Items.Materials.lightningShard>(), 20);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.twilightShard>(), 20);
 			recipe.AddIngredient(ItemID.GoldBar, 5);
 			recipe.AddIngredient(ItemID.WaterBucket);
@@ -543,7 +543,7 @@ namespace KingdomTerrahearts
 			recipe.Register();
 
 			recipe = CreateRecipe(ItemID.IronBar);
-			recipe.AddIngredient(ModContent.ItemType < Items.Materials.denseShard>(),10);
+			recipe.AddIngredient(ModContent.ItemType < Items.Materials.betwixtShard>(),10);
 			recipe.AddTile(TileID.Anvils);
 			recipe.Register();
 
@@ -575,7 +575,7 @@ namespace KingdomTerrahearts
 			.Register();
 
 			CreateRecipe(ItemID.DarkShard)
-			.AddIngredient(ModContent.ItemType<Items.Materials.denseShard>(),13)
+			.AddIngredient(ModContent.ItemType<Items.Materials.betwixtShard>(),13)
 			.AddIngredient(ItemID.SoulofNight, 7)
 			.AddIngredient(ItemID.DemoniteBar)
 			.AddTile(TileID.MythrilAnvil)

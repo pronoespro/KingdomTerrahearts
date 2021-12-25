@@ -34,7 +34,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			keyTransformations = new keyTransformation[] { keyTransformation.cannon, keyTransformation.staff};
 			transSprites = new string[] { "Items/Weapons/Transformations/Lamp_Cannon", "Items/Weapons/Transformations/Lamp_Staff" };
 			formChanges = new keyDriveForm[] { keyDriveForm.element, keyDriveForm.wisdom};
-			animationTimes = new int[] { 15, 10, 8 };
+			animationTimes = new int[] { 15, 30, 13 };
 			keyLevel = 1;
 			keySummon = summonType.genie;
 			projectileTime = 500;
@@ -60,8 +60,8 @@ namespace KingdomTerrahearts.Items.Weapons
 			magic = keyMagic.fire;
 			keyTransformations = new keyTransformation[] { keyTransformation.cannon, keyTransformation.staff };
 			transSprites = new string[] { "Items/Weapons/Transformations/Lamp_Cannon", "Items/Weapons/Transformations/Lamp_Staff" };
-			formChanges = new keyDriveForm[] { keyDriveForm.dark, keyDriveForm.dual };
-			animationTimes = new int[] { 15, 10, 8 };
+			formChanges = new keyDriveForm[] { keyDriveForm.element, keyDriveForm.wisdom };
+			animationTimes = new int[] { 15, 30, 13 };
 			keySummon = summonType.genie;
 			projectileTime = 500;
 		}
