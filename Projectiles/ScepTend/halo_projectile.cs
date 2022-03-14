@@ -87,7 +87,7 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override void Kill(int timeLeft)
         {
-            ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+            EntitySource_Parent s = new EntitySource_Parent(Projectile);
 
             int proj = Projectile.NewProjectile(s,Projectile.Center, Vector2.Zero, ModContent.ProjectileType<halo_explosion>(), Projectile.damage*4, Projectile.knockBack + 1,Projectile.owner);
             SoundEngine.PlaySound(SoundID.Item14,Projectile.Center);

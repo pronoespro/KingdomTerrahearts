@@ -16,7 +16,7 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
     public class AxelChakrams : ModProjectile
     {
 
-        public override string Texture => "KingdomTerrahearts/Projectiles/Weapons/Chakram_EternalFlames";
+        public override string Texture => "KingdomTerrahearts/Items/Weapons/Org13/Axel/Chacrams_EternalFlames";
 
         public int bossOwner;
 

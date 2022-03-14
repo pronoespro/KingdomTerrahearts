@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.GameContent.UI.Elements;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -95,7 +96,8 @@ namespace KingdomTerrahearts.Interface
                 if (keyblade==null)
                 {
                     // QuickSpawnClonedItem will preserve mod data of the item. QuickSpawnItem will just spawn a fresh version of the item, losing the prefix.
-                    Main.LocalPlayer.QuickSpawnClonedItem(item.Item, item.Item.stack);
+                    EntitySource_Parent s = new EntitySource_Parent(Main.LocalPlayer);
+                    Main.LocalPlayer.QuickSpawnClonedItem(s,item.Item, item.Item.stack);
                     // Now that we've spawned the item back onto the player, we reset the item by turning it into air.
                     item.Item.TurnToAir();
                 }
@@ -170,7 +172,8 @@ namespace KingdomTerrahearts.Interface
             if (!item.Item.IsAir)
             {
                 // QuickSpawnClonedItem will preserve mod data of the item. QuickSpawnItem will just spawn a fresh version of the item, losing the prefix.
-                Main.LocalPlayer.QuickSpawnClonedItem(item.Item, item.Item.stack);
+                EntitySource_Parent s=new EntitySource_Parent (Main.LocalPlayer);
+                Main.LocalPlayer.QuickSpawnClonedItem(s,item.Item, item.Item.stack);
                 // Now that we've spawned the item back onto the player, we reset the item by turning it into air.
                 item.Item.TurnToAir();
             }

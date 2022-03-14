@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -45,7 +46,8 @@ namespace KingdomTerrahearts.Projectiles.Summons
             manaAmmount = Main.rand.Next(1, 5);
             for (int i = 0; i < manaAmmount; i++)
             {
-                int item=Item.NewItem(Projectile.getRect(), ItemID.Star);
+                EntitySource_Parent s = new EntitySource_Parent(Projectile);
+                int item=Item.NewItem(s,Projectile.getRect(), ItemID.Star);
                 manaDir = new Vector2(Main.rand.NextFloat(-5f, 5f),0);
                 Main.item[item].velocity = manaDir;
                 Projectile.ai[0]++;

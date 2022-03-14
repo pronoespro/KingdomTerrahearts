@@ -16,7 +16,7 @@ namespace KingdomTerrahearts.Items.Weapons.Custom
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			Item.damage = 420;
+			Item.damage = 200;
 			Item.width = 50;
 			Item.height = 50;
 			Item.scale = 0.85f;

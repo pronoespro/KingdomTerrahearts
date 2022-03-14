@@ -6,6 +6,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
+using Terraria.Audio;
 
 namespace KingdomTerrahearts.Projectiles.ScepTend
 {
@@ -25,7 +26,10 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override void AI()
         {
-            ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+            if (Projectile.timeLeft == 100)
+            {
+                SoundEngine.PlaySound(SoundID.Item66, Projectile.Center);
+            }
 
             if (Projectile.ai[0] == 0)
             {
@@ -53,7 +57,7 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public int SpawnProjectile(int type, float offsetX = 0, float offsetY = 0)
         {
-            ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+            EntitySource_Parent s = new EntitySource_Parent(Projectile);
 
             Vector2 offset = new Vector2(offsetX, offsetY);
             int proj = Projectile.NewProjectile(s,Projectile.Center+offset, Vector2.Zero,type,0,Projectile.knockBack,Projectile.owner);

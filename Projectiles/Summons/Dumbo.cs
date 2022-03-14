@@ -54,15 +54,15 @@ namespace KingdomTerrahearts.Projectiles.Summons
                 {
                     Projectile.spriteDirection = (Main.npc[target].Center - Projectile.Center).X > 0 ? 1 : -1;
                     if (Projectile.ai[0] % 2 == 0)
-                    {
-                        ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+                        {
+                            EntitySource_Parent s = new EntitySource_Parent(Projectile);
 
                         int proj = Projectile.NewProjectile(s,Projectile.Center, MathHelp.Normalize(Main.npc[target].Center+new Vector2(0,25) - Projectile.Center) * 5, ProjectileID.WaterStream, Projectile.damage/4, 3, Projectile.owner);
                         Main.projectile[proj].timeLeft = 50;
 
                         if (Projectile.ai[0] % 120 == 0)
                         {
-                            int itm=Item.NewItem(Projectile.getRect(), ItemID.Star);
+                            int itm=Item.NewItem(s,Projectile.getRect(), ItemID.Star);
                             Main.item[itm].velocity = new Vector2(Main.rand.Next(-3, 3), Main.rand.Next(-3, 3));
                         }
 

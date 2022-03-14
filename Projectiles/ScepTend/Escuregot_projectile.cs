@@ -21,7 +21,7 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override void SetDefaults()
         {
-            ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+            EntitySource_Parent s = new EntitySource_Parent(Projectile);
 
             Projectile.netImportant = true;
             Projectile.width = 42;
@@ -99,7 +99,7 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override bool PreKill(int timeLeft)
         {
-            ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+            EntitySource_Parent s = new EntitySource_Parent(Projectile);
             Projectile.NewProjectile(s,Projectile.Center, Vector2.Zero, ModContent.ProjectileType<Escuregot_explosion>(), 0, 0);
             return base.PreKill(timeLeft);
         }

@@ -20,6 +20,18 @@ namespace KingdomTerrahearts.Projectiles.Weapons
         public float gravity=1;
         public float rotOTime = 0.5f;
         public int fireTime = 120;
+        public float damageMult = 0.5f;
+
+        public int minProjectiles=2;
+        public int maxProjectiles = 5;
+
+        public int projectilesOnCollision= ProjectileID.BallofFire;
+        public int projectileTrail = -1;
+        public int trailTimer=5;
+        public float trailSpeedMult=0.5f;
+        public int manaUsage = 20;
+
+        private int trail = 0;
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
@@ -28,6 +40,8 @@ namespace KingdomTerrahearts.Projectiles.Weapons
 
         public override void AI()
         {
+
+
             initTimeLeft = (initTimeLeft > 0) ? initTimeLeft : Projectile.timeLeft;
             initVel = (initVel > 0) ? initVel : MathHelp.Magnitude(Projectile.velocity);
             initVelX = (initVel != 0) ? initVelX : Projectile.velocity.X;
@@ -47,6 +61,29 @@ namespace KingdomTerrahearts.Projectiles.Weapons
             else
             {
                 Projectile.velocity.Y += gravity;
+                if (projectileTrail >= 0)
+                {
+                    trail++;
+                    while (trail > trailTimer)
+                    {
+                        trail -= trailTimer;
+                        if (Main.player[Projectile.owner].statMana > manaUsage)
+                        {
+                            EntitySource_Parent s = new EntitySource_Parent(Projectile);
+                            int proj = Projectile.NewProjectile(s, Projectile.Center, Projectile.velocity * trailSpeedMult, projectileTrail, (int)(Math.Clamp(Projectile.damage * damageMult, 0, int.MaxValue)), 1, Projectile.owner);
+                            Main.projectile[proj].friendly = true;
+                            Main.projectile[proj].hostile = false;
+
+                            Main.player[Projectile.owner].statMana -= manaUsage;
+                            Main.player[Projectile.owner].manaRegenDelay= 5;
+
+                        }
+                        else
+                        {
+                            Projectile.ai[0] = 0;
+                        }
+                    }
+                }
             }
 
             if (Projectile.timeLeft < 60)
@@ -57,7 +94,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
 
                 if (Vector2.Dot(MathHelp.Normalize(distToPlayer), MathHelp.Normalize(Projectile.velocity))==1)
                 {
-                    if (MathHelp.Magnitude(Main.player[Projectile.owner].velocity) > initVel / 2)
+                    if (MathHelp.Magnitude(Main.player[Projectile.owner].velocity) > initVel)
                     {
                         Projectile.velocity = MathHelp.Normalize(Projectile.velocity) * MathHelp.Magnitude(Main.player[Projectile.owner].velocity) * 2;
                         Projectile.Center = (MathHelp.Magnitude(distToPlayer) > 500) ? Main.player[Projectile.owner].Center + MathHelp.Normalize(distToPlayer) * 500 : Projectile.Center;
@@ -76,16 +113,18 @@ namespace KingdomTerrahearts.Projectiles.Weapons
         {
             Projectile.timeLeft = 40;
 
-            if (Projectile.ai[0] > 50 && Main.player[Projectile.owner].statMana>20)
+            if (projectilesOnCollision>=0 && Projectile.ai[0] > 50 && Main.player[Projectile.owner].statMana>manaUsage)
             {
-                ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
-                int projAmmount = Main.rand.Next(2,5);
+                EntitySource_Parent s = new EntitySource_Parent(Projectile);
+                int projAmmount = Main.rand.Next(minProjectiles,maxProjectiles);
                 for (int i = 0; i < projAmmount; i++)
                 {
-                    int proj=Projectile.NewProjectile(s,Projectile.Center, new Vector2(Main.rand.Next(-2, 2), Main.rand.Next(2, 5)), ProjectileID.BallofFire, Projectile.damage / 2, 1,Projectile.owner);
+                    int proj=Projectile.NewProjectile(s,Projectile.Center, new Vector2(Main.rand.Next(-2, 2), Main.rand.Next(-5, -2)), projectilesOnCollision, (int)(Math.Clamp(Projectile.damage * damageMult,0,int.MaxValue)), 1,Projectile.owner);
+                    Main.projectile[proj].friendly = true;
+                    Main.projectile[proj].hostile= false;
                 }
 
-                Main.player[Projectile.owner].statMana -= 20;
+                Main.player[Projectile.owner].statMana -= manaUsage;
             }
 
             return false;

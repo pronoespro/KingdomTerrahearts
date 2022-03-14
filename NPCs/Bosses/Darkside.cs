@@ -8,6 +8,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
 using Terraria.GameContent.ItemDropRules;
+using Terraria.GameContent.Bestiary;
 
 namespace KingdomTerrahearts.NPCs.Bosses
 {
@@ -57,6 +58,19 @@ namespace KingdomTerrahearts.NPCs.Bosses
             NPC.ai[1] = 200;
         }
 
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            // We can use AddRange instead of calling Add multiple times in order to add multiple items at once
+            bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[] {
+				// Sets the preferred biomes of this town NPC listed in the bestiary.
+				// With Town NPCs, you usually set this to what biome it likes the most in regards to NPC happiness.
+				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Surface,
+
+				// Sets your NPC's flavor text in the bestiary.
+				new FlavorTextBestiaryInfoElement("")
+            });
+        }
+
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
             NPC.lifeMax = (int)(NPC.lifeMax * 0.625f * bossLifeScale);
@@ -71,10 +85,10 @@ namespace KingdomTerrahearts.NPCs.Bosses
             if (player != null)
             {
                 SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
-                if (sp.fightingInBattleground || KingdomWorld.customInvasionUp)
+                if (sp.fightingInBattlegrounds || KingdomWorld.customInvasionUp)
                 {
                     NPC.scale = (resizedInBattleGrounds) ? NPC.scale : NPC.scale * 1.5f;
-                    if (sp.fightingInBattleground)
+                    if (sp.fightingInBattlegrounds)
                         NPC.damage *= 2;
                     resizedInBattleGrounds = true;
                 }
@@ -186,7 +200,7 @@ namespace KingdomTerrahearts.NPCs.Bosses
 
         public void bossAttack(int attackType)
         {
-            ProjectileSource_NPC s = new ProjectileSource_NPC(NPC);
+            EntitySource_Parent s = new EntitySource_Parent(NPC);
 
             if (attackType == 1)
             {
@@ -198,13 +212,13 @@ namespace KingdomTerrahearts.NPCs.Bosses
                         int missile = ModContent.NPCType<Projectiles.BossStuff.darksideMagicMissiles>();
 
 
-                        NPC.NewNPC((int)NPC.Center.X + 15, (int)NPC.Center.Y, missile);
-                        NPC.NewNPC((int)NPC.Center.X - 15, (int)NPC.Center.Y, missile);
+                        NPC.NewNPC(s, (int)NPC.Center.X + 15, (int)NPC.Center.Y, missile);
+                        NPC.NewNPC(s, (int)NPC.Center.X - 15, (int)NPC.Center.Y, missile);
                         //NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y + 15, missile);
                         //NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y - 15, missile);
 
                         shootAttacksUsed++;
-                        NPC.ai[1]=0;
+                        NPC.ai[1] = 0;
                     }
                     else
                     {
@@ -225,24 +239,27 @@ namespace KingdomTerrahearts.NPCs.Bosses
                     bool projectileExists = false;
                     for (int i = 0; i < 1000; i++)
                     {
-                        if (Main.projectile[i].type==projectile) {
+                        if (Main.projectile[i].type == projectile)
+                        {
                             Main.projectile[i].Center = NPC.Center;
                             Main.projectile[i].timeLeft = 15;
                             projectileExists = true;
                         }
                     }
-                    if(!projectileExists)
-                        Projectile.NewProjectile(s,NPC.Center, Vector2.Zero, projectile, 0, 0);
+                    if (!projectileExists)
+                    {
+                        Projectile.NewProjectile(s, NPC.Center, Vector2.Zero, projectile, 0, 0);
+                    }
                 }
             }
             else if(attackType==2)
             {
                 if (NPC.ai[1] < -250)
                 {
-                    int missile = ModContent.NPCType<NPCs.shadowHeartless>();
+                    int missile = ModContent.NPCType<shadowHeartless>();
 
-                    NPC.NewNPC((int)NPC.Center.X + 15, (int)NPC.Center.Y, missile);
-                    NPC.NewNPC((int)NPC.Center.X - 15, (int)NPC.Center.Y, missile);
+                    NPC.NewNPC(s,(int)NPC.Center.X + 15, (int)NPC.Center.Y, missile);
+                    NPC.NewNPC(s,(int)NPC.Center.X - 15, (int)NPC.Center.Y, missile);
                     NPC.ai[1] = 200 + Main.rand.Next(200);
                     bossAttackType = 0;
                 }

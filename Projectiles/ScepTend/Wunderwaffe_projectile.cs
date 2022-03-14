@@ -33,7 +33,7 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
 
-            ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+            EntitySource_Parent s = new EntitySource_Parent(Projectile);
 
             int proj = Projectile.NewProjectile(s,target.Center, Vector2.Zero, ModContent.ProjectileType<Wunderwaffe_explosion>(), Projectile.damage, Projectile.knockBack,Projectile.owner);
 
@@ -46,7 +46,7 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override void Kill(int timeLeft)
         {
-            ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+            EntitySource_Parent s = new EntitySource_Parent(Projectile);
 
             int proj = Projectile.NewProjectile(s,Projectile.Center, Vector2.Zero, ModContent.ProjectileType<Wunderwaffe_explosion>(), Projectile.damage, Projectile.knockBack,Projectile.owner);
             SoundEngine.PlaySound(SoundID.Item12, Projectile.Center);

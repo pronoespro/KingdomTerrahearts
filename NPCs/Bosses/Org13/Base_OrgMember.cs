@@ -15,7 +15,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
     {
 
         public int curAttack = 0;
-        public ProjectileSource_NPC s;
+        public EntitySource_Parent s;
         public int[] attacksDamage = new int[] { 0, 50, 20, 20, 20 };
         public int attackSpeed = 1;
         public float attackSpeedMult = 1;

@@ -92,7 +92,7 @@ namespace KingdomTerrahearts.NPCs
         public void Shoot()
         {
 
-            ProjectileSource_NPC s = new ProjectileSource_NPC(NPC);
+            EntitySource_Parent s = new EntitySource_Parent(NPC);
 
             Vector2 projVel =new Vector2(NPC.direction,0);
             Projectile newProj=Projectile.NewProjectileDirect(s,NPC.Center, projVel*2, ProjectileID.DeathLaser, 3, 0.5f);
@@ -116,7 +116,8 @@ namespace KingdomTerrahearts.NPCs
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningGem>(), 10));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningStone>(), 10));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.writhingStone>(), 10));
         }
 
     }

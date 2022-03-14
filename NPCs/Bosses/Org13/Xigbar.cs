@@ -41,7 +41,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
             NPC.lavaImmune = true;
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath1;
-            s = new ProjectileSource_NPC(NPC);
+            s = new EntitySource_Parent(NPC);
 
             attacksDamage = new int[] { 0, 10, 25, 15,15,15,15,15,15 };
             weaponType = ModContent.ProjectileType<Projectiles.BossStuff.sharpShooterProj>();

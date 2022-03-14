@@ -19,7 +19,7 @@ namespace KingdomTerrahearts.DropRules
 
         public static IItemDropRule DropOnBattleground(SoraPlayer wielder,int itemID,int chanceDenominator=1,int minimumDropped=1,int maximumDropped=1)
         {
-            if (wielder.fightingInBattleground)
+            if (wielder.fightingInBattlegrounds)
             {
                 return ItemDropRule.Common(itemID,chanceDenominator,minimumDropped,maximumDropped);
             }
@@ -31,7 +31,7 @@ namespace KingdomTerrahearts.DropRules
 
         public static IItemDropRule DropOnBattlegroundWithRule(IItemDropRuleCondition condition,SoraPlayer wielder, int itemID, int chanceDenominator = 1, int minimumDropped = 1, int maximumDropped = 1)
         {
-            if (wielder.fightingInBattleground)
+            if (wielder.fightingInBattlegrounds)
             {
                 return ItemDropRule.ByCondition(condition, itemID, chanceDenominator, minimumDropped, maximumDropped);
             }

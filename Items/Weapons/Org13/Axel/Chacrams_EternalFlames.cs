@@ -24,8 +24,8 @@ namespace KingdomTerrahearts.Items.Weapons.Org13.Axel
 
         public override void SetDefaults()
         {
-            Item.autoReuse = false;
-            Item.damage = 50;
+            Item.autoReuse = true;
+            Item.damage = 124;
             Item.height = Item.width=50;
             Item.knockBack = 8;
             Item.maxStack = 2;
@@ -34,11 +34,11 @@ namespace KingdomTerrahearts.Items.Weapons.Org13.Axel
             Item.DamageType = DamageClass.Throwing;
             Item.rare = ItemRarityID.LightRed;
             Item.scale = 1;
-            Item.shootSpeed = 15;
-            Item.useAnimation = 15;
+            Item.shootSpeed = 30;
+            Item.useAnimation = 10;
             Item.UseSound =SoundID.Item19;
             Item.useStyle = ItemUseStyleID.Swing;
-            Item.useTime = 15;
+            Item.useTime = 10;
             Item.value = 20000;
             projectiles = new int[] { ModContent.ProjectileType<Projectiles.Weapons.Chakram_EternalFlames>(), ModContent.ProjectileType<Projectiles.Weapons.Chakram_EternalFlames>() };
         }
@@ -51,8 +51,8 @@ namespace KingdomTerrahearts.Items.Weapons.Org13.Axel
         public override void AddRecipes()
         {
             CreateRecipe(2)
-            .AddIngredient(ItemID.HellstoneBar, 10)
-            .AddIngredient(ItemID.Flamarang)
+            .AddIngredient(ItemID.LunarBar, 10)
+            .AddIngredient(ItemID.FragmentSolar,10)
             .AddTile(TileID.Anvils)
             .Register();
         }

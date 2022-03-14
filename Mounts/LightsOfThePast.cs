@@ -70,7 +70,7 @@ namespace KingdomTerrahearts.Mounts
 
             Player p = Main.player[Main.myPlayer];
 
-            ProjectileSource_BySourceId s = new ProjectileSource_BySourceId(-1);
+            EntitySource_Mount s = new EntitySource_Mount(p,-1);
 
             if (keybladesFromThePast[0].active == false)
             {

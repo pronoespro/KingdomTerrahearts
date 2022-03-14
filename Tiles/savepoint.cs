@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -65,7 +66,7 @@ namespace KingdomTerrahearts.Tiles
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
 		{
 			Tile tile = Main.tile[i, j];
-			if (tile.frameX == 0)
+			if (tile.TileFrameX == 0)
 			{
 				// We can support different light colors for different styles here: switch (tile.frameY / 54)
 				r = 0.75f;
@@ -85,8 +86,9 @@ namespace KingdomTerrahearts.Tiles
 			player = Main.LocalPlayer;
 			SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
 
+			EntitySource_TileBreak s = new EntitySource_TileBreak(i, j);
 
-			Item.NewItem(i * 16, j * 16, 64, 32, ItemType<Items.Placeable.savePoint_Item>());
+			Item.NewItem(s,i * 16, j * 16, 64, 32, ItemType<Items.Placeable.savePoint_Item>());
 		}
 
         public override bool RightClick(int i, int j)
@@ -96,11 +98,11 @@ namespace KingdomTerrahearts.Tiles
 			SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
 
 			Tile tile = Main.tile[i, j];
-			int spawnX = i - tile.frameX / 18;
+			int spawnX = i - tile.TileFrameX / 18;
 			int spawnY = j + 2;
-			spawnX += tile.frameX >= 72 ? 5 : 2;
+			spawnX += tile.TileFrameX >= 72 ? 5 : 2;
 
-			if (tile.frameY % 38 != 0)
+			if (tile.TileFrameY % 38 != 0)
 			{
 				spawnY--;
 			}
@@ -112,7 +114,7 @@ namespace KingdomTerrahearts.Tiles
 			bool healPlayer = true;
 			foreach (NPC npc in Main.npc)
 			{
-				if (!npc.friendly && Vector2.Distance(player.Center, npc.Center) < 250)
+				if (!npc.friendly && !npc.friendly && !npc.CountsAsACritter && Vector2.Distance(player.Center, npc.Center) < 250)
 				{
 					healPlayer = false;
 					break;
@@ -155,7 +157,7 @@ namespace KingdomTerrahearts.Tiles
 
 			float reallyClose = Vector2.Distance(player.position, new Vector2(i * 16, j * 16));
 
-			if (reallyClose < 50 && player!=null)
+			if (reallyClose < 750 && player!=null)
 			{
 
 				sp.canTPToSavePoints = true;
@@ -164,22 +166,24 @@ namespace KingdomTerrahearts.Tiles
 				bool healPlayer = true;
 				foreach (NPC npc in Main.npc)
 				{
-					if (!npc.friendly && Vector2.Distance(player.Center, npc.Center) < 250)
+					if (!npc.townNPC && !npc.friendly && !npc.CountsAsACritter && Vector2.Distance(player.Center, npc.Center) < 250)
 					{
 						healPlayer = false;
 						break;
 					}
 				}
+
 				if (healPlayer)
 				{
 					player.statLife = player.statLifeMax;
-					if(player.statMana<player.statManaMax)
+					if (player.statMana < player.statManaMax)
+					{
 						player.statMana = player.statManaMax;
+					}
+
 					sp.ResetTimers();
 				}
             }
-
-			base.NearbyEffects(i, j, closer);
 		}
 
 	}

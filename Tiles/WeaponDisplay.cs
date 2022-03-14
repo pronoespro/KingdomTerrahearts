@@ -116,7 +116,7 @@ namespace KingdomTerrahearts.Tiles
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
 		{
 			Tile tile = Main.tile[i, j];
-			if (tile.frameX == 0)
+			if (tile.TileFrameX == 0)
 			{
 				// We can support different light colors for different styles here: switch (tile.frameY / 54)
 				r = 1f;
@@ -132,10 +132,12 @@ namespace KingdomTerrahearts.Tiles
 
 		public override bool RightClick(int i, int j)
 		{
+			Player player = Main.LocalPlayer;
+			EntitySource_TileInteraction s = new EntitySource_TileInteraction(player,i, j);
 			Vector2 pos = new Vector2(i, j) * 16;
             if (heldItem != null)
             {
-				Item.NewItem(pos, heldItem.weaponType);
+				Item.NewItem(s,pos, heldItem.weaponType);
 				heldItem = null;
             }
             else

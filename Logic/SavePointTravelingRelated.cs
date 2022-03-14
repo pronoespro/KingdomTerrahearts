@@ -45,7 +45,7 @@ namespace KingdomTerrahearts.Logic
         public static bool CheckValidSP(DiscoveredSavePoint sp)
         {
 
-            if(Main.tile[sp.tileX, sp.tileY].type == ModContent.TileType<Tiles.savepoint>())
+            if(Main.tile[sp.tileX, sp.tileY].TileType == ModContent.TileType<Tiles.savepoint>())
             {
                 return true;
             }

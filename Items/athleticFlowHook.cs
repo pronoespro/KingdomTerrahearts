@@ -43,10 +43,11 @@ namespace KingdomTerrahearts.Items
             Item.shootSpeed = 10f;
         }
 
-        public override bool Shoot(Player player, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             return base.Shoot(player, source, position, velocity - player.velocity, type, damage, knockback);
         }
+
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
@@ -54,7 +55,7 @@ namespace KingdomTerrahearts.Items
 
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
 
-            Item.shootSpeed = 10f;
+            Item.shootSpeed = 5f+sp.CheckPlayerLevel()*2;
         }
 
         void UpdateLevel()

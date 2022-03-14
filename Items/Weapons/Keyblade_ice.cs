@@ -51,6 +51,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			projectileTime = 1000;
 			comboMax = 5;
 			keySummon = summonType.dumbo;
+			transSounds = new Terraria.Audio.LegacySoundStyle[] { SoundID.Item27, SoundID.Item27, SoundID.Item27 };
 		}
     }
 }

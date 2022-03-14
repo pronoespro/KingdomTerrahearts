@@ -42,7 +42,7 @@ namespace KingdomTerrahearts.Items.Weapons.Joke
 		{
 			CreateRecipe()
 			.AddIngredient(ItemID.Umbrella)
-			.AddIngredient(ModContent.ItemType<Items.Materials.twilightShard>(),100)
+			.AddIngredient(ModContent.ItemType<Materials.twilightShard>(),100)
 			.AddTile(TileID.MythrilAnvil)
 			.Register();
 		}

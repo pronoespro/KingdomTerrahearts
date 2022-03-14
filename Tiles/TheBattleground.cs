@@ -58,7 +58,8 @@ namespace KingdomTerrahearts.Tiles
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            Item.NewItem(i*16,j*16,9,28,ModContent.ItemType<TheBattlegroundItem>());
+            EntitySource_TileBreak s = new EntitySource_TileBreak(i, j);
+            Item.NewItem(s,i*16,j*16,9,28,ModContent.ItemType<TheBattlegroundItem>());
         }
 
         public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)
@@ -74,10 +75,10 @@ namespace KingdomTerrahearts.Tiles
             float x = i * 16;
             float y = j * 16;
 
-            if ((player.position.X > x - (16 * 9) && player.position.X < x + (16 * 9) && player.position.Y < y - (16 * 28)) || sp.fightingInBattleground)
+            if ((player.position.X > x - (16 * 9) && player.position.X < x + (16 * 9) && player.position.Y < y - (16 * 28)) || sp.fightingInBattlegrounds)
             {
                 Vector2 init = new Vector2(x - (16 * 9), y - (16 * 29) * 2);
-                Vector2 end = new Vector2(x + (16 * 9) - 9, y - (16 * 29) + 16-player.height/2);
+                Vector2 end = new Vector2(x + (16 * 9) - 9, y - (16 * 29) + 16*2-player.height/2);
                 sp.SetTrapLimits(init,end);
 
                 bool playerIsTrapped = false;
@@ -106,7 +107,7 @@ namespace KingdomTerrahearts.Tiles
                         player.AddBuff(ModContent.BuffType<Buffs.EnlightenedBuff>(), 50,true);
                     }
                 }
-                sp.fightingInBattleground = (playerIsTrapped || sp.fightingInBattleground)&& !player.dead;
+                sp.fightingInBattlegrounds = (playerIsTrapped || sp.fightingInBattlegrounds)&& !player.dead;
             }
 
         }
@@ -117,10 +118,14 @@ namespace KingdomTerrahearts.Tiles
 
     public class TheBattlegroundItem : ModItem
     {
+
+
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Battling Heart");
-            Tooltip.SetDefault("A heart to call the Battlegrounds");
+            Tooltip.SetDefault("A heart to call the Dark Battles" +
+                "\nFight bosses on top of it to call to their inner darkness" +
+                "\nGet better loot for finishing that challenge");
         }
 
         public override void SetDefaults()

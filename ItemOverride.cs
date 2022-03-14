@@ -30,7 +30,7 @@ namespace KingdomTerrahearts
             switch (Item.type)
             {
                 case ItemID.WormFood:
-                    if (sp.fightingInBattleground)
+                    if (sp.fightingInBattlegrounds)
                         return true;
                     break;
             }
@@ -69,6 +69,15 @@ namespace KingdomTerrahearts
                     Item.useAnimation = Item.useTime = 10;
                     Item.damage = (player.HasBuff(ModContent.BuffType<Buffs.EnlightenedBuff>())) ? 550 : 250;
                     Item.shoot = ProjectileID.MagicMissile;
+                    break;
+                case ItemID.EnchantedBoomerang:
+                case ItemID.IceBoomerang:
+                case ItemID.WoodenBoomerang:
+                case ItemID.LightDisc:
+                case ItemID.Bananarang:
+                case ItemID.FruitcakeChakram:
+                case ItemID.ThornChakram:
+                    Item.DamageType = DamageClass.Throwing;
                     break;
             }
         }

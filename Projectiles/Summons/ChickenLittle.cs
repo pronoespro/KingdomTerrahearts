@@ -65,7 +65,7 @@ namespace KingdomTerrahearts.Projectiles.Summons
 
                 if (owner.statLife < owner.statLifeMax * 0.4f)
                 {
-                    ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+                    EntitySource_Parent s = new EntitySource_Parent(Projectile);
                     owner.statLife += (int)(owner.statLifeMax * 0.4f);
                     Projectile.timeLeft -= 500;
                     Projectile.frame = 1;
@@ -154,7 +154,7 @@ namespace KingdomTerrahearts.Projectiles.Summons
 
         void ThrowBall(Vector2 velocity,float speed,float damageMult=1)
         {
-            ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+            EntitySource_Parent s = new EntitySource_Parent(Projectile);
 
             int proj = Projectile.NewProjectile(s,Projectile.Center, MathHelp.Normalize(velocity)*speed, ModContent.ProjectileType<baseball>(), (int)((Projectile.ai[1]+1)*damageMult), Projectile.knockBack,Projectile.owner);
         }

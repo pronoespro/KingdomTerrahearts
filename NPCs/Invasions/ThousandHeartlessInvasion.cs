@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.GameContent.NetModules;
 using Terraria.ID;
 using Terraria.Localization;
@@ -13,7 +15,7 @@ namespace KingdomTerrahearts.NPCs.Invasions
     class ThousandHeartlessInvasion
     {
 
-        static int invasionSize;
+        public static int invasionSize;
 
         public static int[] heartless =
         {
@@ -28,11 +30,13 @@ namespace KingdomTerrahearts.NPCs.Invasions
         {
 
             heartlessBosses = new int[]{};
+            heartless = new int[]{
+                ModContent.NPCType<shadowHeartless>(),
+                ModContent.NPCType<armoredKnightHeartless>(),
+                ModContent.NPCType<SurveillanceRobotHeartless>()
+            };
 
-            if (Main.invasionType!=0 && Main.invasionSize == 0)
-            {
-                Main.invasionType = 0;
-            }
+            Main.invasionType = 0;
 
             if (Main.invasionType == 0)
             {
@@ -46,7 +50,7 @@ namespace KingdomTerrahearts.NPCs.Invasions
                     Main.invasionType = -1;
                     ///////To be continued
                     KingdomWorld.customInvasionUp = true;
-                    invasionSize = (int)(1000 * 1 + (numPlayers - 1) * 0.25f);
+                    invasionSize = (int)(1000 + (numPlayers) * 0.25f);
                     Main.invasionSize = invasionSize;
                     Main.invasionSizeStart = Main.invasionSize;
                     Main.invasionProgress = 0;
@@ -54,12 +58,7 @@ namespace KingdomTerrahearts.NPCs.Invasions
                     Main.invasionProgressWave = 0;
                     Main.invasionProgressMax = Main.invasionSizeStart;
                     Main.invasionWarn = 3600; //This doesn't really matter, as this does not work, I like to keep it here anyways
-                    if (Main.rand.Next(2) == 0)
-                    {
-                        Main.invasionX = 0.0; //Starts invasion immediately rather than wait for it to spawn
-                        return;
-                    }
-                    Main.invasionX = (double)Main.maxTilesX; //Set the initial starting location of the invasion to max tiles
+                    Main.invasionX = 0; //Starts invasion immediately rather than wait for it to spawn
                 }
             }
 
@@ -84,7 +83,7 @@ namespace KingdomTerrahearts.NPCs.Invasions
                 Main.NewText(text, 175, 75, 255);
                 return;
             }
-            if (Main.netMode == 2)
+            if (Main.netMode == NetmodeID.Server)
             {
                 //Sync with net
                 NetMessage.SendData(MessageID.ChatText, -1, -1, NetworkText.FromLiteral(text), 255, 175f, 75f, 255f, 0, 0, 0);
@@ -103,10 +102,26 @@ namespace KingdomTerrahearts.NPCs.Invasions
                     CustomInvasionWarning();
                     Main.invasionType = 0;
                     Main.invasionDelay = 0;
+                    if (NPC.downedMoonlord)
+                    {
+                        EntitySource_OldOnesArmy s = new EntitySource_OldOnesArmy();
+                        int npcSpawned=NPC.NewNPC(s,(int)Main.LocalPlayer.Center.X, (int)Main.LocalPlayer.Center.Y, ModContent.NPCType<Bosses.heartlessXeanorth>());
+                        Item.NewItem(s, Main.npc[npcSpawned].Center, ModContent.ItemType<Bosses.HeartlessXeanorthSpawner>(), noGrabDelay: true);
+                    }
                 }
-                else if (Main.invasionSize <= invasionSize / 2)
+                else if (Main.invasionSize <= invasionSize / 4 && NPC.downedPlantBoss)
                 {
-                    heartlessBosses = new int[] { ModContent.NPCType<NPCs.Bosses.Darkside>() };
+                    heartlessBosses = new int[] { ModContent.NPCType<Bosses.heartlessTide>(), ModContent.NPCType<Bosses.heartlessTower>() };
+                    heartless = new int[] { ModContent.NPCType<shadowHeartless>() };
+                }
+                else if (Main.invasionSize <= invasionSize / 3 && Main.hardMode)
+                {
+                    heartlessBosses = new int[] { ModContent.NPCType<Bosses.heartlessTower>() };
+                    heartless = new int[] { ModContent.NPCType<shadowHeartless>() };
+                }
+                else if (Main.invasionSize <= invasionSize / 4 * 3)
+                {
+                    heartlessBosses = new int[] { ModContent.NPCType<Bosses.Darkside>() };
                 }
 
                 //Do not do the rest if invasion already at spawn
@@ -162,6 +177,16 @@ namespace KingdomTerrahearts.NPCs.Invasions
             {
                 Main.invasionProgressNearInvasion = false;
                 return;
+            }
+
+            IAudioTrack track = MusicLoader.GetMusic("KingdomTerrahearts/Sounds/Music/SinesterShadows");
+            if (!track.IsPlaying)
+            {
+                MusicLoader.GetMusic("KingdomTerrahearts/Sounds/Music/SinesterShadows").Play();
+            }
+            else
+            {
+                MusicLoader.GetMusic("KingdomTerrahearts/Sounds/Music/SinesterShadows").Update();
             }
 
             //Checks if NPCs are in the spawn area to set the flag, which I do not know what it does

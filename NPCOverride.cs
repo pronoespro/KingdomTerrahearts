@@ -33,7 +33,41 @@ namespace KingdomTerrahearts
         bool spawnConversationDone = false;
         int proj;
 
-        ProjectileSource_NPC s;
+        //Cutscene stuff
+        public bool isCutsceneActor;
+        public bool isMidCutscene;
+        public int lastRemainingTime;
+        public Vector2 lastPos;
+        public Vector2 lastVel;
+        public float[] lastAI;
+
+        //Status effects stuff
+        public bool timeFrozen;
+        public int initDamage;
+        public Color initClr;
+
+        EntitySource_Parent s;
+
+        public override void ResetEffects(NPC npc)
+        {
+            if (timeFrozen)
+            {
+                timeFrozen = false;
+                npc.damage = initDamage;
+                npc.color = initClr;
+            }
+        }
+
+        public void Stop(NPC npc)
+        {
+            if (!timeFrozen)
+            {
+                timeFrozen = true;
+                initDamage = npc.damage;
+                initClr = npc.color;
+                npc.damage = 0;
+            }
+        }
 
         //Get npc stats
         public override void SetDefaults(NPC npc)
@@ -76,7 +110,7 @@ namespace KingdomTerrahearts
                     break;
             }
 
-            s = new ProjectileSource_NPC(npc);
+            s = new EntitySource_Parent(npc);
         }
 
         //Change the spawn pool
@@ -94,13 +128,30 @@ namespace KingdomTerrahearts
                 //For every ID inside the invader array in our CustomInvasion file
                 foreach (int i in ThousandHeartlessInvasion.heartless)
                 {
-                    pool.Add(i, 2f); //Add it to the pool with the same weight of 1
+                    pool.Add(i, 15f); //Add it to the pool with the same weight of 1
                 }
-                foreach (int i in ThousandHeartlessInvasion.heartlessBosses)
+                if (!FindBoss(ThousandHeartlessInvasion.heartlessBosses))
                 {
-                    pool.Add(i, 0.05f); //Add it to the pool with the same weight of 1
+                    foreach (int i in ThousandHeartlessInvasion.heartlessBosses)
+                    {
+                        pool.Add(i, 0.7f); //Add it to the pool with the same weight of 1
+                    }
                 }
             }
+        }
+
+        public bool FindBoss(int[] possibleBosses)
+        {
+
+            for (int i = 0; i < possibleBosses.Length; i++)
+            {
+                if (FindNPCType(possibleBosses[i]) != null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         //Changing the spawn rate
@@ -109,8 +160,14 @@ namespace KingdomTerrahearts
             //Change spawn stuff if invasion up and invasion at spawn
             if (KingdomWorld.customInvasionUp && (Main.invasionX == (double)Main.spawnTileX))
             {
-                spawnRate = 35; //The higher the number, the less chance it will spawn (thanks jopojelly for how spawnRate works)
+                spawnRate = 1; //The higher the number, the less chance it will spawn (thanks jopojelly for how spawnRate works)
                 maxSpawns = 10000; //Max spawns of NPCs depending on NPC value
+            }
+            SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
+            if (sp.invincible)
+            {
+                spawnRate = 0;
+                maxSpawns = 1000000000;
             }
         }
 
@@ -145,7 +202,8 @@ namespace KingdomTerrahearts
             {
                 Conversation[] conv = new Conversation[] { new Conversation("That was kindda pointless, but here you go, a Terra Blade for your effords", Color.DarkGreen, 75, "Creator") };
                 DialogSystem.AddConversation(conv);
-                Item.NewItem(npc.getRect(), ItemID.TerraBlade);
+                EntitySource_Parent s = new EntitySource_Parent(npc);
+                Item.NewItem(s,npc.getRect(), ItemID.TerraBlade);
             }
         }
 
@@ -157,21 +215,51 @@ namespace KingdomTerrahearts
             {
                 npc.timeLeft = 1000;
             }
+
+            Player p = Main.LocalPlayer;
+            SoraPlayer sp = p.GetModPlayer<SoraPlayer>();
+            if (sp.noControlTime >= 0 && !isCutsceneActor)
+            {
+                if (!isMidCutscene)
+                {
+                    isMidCutscene = true;
+                    lastPos = npc.Center;
+                    lastVel = npc.velocity;
+                    lastRemainingTime = npc.timeLeft;
+                    lastAI = npc.ai;
+                }
+
+                npc.Center = lastPos;
+                npc.velocity = lastVel;
+                npc.timeLeft = lastRemainingTime;
+                npc.ai = lastAI;
+
+                if (Vector2.Distance(npc.Center, p.Center) < 50 && !npc.friendly && !npc.townNPC && !npc.CountsAsACritter && npc.damage>0)
+                {
+                    npc.life = 0;
+                    npc.checkDead();
+                }
+            }
+        }
+
+        public void SetCutsceneActor(bool isActor)
+        {
+            isCutsceneActor = isActor;
         }
 
         public override bool PreAI(NPC npc)
         {
-
-            if (partyOwner>=0 && npc.townNPC)
+            Player p = Main.LocalPlayer;
+            if (isCutsceneActor || p.GetModPlayer<SoraPlayer>().midCutscene || timeFrozen)
             {
+                return false;
+            } else if (partyOwner>=0 && npc.townNPC) {
 
                 CustomTownNPCAI(npc, npc.type);
                 AI(npc);
 
                 return false;
-            }
-            else
-            {
+            } else {
                 return true;
             }
         }
@@ -293,7 +381,7 @@ namespace KingdomTerrahearts
                             Conversation[] conv = new Conversation[] { new Conversation("You dare challenge the strongest of SLIMES?!", Color.Blue, DialogSystem.BOSS_DIALOGTIME, npc.FullName) };
                             DialogSystem.AddConversation(conv);
                         }
-                        if (sp.fightingInBattleground)
+                        if (sp.fightingInBattlegrounds)
                         {
                             if (!heartlessVerActive)
                             {
@@ -314,9 +402,17 @@ namespace KingdomTerrahearts
                                 npc.velocity.X = 0;
                             }
 
-                            if (Main.expertMode && sp.fightingInBattleground)
+                            if (Main.expertMode)
                             {
                                 npc.velocity.Y = (npc.velocity.Y > 0) ? npc.velocity.Y * 20 : npc.velocity.Y;
+                            }
+
+                            if (npc.life < npc.lifeMax / 4 * 3 && npc.target >= 0 && Main.player[npc.target].active && Main.time % 50 == 0)
+                            {
+                                int createdProj = Projectile.NewProjectile(s, Main.player[npc.target].Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.shadowCloneProjectile>(), 0, 10);
+
+                                Main.projectile[createdProj].friendly = false;
+                                Main.projectile[createdProj].hostile = true;
                             }
                         }
                         break;
@@ -324,7 +420,7 @@ namespace KingdomTerrahearts
                     case NPCID.BlueSlime:
                         if (NPC.AnyNPCs(NPCID.KingSlime))
                         {
-                            if (Main.expertMode && sp.fightingInBattleground && !heartlessVerActive)
+                            if (Main.expertMode && sp.fightingInBattlegrounds && !heartlessVerActive)
                             {
                                 npc.damage = (int)(npc.damage * 1.5f);
                                 npc.scale *= 2;
@@ -344,7 +440,7 @@ namespace KingdomTerrahearts
 
                     case NPCID.EyeofCthulhu:
 
-                        if (sp.fightingInBattleground)
+                        if (sp.fightingInBattlegrounds)
                         {
 
                             if (npc.ai.Length < 6)
@@ -365,13 +461,13 @@ namespace KingdomTerrahearts
                         break;
 
                     case NPCID.ServantofCthulhu:
-                        if (sp.fightingInBattleground)
+                        if (sp.fightingInBattlegrounds)
                         {
 
                             if (!heartlessVerActive)
                             {
                                 npc.alpha = 100;
-                                if (Main.expertMode && sp.fightingInBattleground)
+                                if (Main.expertMode && sp.fightingInBattlegrounds)
                                 {
                                     npc.damage = (int)(npc.damage * 1.5f);
                                     npc.scale = (int)(npc.scale * 1.5f);
@@ -383,7 +479,7 @@ namespace KingdomTerrahearts
 
                                 heartlessVerActive = true;
                             }
-                            if (Main.expertMode && sp.fightingInBattleground)
+                            if (Main.expertMode && sp.fightingInBattlegrounds)
                             {
                                 npc.ai[0]++;
                                 if (npc.ai[0] % 15 == 0)
@@ -401,7 +497,7 @@ namespace KingdomTerrahearts
                         break;
 
                     case NPCID.EaterofWorldsHead:
-                        if (sp.fightingInBattleground)
+                        if (sp.fightingInBattlegrounds)
                         {
                             if (npc.ai.Length < 7)
                             {
@@ -414,7 +510,7 @@ namespace KingdomTerrahearts
                             }
                             npc.ai[6]++;
 
-                            int firingTime = (sp.fightingInBattleground && Main.expertMode) ? 5 : 1;
+                            int firingTime = (sp.fightingInBattlegrounds && Main.expertMode) ? 5 : 1;
                             if (npc.ai[6] > 20 * firingTime && npc.ai[6] % 5 / firingTime == 0)
                             {
                                 int createdProj = Projectile.NewProjectile(s,npc.Center, npc.velocity * 2, ProjectileID.CursedFlameHostile, npc.damage, 10);
@@ -426,7 +522,7 @@ namespace KingdomTerrahearts
                         break;
                     case NPCID.EaterofWorldsBody:
                         int segments = NPC.CountNPCS(npc.type) + NPC.CountNPCS(NPCID.EaterofWorldsHead) + NPC.CountNPCS(NPCID.EaterofWorldsTail);
-                        if (sp.fightingInBattleground && Main.expertMode)
+                        if (sp.fightingInBattlegrounds && Main.expertMode)
                         {
                             if (segments < 30)
                             {
@@ -459,7 +555,7 @@ namespace KingdomTerrahearts
                             Conversation[] conv = new Conversation[] { new Conversation("REMOTE ACTIVATION DETECTED", Color.Red, DialogSystem.BOSS_DIALOGTIME, npc.FullName), new Conversation("ATTEMPTING IMMEDIATE DESTRUCTION", Color.Red, DialogSystem.BOSS_DIALOGTIME, npc.FullName) };
                             DialogSystem.AddConversation(conv);
                         }
-                        if (sp.fightingInBattleground)
+                        if (sp.fightingInBattlegrounds)
                         {
                             npc.ai[2]++;
                             if (npc.ai[2] % 150 == 0)
@@ -475,7 +571,7 @@ namespace KingdomTerrahearts
                         }
                         break;
                     case NPCID.Probe:
-                        if (sp.fightingInBattleground && Main.expertMode)
+                        if (sp.fightingInBattlegrounds && Main.expertMode)
                         {
                             if (npc.ai[0] % 20 == 0)
                             {
@@ -494,18 +590,18 @@ namespace KingdomTerrahearts
                             Conversation[] conv = new Conversation[] { new Conversation("REMOTE ACTIVATION DETECTED", Color.Red, 300, npc.FullName) };
                             DialogSystem.AddConversation(conv);
                         }
-                        if (sp.fightingInBattleground)
+                        if (sp.fightingInBattlegrounds)
                         {
                             if (!NPC.AnyNPCs(NPCID.Spazmatism))
                             {
                                 npc.ai[2]++;
                                 if (npc.ai[2] % 150 == 0)
                                 {
-                                    NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCID.ServantofCthulhu);
+                                    NPC.NewNPC(s,(int)npc.Center.X, (int)npc.Center.Y, NPCID.ServantofCthulhu);
                                 }
                                 else if (npc.ai[2] % 150 == 100)
                                 {
-                                    NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCID.Probe);
+                                    NPC.NewNPC(s,(int)npc.Center.X, (int)npc.Center.Y, NPCID.Probe);
                                 }
                             }
                         }
@@ -517,18 +613,18 @@ namespace KingdomTerrahearts
                             Conversation[] conv = new Conversation[] {  new Conversation("ATTEMPTING IMMEDIATE DESTRUCTION", Color.Red, DialogSystem.BOSS_DIALOGTIME, npc.FullName) };
                             DialogSystem.AddConversation(conv);
                         }
-                        if (sp.fightingInBattleground)
+                        if (sp.fightingInBattlegrounds)
                         {
                             if (!NPC.AnyNPCs(NPCID.Retinazer))
                             {
                                 npc.ai[2]++;
                                 if (npc.ai[2] % 150 == 0)
                                 {
-                                    NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCID.ServantofCthulhu);
+                                    NPC.NewNPC(s,(int)npc.Center.X, (int)npc.Center.Y, NPCID.ServantofCthulhu);
                                 }
                                 if (npc.ai[2] % 150 == 100)
                                 {
-                                    NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCID.ServantofCthulhu);
+                                    NPC.NewNPC(s,(int)npc.Center.X, (int)npc.Center.Y, NPCID.ServantofCthulhu);
                                 }
                             }
                         }
@@ -541,7 +637,7 @@ namespace KingdomTerrahearts
                             Conversation[] conv = new Conversation[] { new Conversation("REMOTE ACTIVATION DETECTED", Color.Red, DialogSystem.BOSS_DIALOGTIME, npc.FullName) , new Conversation("ATTEMPTING IMMEDIATE DESTRUCTION", Color.Red, DialogSystem.BOSS_DIALOGTIME, npc.FullName) };
                             DialogSystem.AddConversation(conv);
                         }
-                        if (sp.fightingInBattleground)
+                        if (sp.fightingInBattlegrounds)
                         {
                             if (!heartlessVerActive)
                             {
@@ -559,7 +655,7 @@ namespace KingdomTerrahearts
                         }
                         break;
                     case NPCID.PrimeCannon:
-                        if (sp.fightingInBattleground)
+                        if (sp.fightingInBattlegrounds)
                         {
                             if (!heartlessVerActive)
                             {
@@ -581,7 +677,7 @@ namespace KingdomTerrahearts
                         }
                         break;
                     case NPCID.PrimeLaser:
-                        if (sp.fightingInBattleground)
+                        if (sp.fightingInBattlegrounds)
                         {
                             if (!heartlessVerActive)
                             {
@@ -603,7 +699,7 @@ namespace KingdomTerrahearts
                         }
                         break;
                     case NPCID.PrimeSaw:
-                        if (sp.fightingInBattleground)
+                        if (sp.fightingInBattlegrounds)
                         {
                             if (!heartlessVerActive)
                             {
@@ -625,7 +721,7 @@ namespace KingdomTerrahearts
                         }
                         break;
                     case NPCID.PrimeVice:
-                        if (sp.fightingInBattleground)
+                        if (sp.fightingInBattlegrounds)
                         {
                             if (!heartlessVerActive)
                             {
@@ -648,7 +744,7 @@ namespace KingdomTerrahearts
                         break;
 
                     case NPCID.Plantera:
-                        if (sp.fightingInBattleground)
+                        if (sp.fightingInBattlegrounds)
                         {
                             if (!heartlessVerActive)
                             {
@@ -658,7 +754,7 @@ namespace KingdomTerrahearts
                         }
                         break;
                     case NPCID.PlanterasTentacle:
-                        if (sp.fightingInBattleground)
+                        if (sp.fightingInBattlegrounds)
                         {
                             if (!heartlessVerActive)
                             {
@@ -684,10 +780,27 @@ namespace KingdomTerrahearts
                             Conversation[] conv = new Conversation[] { new Conversation("Profanity inside the temple detected", Color.Brown, DialogSystem.BOSS_DIALOGTIME, npc.FullName), new Conversation("Destruction of Terrarian started...", Color.Brown, DialogSystem.BOSS_DIALOGTIME, npc.FullName) };
                             DialogSystem.AddConversation(conv);
                         }
+
+                        if (sp.fightingInBattlegrounds)
+                        {
+                            if (!heartlessVerActive)
+                            {
+                                heartlessVerActive = true;
+                                npc.scale = (int)(npc.scale *1.2f);
+                                npc.damage = (int)(npc.damage * 2.5f);
+                            }
+                            if (npc.life < npc.lifeMax / 4 * 3 && npc.target >= 0 && Main.player[npc.target].active && Main.time % 20 == 0)
+                            {
+                                int createdProj = Projectile.NewProjectile(s, Main.player[npc.target].Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.shadowCloneProjectile>(), 0, 10);
+
+                                Main.projectile[createdProj].friendly = false;
+                                Main.projectile[createdProj].hostile = true;
+                            }
+                        }
                         break;
 
                     case NPCID.DukeFishron:
-                        if (sp.fightingInBattleground)
+                        if (sp.fightingInBattlegrounds)
                         {
                             if (!heartlessVerActive)
                             {
@@ -798,6 +911,30 @@ namespace KingdomTerrahearts
                         }
                         break;
                 }
+
+                if (npc.type == ModContent.NPCType<NPCs.Bosses.heartlessXeanorth>())
+                {
+                    if (sp.fightingInBattlegrounds)
+                    {
+                        if (!heartlessVerActive)
+                        {
+                            heartlessVerActive = true;
+                            npc.lifeMax =(int)(npc.lifeMax* 1.1f);
+                            npc.life = npc.lifeMax;
+                            npc.damage = (int)(npc.damage * 1.5f);
+                        }
+
+                        if (npc.life < npc.lifeMax / 4*3 && npc.target>=0 && Main.player[npc.target].active && Main.time%20==0)
+                        {
+                            int createdProj = Projectile.NewProjectile(s, Main.player[npc.target].Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.shadowCloneProjectile>(), 0, 10);
+
+                            Main.projectile[createdProj].friendly = false;
+                            Main.projectile[createdProj].hostile = true;
+                        }
+
+                    }
+                }
+
                 base.AI(npc);
             }
             if (npc.townNPC)
@@ -811,7 +948,7 @@ namespace KingdomTerrahearts
                 return;
             }
             SoraPlayer sp = Main.player[npc.target].GetModPlayer<SoraPlayer>();
-            if (npc.boss && sp.fightingInBattleground)
+            if (npc.boss && sp.fightingInBattlegrounds)
             {
                 Texture2D texture = (Texture2D)ModContent.Request<Texture2D>("KingdomTerrahearts/NPCs/Bosses/HeartlessSigil");
 
@@ -852,7 +989,7 @@ namespace KingdomTerrahearts
         public override bool CheckDead(NPC npc)
         {
             SoraPlayer sp= Main.player[Main.myPlayer].GetModPlayer<SoraPlayer>();
-            EndConversation(npc);
+            DeathConversation(npc);
 
             if (sp.isBoss(npc.whoAmI)){
                 CheckBattlegroundDrops(npc.whoAmI, sp);
@@ -861,8 +998,8 @@ namespace KingdomTerrahearts
             {
                 if (NPC.CountNPCS(NPCID.EaterofWorldsHead) <= 1 && !NPC.AnyNPCs(NPCID.EaterofWorldsBody))
                 {
-                    Item.NewItem(npc.Center, npc.width, npc.height, ItemID.WormFood, Stack: 5, noGrabDelay: true);
-                    Item.NewItem(npc.Center, npc.width, npc.height, ModContent.ItemType<Items.Materials.pulsingShard>(), Stack: Main.rand.Next(10, 15), noGrabDelay: true);
+                    Item.NewItem(s,npc.Center, npc.width, npc.height, ItemID.WormFood, Stack: 5, noGrabDelay: true);
+                    Item.NewItem(s,npc.Center, npc.width, npc.height, ModContent.ItemType<Items.Materials.pulsingShard>(), Stack: Main.rand.Next(10, 15), noGrabDelay: true);
                 }
             }
 
@@ -903,11 +1040,11 @@ namespace KingdomTerrahearts
                     Main.projectile[proj].timeLeft = 1000;
                     break;
                 case NPCID.MeteorHead:
-                    Item.NewItem(npc.getRect(), ItemID.Meteorite, Main.rand.Next(1, 5));
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<Items.Materials.blazingShard>(), Stack: Main.rand.Next(14) + 1);
+                    Item.NewItem(s,npc.getRect(), ItemID.Meteorite, Main.rand.Next(1, 5));
+                    Item.NewItem(s,(int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<Items.Materials.blazingShard>(), Stack: Main.rand.Next(14) + 1);
                     break;
                 case NPCID.Spore:
-                    if (Main.player[npc.target].GetModPlayer<SoraPlayer>().fightingInBattleground)
+                    if (Main.player[npc.target].GetModPlayer<SoraPlayer>().fightingInBattlegrounds)
                     {
                         proj = Projectile.NewProjectile(s,npc.Center, npc.velocity, ProjectileID.SporeCloud, npc.damage * 2, 1);
                         Main.projectile[proj].friendly = false;
@@ -951,7 +1088,7 @@ namespace KingdomTerrahearts
             return base.CheckDead(npc);
         }
 
-        public void EndConversation(NPC npc)
+        public void DeathConversation(NPC npc)
         {
             Conversation[] conv;
             switch (npc.type)
@@ -1034,7 +1171,14 @@ namespace KingdomTerrahearts
                     break;
 
                 case NPCID.EaterofWorldsHead:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingShard>()));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingShard>(),1,2,5));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingStone>(),3,1,3));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingShard>(),7));
+                    break;
+                case NPCID.BrainofCthulhu:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingShard>(), 1, 2, 5));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingStone>(), 3, 1, 3));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingShard>(), 7));
                     break;
                 case NPCID.SkeletronHead:
 
@@ -1047,20 +1191,27 @@ namespace KingdomTerrahearts
                     break;
                 case NPCID.WallofFlesh:
 
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.mythrilShard>(), 1, 10, 15));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.mythrilStone>(), 1, 10, 15));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.mythrilGem>(), 5, 1, 3));
+
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.blazingGem>(), 5, 1, 3));
+
                     npcLoot.Add(ItemDropRule.Common(ItemID.GuideVoodooDoll));
                     break;
                 case NPCID.Retinazer:
                 case NPCID.Spazmatism:
 
-                    npcLoot.Add(ItemDropRule.ByCondition(new Conditions.MissingTwin(), ModContent.ItemType<Items.Materials.mythrilShard>(), 1, 10, 20));
-                    npcLoot.Add(ItemDropRule.ByCondition(new Conditions.MissingTwin(), ModContent.ItemType<Items.Materials.lightningShard>(), 1, 10, 20));
+                    npcLoot.Add(ItemDropRule.ByCondition(new Conditions.MissingTwin(), ModContent.ItemType<Items.Materials.betwixtShard>(), 1, 10, 20));
+                    npcLoot.Add(ItemDropRule.ByCondition(new Conditions.MissingTwin(), ModContent.ItemType<Items.Materials.betwixtStone>(), 1, 1, 5));
+                    npcLoot.Add(ItemDropRule.ByCondition(new Conditions.MissingTwin(), ModContent.ItemType<Items.Materials.betwixtGem>(), 5, 1, 3));
+
                     npcLoot.Add(ItemDropRule.ByCondition(new Conditions.MissingTwin(), ItemID.MechanicalEye, 1, 10, 15));
                     break;
                 case NPCID.TheDestroyer:
 
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.mythrilShard>(), 1, 10, 15));
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningShard>(), 1, 10, 15));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.betwixtCrystal>(), 3));
                     npcLoot.Add(ItemDropRule.Common(ItemID.MechanicalWorm, 1, 10, 15));
                     break;
                 case NPCID.Probe:
@@ -1074,7 +1225,8 @@ namespace KingdomTerrahearts
                     break;
                 case NPCID.Plantera:
 
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingShard>(), 1, 10, 15));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingStone>(), 1, 5, 7));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingGem>(), 5, 1, 3));
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.PlanteraFlower>(), 1, 10, 15));
                     break;
                 case NPCID.PlanterasTentacle:
@@ -1083,26 +1235,43 @@ namespace KingdomTerrahearts
                 case NPCID.Golem:
 
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.mythrilShard>(), 1, 10, 15));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.mythrilStone>(), 1, 1, 5));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.mythrilGem>(), 2, 1, 3));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.mythrilCrystal>(), 5));
                     npcLoot.Add(ItemDropRule.Common(ItemID.LihzahrdPowerCell, 1, 10, 15));
                     break;
                 case NPCID.CultistBoss:
 
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningShard>(), 1, 10, 15));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningStone>(), 1, 5, 7));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningGem>(), 1, 1, 3));
+
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingGem>(), 5, 1, 3));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingCrystal>(), 5, 1, 2));
+
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.frostGem>(), 5, 1, 3));
+
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.blazingGem>(), 5, 1, 3));
                     break;
 
                 case NPCID.DukeFishron:
 
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Weapons.Custom.Keyblade_DukeFish>(), 2));
                     npcLoot.Add(ItemDropRule.Common(ItemID.TruffleWorm, 1, 10, 15));
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningShard>(), 1, 10, 40));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningGem>(), 1, 5, 10));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningCrystal>(), 2));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.writhingGem>(), 1, 5, 10));
                     break;
 
                 case NPCID.QueenSlimeBoss:
                     npcLoot.Add(ItemDropRule.Common(ItemID.QueenSlimeCrystal, 1, 10, 15));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lucidStone>(), 1, 3, 5));
                     break;
 
                 case NPCID.HallowBoss:
                     npcLoot.Add(ItemDropRule.Common(ItemID.EmpressButterfly, 1, 10, 15));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lucidGem>(), 1, 5, 10));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lucidCrystal>(), 1, 1, 3));
                     break;
 
                 case NPCID.MoonLordCore:
@@ -1114,7 +1283,14 @@ namespace KingdomTerrahearts
                     npcLoot.Add(ItemDropRule.Common(ItemID.FragmentSolar, 1, 50, 50));
                     npcLoot.Add(ItemDropRule.Common(ItemID.FragmentStardust, 1, 50, 50));
                     npcLoot.Add(ItemDropRule.Common(ItemID.FragmentVortex, 1, 50, 50));
+
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.OrichalchumPlus>()));
+
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningCrystal>(), 1, 2, 5));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingCrystal>(), 1, 2, 5));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.frostCrystal>(), 1, 2, 5));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.blazingCrystal>(), 1, 2, 5));
+
                     break;
                 case NPCID.MoonLordHead:
                 case NPCID.MoonLordHand:
@@ -1125,6 +1301,9 @@ namespace KingdomTerrahearts
                 case NPCID.DD2Betsy:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Betsys_HatchingEgg>(),1,5,10));
                     npcLoot.Add(ItemDropRule.Common(ItemID.DefenderMedal, 1, 50, 75));
+
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.blazingGem>(),1,5,10));
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.blazingCrystal>(),1,1,3));
                     break;
 
                 //Pilars
@@ -1295,70 +1474,71 @@ namespace KingdomTerrahearts
         public void CheckBattlegroundDrops(int NPC, SoraPlayer sp)
         {
             NPC npc = Main.npc[NPC];
-            if (sp.fightingInBattleground)
+            EntitySource_Parent s = new EntitySource_Parent(npc);
+            if (sp.fightingInBattlegrounds)
             {
 
                 switch (npc.type)
                 {
                     case NPCID.MoonLordCore:
-                        Item.NewItem(npc.Center, npc.width, npc.height, ModContent.ItemType<Items.ContributorItems.ScepTendo_gun>(), noGrabDelay: true);
+                        Item.NewItem(s,npc.Center, npc.width, npc.height, ModContent.ItemType<Items.ContributorItems.ScepTendo_gun>(), noGrabDelay: true);
                         break;
                     case NPCID.DukeFishron:
-                        Item.NewItem(npc.Center, npc.width, npc.height, ItemID.BottomlessBucket, noGrabDelay: true);
-                        Item.NewItem(npc.Center, npc.width, npc.height, ItemID.SuperAbsorbantSponge, noGrabDelay: true);
-                        Item.NewItem(npc.Center, npc.width, npc.height, ItemID.BottomlessLavaBucket, noGrabDelay: true);
-                        Item.NewItem(npc.Center, npc.width, npc.height, ItemID.LavaAbsorbantSponge, noGrabDelay: true);
+                        Item.NewItem(s,npc.Center, npc.width, npc.height, ItemID.BottomlessBucket, noGrabDelay: true);
+                        Item.NewItem(s,npc.Center, npc.width, npc.height, ItemID.SuperAbsorbantSponge, noGrabDelay: true);
+                        Item.NewItem(s,npc.Center, npc.width, npc.height, ItemID.BottomlessLavaBucket, noGrabDelay: true);
+                        Item.NewItem(s,npc.Center, npc.width, npc.height, ItemID.LavaAbsorbantSponge, noGrabDelay: true);
                         break;
                     case NPCID.CultistBoss:
-                        Item.NewItem(npc.Center, npc.width, npc.height, ItemID.SolarTablet, Stack: 5, noGrabDelay: true);
+                        Item.NewItem(s,npc.Center, npc.width, npc.height, ItemID.SolarTablet, Stack: 5, noGrabDelay: true);
                         break;
                     case NPCID.Golem:
-                        Item.NewItem(npc.Center, npc.width, npc.height, ItemID.CellPhone, noGrabDelay: true);
+                        Item.NewItem(s,npc.Center, npc.width, npc.height, ItemID.CellPhone, noGrabDelay: true);
                         break;
                     case NPCID.Plantera:
-                        Item.NewItem(npc.Center, npc.width, npc.height, ModContent.ItemType<Items.KairiHeart>(), noGrabDelay: true);
+                        Item.NewItem(s,npc.Center, npc.width, npc.height, ModContent.ItemType<Items.KairiHeart>(), noGrabDelay: true);
                         break;
                     case NPCID.SkeletronPrime:
-                        Item.NewItem(npc.Center, npc.width, npc.height, ItemID.RocketLauncher, noGrabDelay: true);
-                        Item.NewItem(npc.Center, npc.width, npc.height, ItemID.RocketIII, Stack: Main.rand.Next(20, 50), noGrabDelay: true);
+                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.RocketLauncher, noGrabDelay: true);
+                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.RocketIII, Stack: Main.rand.Next(20, 50), noGrabDelay: true);
                         break;
                     case NPCID.TheDestroyer:
-                        Item.NewItem(npc.Center, npc.width, npc.height, ItemID.ActuationRod, noGrabDelay: true);
-                        Item.NewItem(npc.Center, npc.width, npc.height, ItemID.Actuator, Stack: Main.rand.Next(20, 100), noGrabDelay: true);
+                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.ActuationRod, noGrabDelay: true);
+                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.Actuator, Stack: Main.rand.Next(20, 100), noGrabDelay: true);
                         break;
                     case NPCID.Retinazer:
                         if (!Terraria.NPC.AnyNPCs(NPCID.Spazmatism))
                         {
-                            Item.NewItem(npc.Center, npc.width, npc.height, ItemID.LaserMachinegun, noGrabDelay: true);
+                            Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.LaserMachinegun, noGrabDelay: true);
                         }
                         break;
                     case NPCID.Spazmatism:
                         if (!Terraria.NPC.AnyNPCs(NPCID.Retinazer))
                         {
-                            Item.NewItem(npc.Center, npc.width, npc.height, ItemID.LaserMachinegun, noGrabDelay: true);
+                            Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.LaserMachinegun, noGrabDelay: true);
                         }
                         break;
                     case NPCID.WallofFlesh:
-                        Item.NewItem(npc.Center, npc.width, npc.height, ItemID.TitaniumBar, Stack: Main.rand.Next(80, 120), noGrabDelay: true);
+                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.TitaniumBar, Stack: Main.rand.Next(80, 120), noGrabDelay: true);
                         break;
                     case NPCID.SkeletronHead:
-                        Item.NewItem(npc.Center, npc.width, npc.height, ItemID.RedHat, noGrabDelay: true);
+                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.RedHat, noGrabDelay: true);
                         break;
                     case NPCID.EaterofWorldsHead:
                         if (Terraria.NPC.CountNPCS(NPCID.EaterofWorldsHead) <= 1 && !Terraria.NPC.AnyNPCs(NPCID.EaterofWorldsBody))
                         {
-                            Item.NewItem(npc.Center, npc.width, npc.height, ItemID.WormholePotion, Stack: 10, noGrabDelay: true);
+                            Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.WormholePotion, Stack: 10, noGrabDelay: true);
                         }
                         break;
                     case NPCID.EyeofCthulhu:
-                        Item.NewItem(npc.Center, npc.width, npc.height, ItemID.TheEyeOfCthulhu, noGrabDelay: true);
+                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.TheEyeOfCthulhu, noGrabDelay: true);
                         break;
                     case NPCID.QueenBee:
-                        Item.NewItem(npc.Center, npc.width, npc.height, ItemID.HoneyBucket, noGrabDelay: true);
-                        Item.NewItem(npc.Center, npc.width, npc.height, ItemID.HoneyRocket, Stack: 66, noGrabDelay: true);
+                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.HoneyBucket, noGrabDelay: true);
+                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.HoneyRocket, Stack: 66, noGrabDelay: true);
                         break;
                     case NPCID.KingSlime:
-                        Item.NewItem(npc.Center, npc.width, npc.height, ItemID.ShinyRedBalloon, noGrabDelay: true);
+                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.ShinyRedBalloon, noGrabDelay: true);
                         break;
                 }
 

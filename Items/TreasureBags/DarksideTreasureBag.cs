@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -21,7 +22,7 @@ namespace KingdomTerrahearts.Items.TreasureBags
             Item.consumable = true;
             Item.width = 20;
             Item.height = 20;
-            Item.rare = 9;
+            Item.rare = ItemRarityID.Cyan;
             Item.expert = true;
         }
         public override bool CanRightClick()
@@ -31,15 +32,17 @@ namespace KingdomTerrahearts.Items.TreasureBags
 
         public override void OpenBossBag(Player player)
         {
-            player.TryGettingDevArmor();
+            EntitySource_ItemOpen s = new EntitySource_ItemOpen(player,Type);
+
+            player.TryGettingDevArmor(s);
 
             if (Main.rand.Next(100) < 3)
             {
-                player.QuickSpawnItem(ModContent.ItemType<Weapons.Keyblade_demonite>());
+                player.QuickSpawnItem(s,ModContent.ItemType<Weapons.Keyblade_demonite>());
             }
             else
             {
-                player.QuickSpawnItem(ModContent.ItemType<Weapons.Keyblade_iron>());
+                player.QuickSpawnItem(s,ModContent.ItemType<Weapons.Keyblade_iron>());
             }
 
         }

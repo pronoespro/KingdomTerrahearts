@@ -25,7 +25,7 @@ namespace KingdomTerrahearts.CustomTownNPCAI
 
                 for (int i = 1; i < Main.maxNPCs; i++)
                 {
-                    if (Main.npc[i].active && !Main.npc[i].friendly && MathHelp.Magnitude(GetDistanceToPlayer(Main.npc[i], npcOwner)) < 400)
+                    if (Main.npc[i].active && (!Main.npc[i].townNPC && !Main.npc[i].CountsAsACritter && !Main.npc[i].friendly) && MathHelp.Magnitude(GetDistanceToPlayer(Main.npc[i], npcOwner)) < 400)
                     {
                         npcStats[3] = (npcStats[3] == 0 ||
                             MathHelp.Magnitude(GetDistanceToPlayer(Main.npc[i], npcOwner)) < MathHelp.Magnitude(GetDistanceToPlayer(Main.npc[npcStats[3]], npcOwner)))
@@ -39,7 +39,8 @@ namespace KingdomTerrahearts.CustomTownNPCAI
 
                     if (npc.ai[2] > 25)
                     {
-                        ProjectileSource_NPC s = new ProjectileSource_NPC(npc);
+
+                        EntitySource_Parent s = new EntitySource_Parent(npc);
                         Attack(ref npcStats[5], projType, MathHelp.Normalize(Main.npc[npcStats[3]].Center - npc.Center) * 15, npc.Center, s);
                         npcStats[4] = 5;
                         npc.ai[2] = 0;
@@ -71,7 +72,7 @@ namespace KingdomTerrahearts.CustomTownNPCAI
 
                 for (int i = 1; i < Main.maxNPCs; i++)
                 {
-                    if (Main.npc[i].active && !Main.npc[i].friendly && MathHelp.Magnitude(GetDistanceToPlayer(Main.npc[i], npcOwner)) < 400)
+                    if (Main.npc[i].active && (!Main.npc[i].townNPC && !Main.npc[i].CountsAsACritter && !Main.npc[i].friendly) && MathHelp.Magnitude(GetDistanceToPlayer(Main.npc[i], npcOwner)) < 400)
                     {
                         npcStats[3] = (npcStats[3] == 0 ||
                             MathHelp.Magnitude(GetDistanceToPlayer(Main.npc[i], npcOwner)) < MathHelp.Magnitude(GetDistanceToPlayer(Main.npc[npcStats[3]], npcOwner)))
@@ -83,7 +84,7 @@ namespace KingdomTerrahearts.CustomTownNPCAI
                 {
                     if (npc.ai[2] > 25)
                     {
-                        ProjectileSource_NPC s = new ProjectileSource_NPC(npc);
+                        EntitySource_Parent s = new EntitySource_Parent(npc);
                         Attack(ref npcStats[5], projType, MathHelp.Normalize(Main.npc[npcStats[3]].Center - npc.Center) * 15, npc.Center, s);
                         npcStats[4] = 5;
                         npc.ai[2] = 0;
@@ -127,7 +128,7 @@ namespace KingdomTerrahearts.CustomTownNPCAI
                 {
                     if (npc.ai[2] > 25)
                     {
-                        ProjectileSource_NPC s = new ProjectileSource_NPC(npc);
+                        EntitySource_Parent s = new EntitySource_Parent(npc);
                         Attack(ref npcStats[5], projType, MathHelp.Normalize(Main.npc[npcStats[3]].Center - npc.Center) * 15, npc.Center, s);
 
                         npcStats[4] = 5;
@@ -160,7 +161,7 @@ namespace KingdomTerrahearts.CustomTownNPCAI
 
                 for (int i = 1; i < Main.maxNPCs; i++)
                 {
-                    if (Main.npc[i].active && !Main.npc[i].friendly && MathHelp.Magnitude(GetDistanceToPlayer(Main.npc[i], npcOwner)) < 400)
+                    if (Main.npc[i].active && (!Main.npc[i].townNPC && !Main.npc[i].CountsAsACritter && !Main.npc[i].friendly) && MathHelp.Magnitude(GetDistanceToPlayer(Main.npc[i], npcOwner)) < 400)
                     {
                         npcStats[3] = (npcStats[3] == 0 ||
                             MathHelp.Magnitude(GetDistanceToPlayer(Main.npc[i],npcOwner)) < MathHelp.Magnitude(GetDistanceToPlayer(Main.npc[npcStats[3]], npcOwner)))
@@ -172,7 +173,7 @@ namespace KingdomTerrahearts.CustomTownNPCAI
                 {
                     if (npc.ai[2] > 25)
                     {
-                        ProjectileSource_NPC s = new ProjectileSource_NPC(npc);
+                        EntitySource_Parent s = new EntitySource_Parent(npc);
                         Attack(ref npcStats[5], projType, MathHelp.Normalize(Main.npc[npcStats[3]].Center - npc.Center) * 15, npc.Center, s);
                         npcStats[4] = 5;
                         npc.ai[2] = 0;
@@ -203,7 +204,7 @@ namespace KingdomTerrahearts.CustomTownNPCAI
             return npc.Center - Main.player[Main.myPlayer].Center;
         }
         
-        public static void Attack(ref int curCombo,int projType,Vector2 direction,Vector2 originalpos,IProjectileSource s)
+        public static void Attack(ref int curCombo,int projType,Vector2 direction,Vector2 originalpos,IEntitySource s)
         {
             curCombo++;
 

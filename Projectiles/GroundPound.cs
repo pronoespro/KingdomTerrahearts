@@ -7,11 +7,15 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Microsoft.Xna.Framework;
+using Terraria.Audio;
 
 namespace KingdomTerrahearts.Projectiles
 {
     public class GroundPound:ModProjectile
     {
+
+        bool madeSound;
 
         public override void SetStaticDefaults()
         {
@@ -21,7 +25,6 @@ namespace KingdomTerrahearts.Projectiles
 
         public override void SetDefaults()
         {
-
             Projectile.netImportant = true;
             Projectile.width = 60;
             Projectile.height = 20;
@@ -34,7 +37,13 @@ namespace KingdomTerrahearts.Projectiles
 
         public override void AI()
         {
+            if (!madeSound)
+            {
+                SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
+                madeSound = true;
+            }
             Projectile.scale = 3f;
+            Projectile.restrikeDelay = 0;
 
             if (Projectile.timeLeft > 10)
             {
@@ -46,6 +55,7 @@ namespace KingdomTerrahearts.Projectiles
                         Main.dust[newDust].noGravity=false;
                     }
                 }
+                KingdomTerrahearts.instance.SetCameraForAllPlayers(Vector2.Zero, shakeForce: 1.25f, shakeSpeed: 3f,percentageChange:100);
             }
 
             Projectile.frame = 3-Projectile.timeLeft / 5;

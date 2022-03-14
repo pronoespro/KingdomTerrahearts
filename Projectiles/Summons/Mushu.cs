@@ -47,7 +47,7 @@ namespace KingdomTerrahearts.Projectiles.Summons
                 Projectile.ai[0]++;
                 if (Projectile.ai[0] % 20 == 0)
                 {
-                    ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+                    EntitySource_Parent s = new EntitySource_Parent(Projectile);
 
                     Projectile.direction = (Main.npc[target].Center.X > Projectile.Center.X) ? 1 : -1;
                     dir = MathHelp.Normalize(Main.npc[target].Center - Projectile.Center)*15;

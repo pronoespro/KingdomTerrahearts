@@ -41,7 +41,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
             NPC.lavaImmune = true;
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath1;
-            s = new ProjectileSource_NPC(NPC);
+            s = new EntitySource_Parent(NPC);
 
             attacksDamage = new int []{0,10,25,15 };
             weaponType = ModContent.ProjectileType<Projectiles.BossStuff.AxelChakrams>();
@@ -469,12 +469,13 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            int[] dropOptions = new int[] { ModContent.ItemType<Items.Weapons.Keyblade_flameFrolic>(),ModContent.ItemType<Items.Weapons.Org13.Axel.Chacrams_EternalFlames>(), ModContent.ItemType<Items.Armor.orgCoat>(), ModContent.ItemType<Items.seasaltIcecream>() };
+            int[] dropOptions = new int[] { ModContent.ItemType<Items.Weapons.Keyblade_flameFrolic>(),ModContent.ItemType<Items.Weapons.Org13.Axel.Chacrams_Ashes>(), ModContent.ItemType<Items.Armor.orgCoat>(), ModContent.ItemType<Items.seasaltIcecream>() };
             npcLoot.Add(ItemDropRule.OneFromOptions(1, dropOptions));
 
 
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<AxelSpawner>()));
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.blazingShard>(), 1, 5, 15));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.blazingStone>(), 7));
         }
 
     }

@@ -76,6 +76,7 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
 
         public override void AI()
         {
+            Projectile.scale = 2.5f;
 
             if (Projectile.hostile)
             {
@@ -118,7 +119,7 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
 
                     if (Projectile.timeLeft % 240 == 120)
                     {
-                        Projectile.velocity = MathHelp.Normalize(targetPosition - Projectile.Center) * Projectile.ai[1] * 2;
+                        Projectile.velocity = MathHelp.Normalize(targetPosition - Projectile.Center) * Projectile.ai[1] * 1.75f;
                     }
                     else
                     {
@@ -126,6 +127,7 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
                     }
                 }
             }
+            Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X)+((float)Math.PI/2f);
         }
 
         public void GetTargetPosition()

@@ -107,7 +107,7 @@ namespace KingdomTerrahearts.NPCs
                     else
                     {
 
-                        ProjectileSource_NPC s = new ProjectileSource_NPC(NPC);
+                        EntitySource_Parent s = new EntitySource_Parent(NPC);
 
                         pRelDist = MathHelp.Normalize(pRelDist) * speed/4;
                         int proj=Projectile.NewProjectile(s,NPC.Center, pRelDist, ProjectileID.Fireball, 10,1) ;
@@ -133,10 +133,7 @@ namespace KingdomTerrahearts.NPCs
         {
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.blazingShard>(),5,1,6));
 
-            if (Main.player[NPC.target].Center.Y > Main.UnderworldLayer)
-            {
-                npcLoot.Add(ItemDropRule.Common(ItemID.Hellstone,1,1,5));
-            }
+            npcLoot.Add(ItemDropRule.Common(ItemID.Hellstone, 1, 1, 5));
 
 
         }

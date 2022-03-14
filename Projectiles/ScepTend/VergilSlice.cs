@@ -6,6 +6,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
+using Terraria.Audio;
 
 namespace KingdomTerrahearts.Projectiles.ScepTend
 {
@@ -90,6 +91,10 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override void AI()
         {
+            if (Projectile.timeLeft == 55)
+            {
+                SoundEngine.PlaySound(SoundID.Item64, Projectile.Center);
+            }
             int vergilProjCount = 0;
             for(int i = 0; i < Main.maxProjectiles; i++)
             {
@@ -119,7 +124,7 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
             Projectile.ai[0]++;
             if (Projectile.ai[0] % 10 == 0)
             {
-                ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+                EntitySource_Parent s = new EntitySource_Parent(Projectile);
 
                 int proj=Projectile.NewProjectile(s,Projectile.Center, Vector2.Zero, ModContent.ProjectileType<Vergil_Bubble>(), 0, 0, Projectile.owner);
                 Main.projectile[proj].ai[0]= 50;

@@ -1,18 +1,13 @@
-DISCLAIMER: this is only the quick port of the mod to 1.4, several things are not working, including the command menu, the heal ability, and much, much more.
-
-
 Kingdom Terrahearts introduces the world of Kingdom Hearts to Terraria.
 
 ---Mod Contents---
 
 -A special menu style (with custom music composed for this mod)
--3 prehardmode bosses, a multi-stage boss (gets more phases as you go along on your adventure), an event (the 1000 heartless battle), 5 enemies (more to come) and 3 town npcs
+-7 brand new normal bosses, a multi-stage boss (gets more phases as you go along on your adventure), an event (the 1000 heartless battle), and 3 town npcs
 -7 abilities, a "grappling hook" (athletic flow), a set of "wings" (faity dust)
--24 keyblades, an arrowgun, a chacram, a pickaxe keyblade, an Ultimate gun (Moon Lord drop) and some joke weapons.
+-2 new weapon types and 1 new class (Keyblade master)
 -A furniture set (twilight town based, block, walls, crafting table and poster), a huge tile (dive to heart) and a custom bed based on save spots in the KH franchise that fast forwards time.
--A vanity item, a vanity clothing set , a pet and a dye (last world dye)
--9 material items and an anti-death item (Kupo coin)
--A party member system for all vanilla Terraria town npcs (not working atm)
+-A party member system for all vanilla Terraria town npcs
 -Fighting bosses on the dive to heart battleground unlocks harder versions of themselves that drop special loot (not really that much harder, but enough to be a nuisance)
 
 DISCLAIMER: This mod is currently being developed for single player only. If you wish to play with other people do not use the npcs as party members unles you are ready for crazyness.

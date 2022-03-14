@@ -271,7 +271,7 @@ namespace KingdomTerrahearts.Items
                 {
                     case BuffID.NoBuilding:
                     case BuffID.Horrified:
-                        return;
+                        continue;
                 }
                 #endregion
                 player.buffImmune[i] = true;

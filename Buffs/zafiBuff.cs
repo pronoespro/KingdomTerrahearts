@@ -20,7 +20,7 @@ namespace KingdomTerrahearts.Buffs
 		public override void Update(Player player, ref int buffIndex)
 		{
 
-			ProjectileSource_Buff s = new ProjectileSource_Buff(player, 0,buffIndex);
+			EntitySource_Buff s = new EntitySource_Buff(player, 0,buffIndex);
 
 			player.buffTime[buffIndex] = 18000;
 			player.GetModPlayer<SoraPlayer>().hasZafi = true;

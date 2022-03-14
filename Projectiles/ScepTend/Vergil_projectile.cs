@@ -36,7 +36,7 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override void Kill(int timeLeft)
         {
-            ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+            EntitySource_Parent s = new EntitySource_Parent(Projectile);
 
             float rot = Main.rand.NextFloat((float)(-Math.PI * 2f), (float)(Math.PI * 2f));
             int proj = Projectile.NewProjectile(s,Projectile.Center, Vector2.Zero, ModContent.ProjectileType<VergilSlice>(), Projectile.damage, 1);

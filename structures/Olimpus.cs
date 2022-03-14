@@ -59,7 +59,12 @@ namespace KingdomTerrahearts.structures
         public static int[] olimpusBlockTypes = new int[] { -1, TileID.Cloud, TileID.Sunplate, TileID.MarbleBlock, TileID.GoldBrick, TileID.Platforms };
         public static int[] olimpusWallTypes = new int[] { WallID.None, WallID.Cloud, WallID.DiscWall, WallID.MarbleBlock, WallID.GoldBrick };
         public static int[] olimpusliquidTypes = new int[] { 0, 255 };
-        public static int[] olimpusPaintTypes = new int[] { 0, 1, 2 ,3,4,5,6,7,8,9,10};
+        public static int[] olimpusPaintTypes = new int[] { PaintID.None, PaintID.BlackPaint, PaintID.WhitePaint ,PaintID.YellowPaint,PaintID.GrayPaint};
+        public static int[] olimpusFurnitureTypes = new int[] {-1, TileID.Chairs };
+        public static int[] olimpusFurnitureStyles = new int[] {-1, 0 };
+
+        public static int[] olimpusChestStyles = new int[] { -1, 0};
+        public static int[,] olimpusChestContentStyles = new int[,] { {ItemID.Starfury,ItemID.FallenStar },{ ItemID.StarCannon, ItemID.StarCannon } ,{ ItemID.EnchantedSword,ItemID.MythrilAnvil} };
 
         public static int olimpusPlatforms = 22;
         #endregion

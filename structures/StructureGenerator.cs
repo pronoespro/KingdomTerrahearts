@@ -97,9 +97,9 @@ namespace KingdomTerrahearts.structures
 								{
 									for (int m = j - structure.blocks.element.GetLength(1) / 2; m < j + structure.blocks.element.GetLength(1) / 2; m++)
 									{
-										if (Main.tile[l, m].IsActive)
+										if (Main.tile[l, m].TileType!=null)
 										{
-											int type = (int)Main.tile[l, m].type;
+											int type = (int)Main.tile[l, m].TileType;
 											if (type == TileID.BlueDungeonBrick || type == TileID.GreenDungeonBrick || type == TileID.PinkDungeonBrick || type == TileID.Cloud || type == TileID.RainCloud)
 											{
 												placementOK = forceMake;
@@ -136,8 +136,8 @@ namespace KingdomTerrahearts.structures
 						if (structure.blocks.types[structure.blocks.element[flippedY, structX]] >= 0 && structure.hasSlopes)
 						{
 							//the type of block this is
-							tile.type = (ushort)structure.blocks.types[structure.blocks.element[flippedY, structX]];
-							tile.IsActive = false;
+							tile.TileType = (ushort)structure.blocks.types[structure.blocks.element[flippedY, structX]];
+							tile.ClearTile();
 
 							//checking if the block is a platform and checking the type it is
 							tileType = structure.blocks.types[structure.blocks.element[flippedY, structX]];
@@ -168,14 +168,43 @@ namespace KingdomTerrahearts.structures
 
 							if (structure.hasBlockPaint && flippedY < structure.blockColors.element.GetLength(0) && structX<structure.blockColors.element.GetLength(1))
 							{
-								WorldGen.paintTile(k, l, GetColorFromType(structure.blockColors.types[structure.blockColors.element[flippedY, structX]]));
+								WorldGen.paintTile(k, l, (byte)structure.blockColors.types[structure.blockColors.element[flippedY, structX]]);
 							}
 
-							tile.IsActive = true;
 						} else
 						{
-							tile.IsActive = false;
+							tile.ClearTile();
 						}
+
+						//Place furniture
+                        if (structure.containsFurniture && 
+							flippedY< structure.furnitureTiles.element.GetLength(0) && structX<structure.furnitureTiles.element.GetLength(1))
+                        {
+
+                            if (structure.furnitureTiles.types[structure.furnitureTiles.element[flippedY, structX]]>=0)
+                            {
+								WorldGen.PlaceTile(k, l, structure.furnitureTiles.types[structure.furnitureTiles.element[flippedY, structX]], mute: true, forced:true,-1,structure.furnitureStyles.types[structure.furnitureStyles.element[flippedY,structX]]);
+                            }
+
+                        }
+
+						//Place chests
+						if(structure.containsChests && flippedY<structure.chests.element.GetLength(0) && structX < structure.chests.element.GetLength(1))
+                        {
+                            if (structure.chests.types[structure.chests.element[flippedY, structX]] >= 0)
+                            {
+								int chestIndex=WorldGen.PlaceChest(k, l, style: structure.structureChestStyle);
+
+                                if (chestIndex >= 0)
+                                {
+									for(int item = 0; item < structure.chestPosibleContent.GetLength(structure.chests.types[structure.chests.element[flippedY,structX]]);item++)
+                                    {
+										Main.chest[chestIndex].item[item].SetDefaults(
+											structure.chestPosibleContent[structure.chests.types[structure.chests.element[flippedY, structX]],item]);
+                                    }
+                                }
+                            }
+                        }
 
 						//Actuate blocks
 						if (structure.hasActuatedBlocks &&
@@ -186,12 +215,17 @@ namespace KingdomTerrahearts.structures
 
 						if (structure.walls.types[structure.walls.element[flippedY, structX]] != WallID.None)
 						{
-							tile.wall = (ushort)structure.walls.types[structure.walls.element[flippedY, structX]];
+							ushort wall = (ushort)structure.walls.types[structure.walls.element[flippedY, structX]];
+							tile.WallType =(ushort)(wall==0?WallID.None:wall);
 
-							if (structure.hasWallPaint && flippedY<structure.wallColors.element.GetLength(0) && structX< structure.wallColors.element.GetLength(1) && structure.wallColors.element[flippedY,structX]!=0)
+							if (structure.hasWallPaint && structure.wallColors.element.GetLength(0)>flippedY && structure.wallColors.element.GetLength(1)>structX)
 							{
-								//tile.WallColor=GetColorFromType(structure.wallColors.types[structure.wallColors.element[flippedY, structX]]);
+								tile.WallColor = (byte)structure.wallColors.types[structure.wallColors.element[flippedY, structX]];
 							}
+                        }
+                        else
+						{
+							WorldUtils.ClearWall(k, l);
 						}
 
 						if (structure.containsLiquids && structure.liquids.types[structure.liquids.element[flippedY, structX]] > 0)
@@ -202,22 +236,6 @@ namespace KingdomTerrahearts.structures
 				}
 			}
 			return true;
-		}
-
-		public byte GetColorFromType(int i)
-        {
-            switch (i)
-			{
-				default:
-				case 0:
-					return (byte)Color.Black.PackedValue;
-				case 1:
-					return (byte)Color.White.PackedValue;
-				case 2:
-					return (byte)Color.Gold.PackedValue;
-				case 3:
-					return (byte)Color.DarkGray.PackedValue;
-			}
 		}
 
         #endregion

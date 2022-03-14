@@ -40,14 +40,12 @@ namespace KingdomTerrahearts.Items.Weapons.Org13
             {
                 projAmmount += (Main.projectile[i].active && Main.projectile[i].type == Item.shoot) ? 1 : 0;
             }
-            return projAmmount < maxChakrams;
+            return projAmmount < maxChakrams && projAmmount<player.HeldItem.stack;
         }
 
-        public override bool Shoot(Player player, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            ProjectileSource_Item s = new ProjectileSource_Item(player, Item);
-            Projectile.NewProjectile(s,position, velocity + new Vector2(0,(player.altFunctionUse == 2) ? -5 : 5), type, damage, knockback, Item.playerIndexTheItemIsReservedFor, (player.altFunctionUse == 2) ? 100 : 0);
-
+            Projectile.NewProjectile(source, position, velocity + new Vector2(0, (player.altFunctionUse == 2) ? -5 : 5), type, damage, knockback, Item.playerIndexTheItemIsReservedFor, (player.altFunctionUse == 2) ? 100 : 0);
             return base.Shoot(player, source, position, velocity, type, damage, knockback);
         }
 

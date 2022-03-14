@@ -12,13 +12,16 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using KingdomTerrahearts.Projectiles.Weapons;
 using Terraria.Audio;
+using System.IO;
+using KingdomTerrahearts.Logic;
 
 public enum blockingType
 {
 	none,
 	normal,
 	reflect,
-	reversal
+	reversal,
+    special
 }
 namespace KingdomTerrahearts.Items.Weapons
 {
@@ -141,6 +144,8 @@ namespace KingdomTerrahearts.Items.Weapons
 		public int manaConsumed = 0;
 		public int[] animationTimes=new int[0];
 		public float[] transformationsDamageMultiplier = new float[] { 1f, 1f, 1f, 1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f };
+		public int shootProjectile = -1;
+		public float shootSpeed = 10;
 
 		//Magic attack atributes
 		public int magicCost=10;
@@ -160,10 +165,12 @@ namespace KingdomTerrahearts.Items.Weapons
 		public int curTransformation=-1;
 		public int curForm = -1;
 		public int weaponDisplayProjectile;
-		public float weaponDisplayRotation;
+        public float weaponDisplayRotation;
 
-		//Tooltips
-		public TooltipLine transTooltip;
+		public int[] formchangeCutscenes = new int[] { 4,4,4,4,4,4,4,4,4,4,4,4,4 };
+
+        //Tooltips
+        public TooltipLine transTooltip;
 		public TooltipLine levelTooltip;
 
 		//Summon atributes
@@ -197,6 +204,16 @@ namespace KingdomTerrahearts.Items.Weapons
 			{
 				return base.Texture;
             }
+        }
+
+        public override void NetSend(BinaryWriter writer)
+        {
+			writer.Write(combo);
+        }
+
+        public override void NetReceive(BinaryReader reader)
+        {
+			combo=reader.ReadInt32();
         }
 
         public void SaveAtributes()
@@ -328,7 +345,7 @@ namespace KingdomTerrahearts.Items.Weapons
 				}
 				else
 				{
-					ProjectileSource_Item s = new ProjectileSource_Item(Main.player[Item.playerIndexTheItemIsReservedFor], Item);
+					EntitySource_ItemUse s = new EntitySource_ItemUse(Main.player[Item.playerIndexTheItemIsReservedFor], Item);
 
 					weaponDisplayProjectile = Projectile.NewProjectile(s, Main.player[Item.playerIndexTheItemIsReservedFor].position, Vector2.Zero, ModContent.ProjectileType<KeybladeHoldDisplay>(), 0, 0, Item.playerIndexTheItemIsReservedFor);
 
@@ -358,7 +375,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			int projType = ModContent.ProjectileType<Projectiles.ScepTend.Vergil_Bubble>();
 			Item.mana = 0;
 
-			ProjectileSource_Item source = new ProjectileSource_Item(wielder, Item);
+			EntitySource_ItemUse source = new EntitySource_ItemUse(wielder, Item);
 
 			switch (sp.guardType)
             {
@@ -721,7 +738,7 @@ namespace KingdomTerrahearts.Items.Weapons
             }
 			SoraPlayer.summonProjectiles = new Projectile[6];
 
-			ProjectileSource_Item s = new ProjectileSource_Item(wielder, Item);
+			EntitySource_ItemUse s = new EntitySource_ItemUse(wielder, Item);
 			for (int i = 0; i < 6; i++)
 			{
 				SoraPlayer.summonProjectiles[i] = Main.projectile[Projectile.NewProjectile(s,wielder.Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.ultimate_projectile_stab>(), (int)(Item.damage/2f), 3, Item.playerIndexTheItemIsReservedFor, i*10f,Item.useAnimation)];
@@ -736,10 +753,10 @@ namespace KingdomTerrahearts.Items.Weapons
 			}
 			SoraPlayer.summonProjectiles = new Projectile[6];
 
-			ProjectileSource_Item s = new ProjectileSource_Item(wielder, Item);
+			EntitySource_ItemUse s = new EntitySource_ItemUse(wielder, Item);
 			for (int i = 0; i < 6; i++)
 			{
-				SoraPlayer.summonProjectiles[i] = Main.projectile[Projectile.NewProjectile(s, wielder.Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.ultimate_projectile_slice>(), (int)(Item.damage / 2f), 3, Item.playerIndexTheItemIsReservedFor, Main.rand.NextFloat(-2f*(float)Math.PI,2f* (float)Math.PI), Item.useAnimation)];
+				SoraPlayer.summonProjectiles[i] = Main.projectile[Projectile.NewProjectile(s, wielder.Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.ultimate_projectile_slice>(), (int)(Item.damage), 3, Item.playerIndexTheItemIsReservedFor, Main.rand.NextFloat(-2f*(float)Math.PI,2f* (float)Math.PI), Item.useAnimation)];
 			}
 		}
 
@@ -751,6 +768,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			{
 				return;
 			}
+			SoraPlayer sp = wielder.GetModPlayer<SoraPlayer>();
 
             switch (formChanges[curForm])
             {
@@ -766,6 +784,7 @@ namespace KingdomTerrahearts.Items.Weapons
 				case keyDriveForm.guardian:
 					break;
 				case keyDriveForm.limit:
+					sp.curCostume = 2;
 					break;
 				case keyDriveForm.master:
 					break;
@@ -774,6 +793,7 @@ namespace KingdomTerrahearts.Items.Weapons
 				case keyDriveForm.rage:
 					break;
 				case keyDriveForm.second:
+					sp.curCostume = 2;
 					break;
 				case keyDriveForm.strike:
 					break;
@@ -830,10 +850,10 @@ namespace KingdomTerrahearts.Items.Weapons
 					Item.shoot = ModContent.ProjectileType<Projectiles.Magic.magnet>();
 					return !KingdomTerrahearts.instance.AnyProjectile(ModContent.ProjectileType<Projectiles.Magic.magnet>());
 				case keyMagic.reflect:
-					wielder.GetModPlayer<SoraPlayer>().AddInvulnerability(60);
-					Item.shoot = ModContent.ProjectileType<Projectiles.guardProjectile>();
-					
-					Item.shootSpeed = 5;
+					Item.shootSpeed = 0;
+					wielder.GetModPlayer<SoraPlayer>().AddInvulnerability(1);
+					Item.shoot = ModContent.ProjectileType<Projectiles.reflectProjectile>();
+					Item.useStyle = 100;
 					break;
 				case keyMagic.gravity:
 					Item.useStyle = 100;
@@ -841,7 +861,8 @@ namespace KingdomTerrahearts.Items.Weapons
 					break;
 				case keyMagic.stop:
 					Item.useStyle = 100;
-					Item.channel = true;
+					Item.shootSpeed = 0;
+					Item.shoot = ModContent.ProjectileType<Projectiles.Magic.stop>();
 					break;
 				case keyMagic.slow:
 					Item.useStyle = 100;
@@ -876,11 +897,12 @@ namespace KingdomTerrahearts.Items.Weapons
         public bool TransformKey()
 		{
 
-			if (keyTransformations.Length > 0)
+			if (keyTransformations!=null && keyTransformations.Length > 0)
 			{
 
 				if (lastUsedTime > 2)
 				{
+
 					curTransformation = (++curTransformation >= keyTransformations.Length) ? -1 : curTransformation;
 					curForm = (++curForm >= formChanges.Length) ? -1 : curForm;
 
@@ -893,6 +915,11 @@ namespace KingdomTerrahearts.Items.Weapons
 					}
 
 					SoundEngine.PlaySound(SoundLoader.GetLegacySoundSlot(Mod, "Sounds/keybladeTransform"));
+
+					if (curForm >= 0 && curForm < formchangeCutscenes.Length && formchangeCutscenes[curForm] >= 0)
+					{
+						CutsceneLogic.instance.ChangeCutscene(formchangeCutscenes[curForm], initDamage);
+					}
 				}
 
 				lastUsedTime = 0;
@@ -921,7 +948,7 @@ namespace KingdomTerrahearts.Items.Weapons
 						wielder.statMana = 0;
 						CommandLogic.instance.ChangeCommand(0);
 
-						ProjectileSource_Item s = new ProjectileSource_Item(wielder, Item);
+						EntitySource_ItemUse s = new EntitySource_ItemUse(wielder, Item);
 
 						switch (keySummon)
                         {
@@ -990,18 +1017,26 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public override void HoldItem(Player player)
 		{
-			Item.holdStyle = -1;
+
 			if (player.whoAmI == Main.myPlayer)
 			{
 				SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
 				sp.lastHeldKeyblade = 2;
 				sp.guardType = guardType;
 
+                if (sp.midCutscene)
+                {
+					Item.noUseGraphic = true;
+					return;
+                }
+
 				if (player.itemAnimation <= 0)
 				{
 					Item.useStyle = ItemUseStyleID.Swing;
 				}
 			}
+
+			Item.holdStyle = -1;
 
 			if (curTransformation >= 0 && keyTransformations[curTransformation] != keyTransformation.none)
 			{
@@ -1053,7 +1088,7 @@ namespace KingdomTerrahearts.Items.Weapons
 				}
 				else
 				{
-					ProjectileSource_Item s = new ProjectileSource_Item(Main.player[Item.playerIndexTheItemIsReservedFor], Item);
+					EntitySource_ItemUse s = new EntitySource_ItemUse(Main.player[Item.playerIndexTheItemIsReservedFor], Item);
 
 					weaponDisplayProjectile = Projectile.NewProjectile(s, Main.player[Item.playerIndexTheItemIsReservedFor].position, Vector2.Zero, ModContent.ProjectileType<KeybladeHoldDisplay>(), 0, 0, Item.playerIndexTheItemIsReservedFor);
 					Main.projectile[weaponDisplayProjectile].scale = Item.scale;
@@ -1244,11 +1279,11 @@ namespace KingdomTerrahearts.Items.Weapons
 			return false;
 		}
 
-		public override bool Shoot(Player player, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			if (player.whoAmI == Main.myPlayer && lastUsedTime<Item.useTime)
+			if (player.whoAmI == Main.myPlayer && lastUsedTime < Item.useTime)
 			{
-				if ((curTransformation == -1 || keyTransformations[curTransformation] == keyTransformation.none)&& CommandLogic.instance.selectedCommand == 0)
+				if ((curTransformation == -1 || keyTransformations[curTransformation] == keyTransformation.none) && CommandLogic.instance.selectedCommand == 0)
 				{
 					Vector2 vel = Main.screenPosition + new Vector2(Main.mouseX, Main.mouseY) - player.Center;
 					vel = MathHelp.Normalize(vel) * Item.shootSpeed;
@@ -1259,16 +1294,16 @@ namespace KingdomTerrahearts.Items.Weapons
 					Item.shoot = ProjectileID.None;
 					return false;
 				}
-				if(curTransformation>=0 && keyTransformations[curTransformation] == keyTransformation.cannon && CommandLogic.instance.selectedCommand==0)
+				if (curTransformation >= 0 && keyTransformations[curTransformation] == keyTransformation.cannon && CommandLogic.instance.selectedCommand == 0)
 				{
 					Vector2 vel = Main.screenPosition + new Vector2(Main.mouseX, Main.mouseY) - player.Center;
 					vel = MathHelp.Normalize(vel) * Item.shootSpeed;
-					int proj = Projectile.NewProjectile(source, position, vel, type, damage*3, knockback*3, Item.playerIndexTheItemIsReservedFor);
+					int proj = Projectile.NewProjectile(source, position, vel, type, damage * 3, knockback * 3, Item.playerIndexTheItemIsReservedFor);
 					Main.projectile[proj].friendly = true;
 					Main.projectile[proj].hostile = false;
 					return false;
 				}
-                if (CommandLogic.instance.selectedCommand == 1)
+				if (CommandLogic.instance.selectedCommand == 1)
 				{
 					Vector2 vel = Main.screenPosition + new Vector2(Main.mouseX, Main.mouseY) - player.Center;
 					vel = MathHelp.Normalize(vel) * Item.shootSpeed;
@@ -1278,8 +1313,8 @@ namespace KingdomTerrahearts.Items.Weapons
 					return false;
 				}
 			}
-			return base.Shoot(player,source,position,velocity,type,damage,knockback);
-		}
+			return base.Shoot(player, source, position, velocity, type, damage, knockback);
+        }
 
         public void ShootMagicProjectile()
 		{
@@ -1299,40 +1334,48 @@ namespace KingdomTerrahearts.Items.Weapons
 				}
 			}
 
-			switch (keybladeElement)
+			if (shootProjectile == -1)
 			{
-				case keyType.fire:
-					Item.shoot = ProjectileID.Fireball;
-					Item.shootSpeed = 3;
-					break;
-				case keyType.dark:
-					Item.shoot = ProjectileID.DemonScythe;
-					Item.shootSpeed = 1;
-					break;
-				case keyType.light:
-					Item.shoot = ProjectileID.MagicMissile;
-					Item.shootSpeed = 4;
-					break;
-				case keyType.jungle:
-					Item.shoot = ProjectileID.SporeCloud;
-					Item.shootSpeed = 1;
-					break;
-				case keyType.digital:
-					Item.shoot = ModContent.ProjectileType<Projectiles.tronDisk>();
-					Item.shootSpeed = 7;
-					break;
-				case keyType.destiny:
-					Item.shoot = ModContent.ProjectileType<Projectiles.teleportThrownKey>();
-					Item.shootSpeed = 15;
-					break;
-				case keyType.star:
-					Item.shoot = ProjectileID.FallingStar;
-					Item.shootSpeed = 25;
-					break;
-				case keyType.honey:
-					Item.shoot = ProjectileID.Bee;
-					Item.shootSpeed = 15;
-					break;
+				switch (keybladeElement)
+				{
+					case keyType.fire:
+						Item.shoot = ProjectileID.Fireball;
+						Item.shootSpeed = 3;
+						break;
+					case keyType.dark:
+						Item.shoot = ProjectileID.DemonScythe;
+						Item.shootSpeed = 1;
+						break;
+					case keyType.light:
+						Item.shoot = ProjectileID.MagicMissile;
+						Item.shootSpeed = 4;
+						break;
+					case keyType.jungle:
+						Item.shoot = ProjectileID.SporeCloud;
+						Item.shootSpeed = 1;
+						break;
+					case keyType.digital:
+						Item.shoot = ModContent.ProjectileType<Projectiles.tronDisk>();
+						Item.shootSpeed = 7;
+						break;
+					case keyType.destiny:
+						Item.shoot = ModContent.ProjectileType<Projectiles.teleportThrownKey>();
+						Item.shootSpeed = 15;
+						break;
+					case keyType.star:
+						Item.shoot = ProjectileID.FallingStar;
+						Item.shootSpeed = 25;
+						break;
+					case keyType.honey:
+						Item.shoot = ProjectileID.Bee;
+						Item.shootSpeed = 15;
+						break;
+				}
+            }
+            else
+			{
+				Item.shoot = shootProjectile;
+				Item.shootSpeed =shootSpeed;
 			}
 			Item.useStyle = ItemUseStyleID.Shoot;
 		}
@@ -1470,7 +1513,6 @@ namespace KingdomTerrahearts.Items.Weapons
 					CheckSummonProjectiles();
 				}
 
-				ChangeForm();
 				SoraPlayer sora = player.GetModPlayer<SoraPlayer>();
 
 				if (sora.lastHeldItem == Item)
@@ -1478,6 +1520,7 @@ namespace KingdomTerrahearts.Items.Weapons
 					if (player.HeldItem == Item)
 					{
 						sora.usingForm = (curForm >= 0);
+						ChangeForm();
 					}
 					else
 					{

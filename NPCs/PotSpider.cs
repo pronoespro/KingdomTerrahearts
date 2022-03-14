@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
@@ -128,7 +129,8 @@ namespace KingdomTerrahearts.NPCs
         public override void HitEffect(int hitDirection, double damage)
         {
             activated = true;
-            Item.NewItem(NPC.getRect(), ItemID.CopperCoin,(Main.rand.Next(1,30)/10+1));
+            EntitySource_Parent s = new EntitySource_Parent(NPC);
+            Item.NewItem(s,NPC.getRect(), ItemID.CopperCoin,(Main.rand.Next(1,30)/10+1));
         }
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
@@ -150,7 +152,8 @@ namespace KingdomTerrahearts.NPCs
             Rectangle coinSpawnRect = NPC.getRect();
             coinSpawnRect.Width *= 4;
             coinSpawnRect.Height *= 4;
-            Item.NewItem(coinSpawnRect, ItemID.GoldCoin, (Main.rand.Next(1, 4)  + 1));
+            EntitySource_Parent s = new EntitySource_Parent(NPC);
+            Item.NewItem(s,coinSpawnRect, ItemID.GoldCoin, (Main.rand.Next(1, 4)  + 1));
             return base.PreKill();
         }
 

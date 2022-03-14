@@ -17,7 +17,7 @@ namespace KingdomTerrahearts.Items.Weapons.Custom
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			Item.damage = 750;
+			Item.damage = 300;
 			Item.width = 50;
 			Item.height = 50;
 			Item.useStyle = ItemUseStyleID.Swing;

@@ -51,6 +51,9 @@ namespace KingdomTerrahearts.Projectiles
 
         public override void AI()
         {
+
+            KingdomTerrahearts.instance.SetCameraForAllPlayers(Vector2.Zero,1.05f+(1-Projectile.timeLeft/Projectile.ai[1])*0.05f, percentageChange: 100);
+
             if (Projectile.timeLeft ==666666)
             {
                 Projectile.spriteDirection = Projectile.direction = Main.player[Projectile.owner].direction;

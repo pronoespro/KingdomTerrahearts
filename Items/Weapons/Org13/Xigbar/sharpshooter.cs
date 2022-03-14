@@ -33,7 +33,7 @@ namespace KingdomTerrahearts.Items.Weapons.Org13.Xigbar
             Item.useStyle = 5;
             Item.knockBack = 3;
             Item.value = 10000;
-            Item.rare = 2;
+            Item.rare = ItemRarityID.Cyan;
             Item.UseSound = SoundID.Item5.WithVolume(0.25f).WithPitchVariance(0.5f);
             Item.autoReuse = true;
             Item.shoot = ProjectileID.JestersArrow;

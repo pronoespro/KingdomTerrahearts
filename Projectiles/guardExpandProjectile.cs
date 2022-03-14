@@ -37,6 +37,10 @@ namespace KingdomTerrahearts.Projectiles
 
         public override void AI()
         {
+            if (Projectile.timeLeft > 40)
+            {
+                KingdomTerrahearts.instance.SetCameraForAllPlayers(Vector2.Zero, shakeForce: 1, shakeSpeed: 1);
+            }
             Projectile.scale += 0.1f*(Projectile.timeLeft/100f);
             Projectile.alpha += (int)(15 * (Projectile.timeLeft / 50f));
         }

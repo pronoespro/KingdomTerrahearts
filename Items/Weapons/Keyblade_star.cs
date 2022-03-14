@@ -52,6 +52,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			formChanges = new keyDriveForm[] { keyDriveForm.element, keyDriveForm.element };
 			animationTimes = new int[] { 20, 10, 30 };
 			keySummon = summonType.chickenLittle;
+			formchangeCutscenes = new int[] { 5, 4, 4,4 };
 		}
 
 		public override void AddRecipes()

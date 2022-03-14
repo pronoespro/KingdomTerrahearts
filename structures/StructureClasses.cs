@@ -48,6 +48,16 @@ namespace KingdomTerrahearts.structures
         public bool containsLiquids;
         public StructureElement liquids;
 
+        public bool containsFurniture;
+        public StructureElement furnitureTiles;
+        public StructureElement furnitureColors;
+        public StructureElement furnitureStyles;
+
+        public bool containsChests;
+        public StructureElement chests;
+        public int[,] chestPosibleContent;
+        public int structureChestStyle;
+
         public StructureComplete(StructureElement block,int[,] slopes, StructureElement blockCol, bool[,] actuated, StructureElement wall,StructureElement wallCol, StructureElement liquid, int platformtype=0)
         {
 
@@ -71,6 +81,106 @@ namespace KingdomTerrahearts.structures
             liquids = liquid;
 
             platformsType = platformtype;
+
+            containsFurniture = false;
+
+        }
+
+        public StructureComplete(StructureElement block, int[,] slopes, StructureElement blockCol, bool[,] actuated, StructureElement wall, StructureElement wallCol, StructureElement liquid,StructureElement furniture, StructureElement funriturePaint,StructureElement furnitureStyle, int platformtype = 0)
+        {
+
+            blocks = block;
+
+            hasSlopes = slopes.Length > 0;
+            blockSlopes = slopes;
+
+            hasBlockPaint = blockCol.element.Length > 0;
+            blockColors = blockCol;
+
+            hasActuatedBlocks = actuated.Length > 0;
+            actuatedBlocks = actuated;
+
+            hasWallPaint = wall.element.Length > 0;
+            walls = wall;
+
+            wallColors = wallCol;
+
+            containsLiquids = liquid.element.Length > 0;
+            liquids = liquid;
+
+            platformsType = platformtype;
+
+            containsFurniture = furniture.element.Length>0;
+            furnitureTiles = furniture;
+            furnitureColors = funriturePaint;
+            furnitureStyles = furnitureStyle;
+
+        }
+
+        public StructureComplete(StructureElement block, int[,] slopes, StructureElement blockCol, bool[,] actuated, StructureElement wall, StructureElement wallCol, StructureElement liquid, StructureElement chest, int chestStyle, int[,] chestPossibleContents, int platformtype = 0)
+        {
+
+            blocks = block;
+
+            hasSlopes = slopes.Length > 0;
+            blockSlopes = slopes;
+
+            hasBlockPaint = blockCol.element.Length > 0;
+            blockColors = blockCol;
+
+            hasActuatedBlocks = actuated.Length > 0;
+            actuatedBlocks = actuated;
+
+            hasWallPaint = wall.element.Length > 0;
+            walls = wall;
+
+            wallColors = wallCol;
+
+            containsLiquids = liquid.element.Length > 0;
+            liquids = liquid;
+
+            platformsType = platformtype;
+
+            containsChests = chest.element.Length > 0;
+            chests = chest;
+            chestPosibleContent = chestPossibleContents;
+            structureChestStyle = chestStyle;
+
+        }
+
+        public StructureComplete(StructureElement block, int[,] slopes, StructureElement blockCol, bool[,] actuated, StructureElement wall, StructureElement wallCol, StructureElement liquid, StructureElement furniture, StructureElement funriturePaint, StructureElement furnitureStyle, StructureElement chest, int chestStyle, int[,] chestPossibleContents, int platformtype = 0)
+        {
+
+            blocks = block;
+
+            hasSlopes = slopes.Length > 0;
+            blockSlopes = slopes;
+
+            hasBlockPaint = blockCol.element.Length > 0;
+            blockColors = blockCol;
+
+            hasActuatedBlocks = actuated.Length > 0;
+            actuatedBlocks = actuated;
+
+            hasWallPaint = wall.element.Length > 0;
+            walls = wall;
+
+            wallColors = wallCol;
+
+            containsLiquids = liquid.element.Length > 0;
+            liquids = liquid;
+
+            platformsType = platformtype;
+
+            containsFurniture = furniture.element.Length > 0;
+            furnitureTiles = furniture;
+            furnitureColors = funriturePaint;
+            furnitureStyles = furnitureStyle;
+
+            containsChests = chest.element.Length > 0;
+            chests = chest;
+            chestPosibleContent = chestPossibleContents;
+            structureChestStyle = chestStyle;
 
         }
 
@@ -145,7 +255,7 @@ namespace KingdomTerrahearts.structures
 
                     blocks = new StructureElement(OlimpusCloud.OlimpusCloud2Blocks, OlimpusCloud.olimpusBlockTypes);
                     walls = new StructureElement(OlimpusCloud.OlimpusCloud2Walls, OlimpusCloud.olimpusWallTypes);
-                    wallPaint = new StructureElement(OlimpusCloud.OlimpusCoud2wallPaint, OlimpusCloud.olimpusPaintTypes);
+                    //wallPaint = new StructureElement(OlimpusCloud.OlimpusCoud2wallPaint, OlimpusCloud.olimpusPaintTypes);
 
                     return new StructureComplete(blocks, OlimpusCloud.OlimpusCloud2Slopes, blockPaint, StructureComplete.BoolsFromInts(OlimpusCloud.OlimpusCloud2Actuate), walls, wallPaint, liquids);
 

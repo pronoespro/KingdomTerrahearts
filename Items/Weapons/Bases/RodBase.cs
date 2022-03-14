@@ -76,7 +76,7 @@ namespace KingdomTerrahearts.Items.Weapons.Bases
 
         }
 
-        public override bool Shoot(Player player, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             if (shootType[curProjectile] != projShootType.normal)
             {
@@ -88,24 +88,24 @@ namespace KingdomTerrahearts.Items.Weapons.Bases
 
                         for (int i = 0; i < projectileAmmount[curProjectile]; i++)
                         {
-                            float curTangent = (float)Math.PI*2*(projectileAmmount[curProjectile]/1f/i);
-                            offset = new Vector2((float)Math.Sin(curTangent),(float)Math.Cos(curTangent))*projectileDistanceWhenShot[curProjectile];
+                            float curTangent = (float)Math.PI * 2 * (projectileAmmount[curProjectile] / 1f / i);
+                            offset = new Vector2((float)Math.Sin(curTangent), (float)Math.Cos(curTangent)) * projectileDistanceWhenShot[curProjectile];
 
                             Projectile.NewProjectile(source, position + offset, velocity, type, damage, knockback, player.whoAmI);
                         }
 
                         break;
                     case projShootType.enix:
-                        for(int i = 0; i < projectileAmmount[curProjectile]; i++)
+                        for (int i = 0; i < projectileAmmount[curProjectile]; i++)
                         {
                             float distance;
 
                             if (i % 2 == 0)
                             {
-                                distance =(i/projectileAmmount[curProjectile])*projectileDistanceWhenShot[curProjectile]-projectileDistanceWhenShot[curProjectile]/2f;
-                                
+                                distance = (i / projectileAmmount[curProjectile]) * projectileDistanceWhenShot[curProjectile] - projectileDistanceWhenShot[curProjectile] / 2f;
 
-                                offset = new Vector2(distance,distance);
+
+                                offset = new Vector2(distance, distance);
                             }
                             else
                             {
@@ -120,7 +120,8 @@ namespace KingdomTerrahearts.Items.Weapons.Bases
                         break;
                     case projShootType.rand:
 
-                        for (int i = 0; i < projectileAmmount[curProjectile]; i++) {
+                        for (int i = 0; i < projectileAmmount[curProjectile]; i++)
+                        {
                             offset = new Vector2(
                                 Main.rand.NextFloat(-projectileDistanceWhenShot[curProjectile], projectileDistanceWhenShot[curProjectile]),
                                 Main.rand.NextFloat(-projectileDistanceWhenShot[curProjectile], projectileDistanceWhenShot[curProjectile]));
@@ -136,7 +137,7 @@ namespace KingdomTerrahearts.Items.Weapons.Bases
             }
             else
             {
-                for (int i = 0; i < projectileAmmount[curProjectile]-1; i++)
+                for (int i = 0; i < projectileAmmount[curProjectile] - 1; i++)
                 {
                     Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI);
                 }

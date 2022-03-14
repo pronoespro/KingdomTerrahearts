@@ -139,7 +139,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                                     if (percentageDone <= 0.7f)
                                     {
 
-                                        ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+                                        EntitySource_Parent s = new EntitySource_Parent(Projectile);
 
                                         proj = Projectile.NewProjectile(s, Projectile.position, Vector2.Zero, ModContent.ProjectileType<GroundPound>(), Projectile.damage * 2, Projectile.knockBack * 2, player.whoAmI);
 
@@ -246,6 +246,11 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                             break;
                         case keyTransformation.cannon:
                         case keyTransformation.drill:
+
+                            if (percentageDone > 0.5f)
+                            {
+                                sp.ModifyCutsceneCamera(Vector2.Zero,-1, shakeForce: 0.35f, shakeSpeed: 3, camPercentChange: 100);
+                            }
 
                             flipVertically = mouseDir.X < 0;
                             Projectile.Center = player.Center + new Vector2(player.width, player.height / 2 + 5);
@@ -369,6 +374,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                                         {
                                             createdProjectile = false;
                                             CreateDoubleSliceProjectile("Horizontal", 15,(float)Math.Atan2(MathHelp.Normalize(initMouseDir).Y,MathHelp.Normalize(initMouseDir).X) , 3,secondSliceDistance:30);
+                                            SoundEngine.PlaySound(SoundID.Item1, Projectile.Center);
                                         }
                                     }
 
@@ -405,6 +411,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                                     {
                                         if (createdProjectile)
                                         {
+                                            SoundEngine.PlaySound(SoundID.Item1, Projectile.Center);
                                             CreateSliceProjectile("Horizontal_left", 10, (float)Math.PI, 3, 0, 1, true);
                                             CreateSliceProjectile("Horizontal_right", 10, 0, 3, 0, 1, true, -30f);
                                             createdProjectile = false;
@@ -413,6 +420,12 @@ namespace KingdomTerrahearts.Projectiles.Weapons
 
                                     break;
                                 case 2:
+
+                                    if (percentageDone > 0.25f)
+                                    {
+                                        sp.ModifyCutsceneCamera(Vector2.Zero, 1+(1f - percentageDone)/5f,  0.5f,  1.5f,  100);
+                                    }
+
                                     Projectile.Center = player.Center;
 
                                     Slash(Math.Clamp((1-percentageDone)*2f,0,1));
@@ -461,6 +474,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                                             CreateSliceProjectile("Horizontal_right", 10, 0, 3, 0, 1, true);
                                             CreateSliceProjectile("Horizontal_left", 10, (float)Math.PI, 3, 0, 1, true, 30f);
                                             createdProjectile = true;
+                                            SoundEngine.PlaySound(SoundID.Item1, Projectile.Center);
                                         }
                                     }
                                     else
@@ -470,6 +484,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                                             CreateSliceProjectile("Horizontal_right", 10, (float)Math.PI, 3, 0, 1, true);
                                             CreateSliceProjectile("Horizontal_left", 10, 0, 3, 0, 1, true, -30f);
                                             createdProjectile = false;
+                                            SoundEngine.PlaySound(SoundID.Item1, Projectile.Center);
                                         }
                                     }
                                     break;
@@ -507,6 +522,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                                     {
                                         if (createdProjectile)
                                         {
+                                            SoundEngine.PlaySound(SoundID.Item1, Projectile.Center);
                                             CreateDoubleSliceProjectile(timeLeft: 5, rotation: (player.direction < 0 ? (float)Math.PI:0), scale: 3,additive:true,secondSliceDistance:30f);
                                             createdProjectile = false;
                                             for (int i = 0; i < 2; i++)
@@ -520,6 +536,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                                     {
                                         if (!createdProjectile)
                                         {
+                                            SoundEngine.PlaySound(SoundID.Item1, Projectile.Center);
                                             CreateDoubleSliceProjectile(timeLeft: 5,rotation:(player.direction<0?0:(float)Math.PI), scale: 3, additive: true, secondSliceDistance: 30f);
                                             createdProjectile = true;
                                             for (int i = 0; i < 2; i++)
@@ -711,9 +728,9 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                                     break;
                                 case 1:
 
-                                    target = sp.GetClosestEnemy(500);
-
                                     player.bodyFrame.Y = player.bodyFrame.Height*(int)(5-(1-percentageDone)*3f);
+
+                                    target = sp.GetClosestEnemy(500);
 
                                     if(target>=0 && Main.npc[target].active)
                                     {
@@ -781,7 +798,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                                             createdProjectile = true;
 
 
-                                            ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+                                            EntitySource_Parent s = new EntitySource_Parent(Projectile);
 
                                             proj = Projectile.NewProjectile(s, Projectile.Center, Vector2.Zero, ModContent.ProjectileType<GroundPound>(), Projectile.damage * 2, Projectile.knockBack * 2, player.whoAmI);
                                             proj = Projectile.NewProjectile(s, Projectile.Center + new Vector2(50, 0), Vector2.Zero, ModContent.ProjectileType<GroundPound>(), Projectile.damage * 2, Projectile.knockBack * 2, player.whoAmI);
@@ -806,6 +823,11 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                                             player.gravity = 0;
                                             sp.SetContactinvulnerability(5);
                                         }
+                                    }
+
+                                    if (target != -1 && Main.npc[target].active)
+                                    {
+                                        sp.ModifyCutsceneCamera(Main.npc[target].Center-player.Center, 1.25f, camPercentChange: 100);
                                     }
 
                                     Projectile.Center = player.Center + player.velocity + new Vector2(Projectile.width / 2, 0);
@@ -1440,7 +1462,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
         {
             int startProj = initProjectile + (additive ? attackProjectiles.Length : 0);
             int ammountToCreate = startProj+ ammount;
-            ProjectileSource_ProjectileParent s = new ProjectileSource_ProjectileParent(Projectile);
+            EntitySource_Parent s = new EntitySource_Parent(Projectile);
             RescaleProjectileArray(ammountToCreate);
             for (int i = 0; i < ammount; i++)
             {
@@ -1560,6 +1582,8 @@ namespace KingdomTerrahearts.Projectiles.Weapons
 
                     flipVertically = mouseDir.X < 0;
 
+                    player.statDefense += 100;
+
                     break;
                 case keyTransformation.guns:
 
@@ -1595,6 +1619,8 @@ namespace KingdomTerrahearts.Projectiles.Weapons
                 case keyTransformation.hammer:
 
                     player.direction = (mouseDir.X < 0) ? -1 : 1;
+                    player.fullRotation = 0;
+                    player.legRotation = 0;
                     Projectile.Center = player.Center;
                     Projectile.Center += new Vector2(Projectile.width * (mouseDir.X < 0 ? 1 :0), 0);
                     Projectile.direction = (mouseDir.X < 0) ? -1 : 1;

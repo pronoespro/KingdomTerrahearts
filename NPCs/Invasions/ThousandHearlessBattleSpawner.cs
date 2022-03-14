@@ -57,7 +57,7 @@ namespace KingdomTerrahearts.NPCs.Invasions
         public override void AddRecipes()
         {
             Recipe recipe = CreateRecipe();
-            recipe.AddIngredient(ModContent.ItemType<Items.Materials.lucidShard>(), 5);
+            recipe.AddIngredient(ModContent.ItemType<Items.Materials.writhingShard>(), 5);
             recipe.Register();
         }
 

@@ -1,4 +1,5 @@
 ﻿using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -39,7 +40,8 @@ namespace KingdomTerrahearts.Items
                     }
                     else
                     {
-                        Item.NewItem(player.getRect(), ItemID.GoldCoin, 4);
+                        EntitySource_Parent s = new EntitySource_Parent(Item);
+                        Item.NewItem(s,player.getRect(), ItemID.GoldCoin, 4);
                         player.ConsumeItem(ModContent.ItemType<KupoCoin>(),true);
                     }
                 }

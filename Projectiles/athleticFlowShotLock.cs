@@ -16,6 +16,9 @@ namespace KingdomTerrahearts.Projectiles
         int curTarget;
         Vector2 originalPos;
 
+        bool shotlockedToBoss;
+        int addedTimeBecauseBoss = 60;
+
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Shotlock");
@@ -58,13 +61,16 @@ namespace KingdomTerrahearts.Projectiles
                     if (Main.npc[i].active && KingdomTerrahearts.instance.IsEnemy(i) && !targetsLocked.Contains(i) && IsInDistance(i))
                     {
                         targetsLocked.Add(i);
+                        if (sp.isBoss(Main.npc[i].whoAmI))
+                        {
+                            shotlockedToBoss = true;
+                        }
                     }
                 }
 
             }
-            else
+            else if(targetsLocked.Count>0)
             {
-                sp.SetContactinvulnerability(15);
 
                 if (originalPos == Vector2.Zero)
                 {
@@ -82,6 +88,16 @@ namespace KingdomTerrahearts.Projectiles
                     p.Center =Vector2.Lerp(originalPos, Main.npc[targetsLocked[curTarget]].Center,Math.Clamp(Projectile.ai[1]/4f,0,1));
                     p.velocity = Vector2.Zero;
                     p.gravity = 0;
+                }
+                if (shotlockedToBoss && Projectile.timeLeft<2 && addedTimeBecauseBoss>0)
+                {
+                    Projectile.hide = true;
+                    Projectile.timeLeft += 2;
+                    addedTimeBecauseBoss -= 1;
+                }
+                else
+                {
+                    sp.SetContactinvulnerability(15);
                 }
             }
         }

@@ -30,7 +30,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
 
         bool defeated;
         int defeatTime = 75;
-        ProjectileSource_NPC s;
+        EntitySource_Parent s;
 
         int hitRecoil;
         int hitCombo;
@@ -66,7 +66,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
             NPC.DeathSound = SoundID.NPCDeath1;
             Music = MusicLoader.GetMusicSlot("KingdomTerrahearts/Sounds/Music/Vector to the Heaven");
 
-            s = new ProjectileSource_NPC(NPC);
+            s = new EntitySource_Parent(NPC);
             NPC.ai[0] = 50;
         }
 
@@ -109,7 +109,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
                 }else if (defeatTime <= 0)
                 {
                     NPC.life = -1;
-                    NPC.timeLeft = 1;
+                    NPC.timeLeft = 0;
                     defeatTime = 1000;
                 }
 
@@ -210,6 +210,10 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
 
         public void NPCHit()
         {
+            if (defeated)
+            {
+                return;
+            }
             if (hitCombo < 7)
             {
                 if (curAttack != 0)
@@ -342,7 +346,8 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
             }
 
 
-            if (keyProj != -1 && Main.projectile[keyProj].active)
+            if (keyProj != -1 && Main.projectile[keyProj].active && 
+                Main.projectile[keyProj].type==ModContent.ProjectileType<Projectiles.EnemyKingdomKey>())
             {
                 Main.projectile[keyProj].spriteDirection = NPC.spriteDirection;
                 GrabKey(frame);
@@ -394,14 +399,11 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
 
-            if (!Main.hardMode)
-            {
-                int[] dropOptions = new int[] { ModContent.ItemType<Items.Weapons.Keyblade_Kingdom>(), ModContent.ItemType<Items.Armor.orgCoat>(), ModContent.ItemType<Items.seasaltIcecream>() };
-                npcLoot.Add(ItemDropRule.OneFromOptions(3, dropOptions));
+            int[] dropOptions = new int[] { ModContent.ItemType<Items.Weapons.Keyblade_Kingdom>(), ModContent.ItemType<Items.Armor.orgCoat>(), ModContent.ItemType<Items.seasaltIcecream>() };
+            npcLoot.Add(ItemDropRule.OneFromOptions(3, dropOptions));
 
 
-                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.twilightStone>(), 1, 5, 15));
-            }
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.twilightStone>(), 1, 5, 15));
         }
 
         public override bool CheckDead()
@@ -418,9 +420,9 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
                 }
                 else
                 {
-                    NPC.NewNPC((int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<xion_secondPhase>(), Target: NPC.target);
+                    NPC.NewNPC(s,(int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<xion_secondPhase>(), Target: NPC.target);
                     NPC.timeLeft = (NPC.timeLeft > 5) ? 1 : NPC.timeLeft-1;
-                    defeatTime = 0;
+                    defeatTime = 10;
                 }
             }
             defeated = true;
@@ -457,7 +459,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
         bool defeated;
         int defeatTime = 75;
 
-        ProjectileSource_NPC s;
+        EntitySource_Parent s;
 
         void Target()
         {
@@ -490,7 +492,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
             NPC.DeathSound = SoundID.NPCDeath1;
             Music = MusicLoader.GetMusicSlot("KingdomTerrahearts/Sounds/Music/Vector to the Heaven");
 
-            s = new ProjectileSource_NPC(NPC);
+            s = new EntitySource_Parent(NPC);
             NPC.ai[0] = 50;
         }
 
@@ -529,7 +531,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
                 else if (defeatTime <= 0)
                 {
                     NPC.life = -1;
-                    NPC.timeLeft = 1;
+                    NPC.timeLeft = 0;
                     defeatTime = 1000;
                 }
 
@@ -795,11 +797,11 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
             {
                 if (!defeated)
                 {
-                    ProjectileSource_NPC s = new ProjectileSource_NPC(NPC);
+                    EntitySource_Parent s = new EntitySource_Parent(NPC);
                     Projectile.NewProjectile(s, Main.player[NPC.target].Center, Vector2.Zero, ModContent.ProjectileType<FinalXionSpawnProjectile>(), 0, 0);
                     NPC.timeLeft = (NPC.timeLeft > 5) ? 1 : NPC.timeLeft;
                     defeated = true;
-                    defeatTime = 0;
+                    defeatTime = 10;
                 }
             }
             KingdomWorld.downedXionPhases[1] = true;
@@ -865,6 +867,8 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
                 Projectile.alpha = (int)((50f-Projectile.timeLeft*2f)*25f);
             }
 
+            KingdomTerrahearts.instance.SetCameraForAllPlayers(Vector2.Zero, shakeForce: 3,shakeSpeed:2);
+
         }
 
         public void SpawnFinalXion()
@@ -872,14 +876,16 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
 
             if (TargetActive())
             {
-                NPC.NewNPC((int)Main.player[target].Center.X, (int)Main.player[target].Center.Y + 300, ModContent.NPCType<xion_finalPhase>());
+                EntitySource_Parent s = new EntitySource_Parent(Projectile);
+                NPC.NewNPC(s,(int)Main.player[target].Center.X, (int)Main.player[target].Center.Y + 300, ModContent.NPCType<xion_finalPhase>());
             }
             else
             {
                 GetTarget();
                 if (Main.player[target].active && !Main.player[target].dead)
                 {
-                    NPC.NewNPC((int)Main.player[target].Center.X, (int)Main.player[target].Center.Y + 300, ModContent.NPCType<xion_finalPhase>());
+                    EntitySource_Parent s = new EntitySource_Parent(Projectile);
+                    NPC.NewNPC(s,(int)Main.player[target].Center.X, (int)Main.player[target].Center.Y + 300, ModContent.NPCType<xion_finalPhase>());
                 }
             }
         }
@@ -935,7 +941,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
 
 
     [AutoloadBossHead]
-    public class xion_finalPhase : ModNPC
+    public class xion_finalPhase : NPC3D
     {
 
         Player player;
@@ -952,18 +958,14 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
         Vector2[] armPivot = new Vector2[] { new Vector2(),new Vector2()};
 
         bool defeated;
-        int defeatTime = 75;
+        int defeatTime = 5;
 
-        ProjectileSource_NPC s;
+        EntitySource_Parent s;
 
-        void Target()
-        {
-            player = Main.player[NPC.target];
-        }
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Xion");
+            DisplayName.SetDefault("Ultimate Xion");
             Main.npcFrameCount[NPC.type] = 1;
         }
 
@@ -989,8 +991,9 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
             NPC.DeathSound = SoundID.NPCDeath1;
             Music = MusicLoader.GetMusicSlot("KingdomTerrahearts/Sounds/Music/Vector to the Heaven");
 
-            s = new ProjectileSource_NPC(NPC);
+            s = new EntitySource_Parent(NPC);
             NPC.ai[0] = 50;
+            depth = 0.1f;
         }
 
         public override void DrawBehind(int index)
@@ -1000,7 +1003,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            Rectangle rect = new Rectangle((int)(NPC.position.X - Main.screenPosition.X - (NPC.width / 2)), (int)(NPC.position.Y - Main.screenPosition.Y), NPC.width * 2, NPC.height);
+            Rectangle rect = new Rectangle((int)(NPC.position.X - Main.screenPosition.X - (NPC.width/4*3) + Get3DOffsetWithPosition().X), (int)(NPC.position.Y - Main.screenPosition.Y+Get3DOffsetWithPosition().Y), NPC.width * 2, NPC.height);
             spriteBatch.Draw((Texture2D)ModContent.Request<Texture2D>("KingdomTerrahearts/NPCs/Bosses/Org13/xion_finalPhase"), rect, Color.White);
             return false;
         }
@@ -1016,6 +1019,11 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
             attackSpeedMult += numPlayers * 0.5f;
         }
 
+        void Target()
+        {
+            player = Main.player[NPC.target];
+        }
+
         public override void AI()
         {
 
@@ -1023,6 +1031,13 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
             NPC.TargetClosest();
             Target();
             DespawnHandler();
+
+            if(player!=null && player.active)
+            {
+                SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
+                sp.SetTrapLimits(NPC.Center - new Vector2(250, 250), NPC.Center + new Vector2(250, 0));
+                sp.fightingInArena = true;
+            }
 
             if (NPC.timeLeft <= 10)
             {
@@ -1036,7 +1051,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
                 if (defeatTime <= 0)
                 {
                     NPC.life = -1;
-                    NPC.timeLeft = 1;
+                    NPC.timeLeft = 0;
                     defeatTime = 1000;
                 }
 
@@ -1052,18 +1067,22 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
                     armProj[i] = Projectile.NewProjectile(s,NPC.Center, NPC.velocity, ModContent.ProjectileType<Projectiles.BossStuff.xion_finalPhase_arms>(), attacksDamage[curAttack], 1);
                     Projectile.NewProjectile(s,NPC.Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.darkPortal>(), 0, 0);
                 }
+                else if (!Main.projectile[armProj[i]].active || Main.projectile[armProj[i]].type != ModContent.ProjectileType<Projectiles.BossStuff.xion_finalPhase_arms>())
+                {
+                    armProj[i] = Projectile.NewProjectile(s, NPC.Center, NPC.velocity, ModContent.ProjectileType<Projectiles.BossStuff.xion_finalPhase_arms>(), attacksDamage[curAttack], 1);
+                }
                 else
                 {
                     Main.projectile[armProj[i]].timeLeft = 5;
                     switch (i)
                     {
                         case 0:
-                            Main.projectile[armProj[i]].Center = new Vector2(NPC.Center.X - 157f, NPC.Center.Y - 295f);
+                            Main.projectile[armProj[i]].Center = new Vector2(NPC.Center.X - 157f - (NPC.width / 4), NPC.Center.Y - 295f)+Get3DOffsetWithPosition() ;
                             Main.projectile[armProj[i]].spriteDirection = 1;
                             Main.projectile[armProj[i]].rotation = -(float)Math.PI / 2; 
                             break;
                         case 1:
-                            Main.projectile[armProj[i]].Center = new Vector2(NPC.Center.X + 157f, NPC.Center.Y - 295f);
+                            Main.projectile[armProj[i]].Center = new Vector2(NPC.Center.X + 157f - (NPC.width / 4), NPC.Center.Y - 295f) + Get3DOffsetWithPosition();
                             Main.projectile[armProj[i]].spriteDirection = -1;
                             Main.projectile[armProj[i]].rotation = (float)Math.PI / 2;
                             break;
@@ -1269,6 +1288,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
             {
                 NPC.TargetClosest(false);
                 player = Main.player[NPC.target];
+                player.GetModPlayer<SoraPlayer>().fightingInArena = false;
                 if (!player.active || player.dead || player.statLife == 0)
                 {
                     NPC.velocity = new Vector2(0, 100000);
@@ -1284,10 +1304,11 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
 
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            int[] dropOptions = new int[] { ModContent.ItemType<Items.Weapons.Keyblade_FinalXion>(),ModContent.ItemType<Items.Armor.orgCoat>(),ModContent.ItemType<Items.seasaltIcecream>()};
+            int[] dropOptions = new int[] { ModContent.ItemType<Items.Weapons.Keyblade_FinalXion>(),ModContent.ItemType<Items.Armor.orgCoat>(),ModContent.ItemType<Items.seasaltIcecream>(),ModContent.ItemType<Items.Weapons.Keyblade_Kingdom>()};
             npcLoot.Add(ItemDropRule.OneFromOptions(3,dropOptions));
 
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.twilightCrystal>(), 1, 50, 137));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.twilightCrystal>(), 1, 5, 10));
+            npcLoot.Add(ItemDropRule.Common(ItemID.LightShard, 1, 3, 5));
 
             npcLoot.Add(ItemDropRule.Common(ItemID.BlueSolution, 1, 10, 15));
         }

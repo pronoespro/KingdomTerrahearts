@@ -1,10 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "IlWSteG1Bjz/7NjCouSsJJkfzwc7Dki0SGi4uu+Qw2KH5KFzD6ykUOw65+ggtoHFZQvqOFtTNHo2KjAoeCmBxg==",
+  "dgSpecHash": "VbYp+yaI3PzkD5SMwCDLx//qatP/wm8dPdfTWD96oE80R7/fCvcLW91VPLSZB4JkJ0nekHIXIR4U25afeB5fXg==",
   "success": true,
   "projectFilePath": "C:\\Users\\cesar\\Documents\\My Games\\Terraria\\ModLoader\\Beta\\Mod Sources\\KingdomTerrahearts\\KingdomTerrahearts.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\cesar\\.nuget\\packages\\tmodloader.codeassist\\0.1.3\\tmodloader.codeassist.0.1.3.nupkg.sha512"
-  ],
+  "expectedPackageFiles": [],
   "logs": []
 }

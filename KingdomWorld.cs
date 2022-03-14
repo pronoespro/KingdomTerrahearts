@@ -33,9 +33,35 @@ namespace KingdomTerrahearts
         public void Initialize()
         {
 
-            customInvasionUp = true;
+            customInvasionUp = false;
             downedCustomInvasion = false;
 
+        }
+
+        public override void SaveWorldData(TagCompound tag)
+        {
+            if (customInvasionUp && Main.invasionSize>0 && Main.invasionSizeStart>0)
+            {
+                tag.Add("invasionUp",true);
+                tag.Add("invationSize", Main.invasionSize);
+                tag.Add("invationInitSize", Main.invasionSizeStart);
+            }
+            else
+            {
+                tag.Remove("invasionUp");
+                tag.Remove("invationSize");
+            }
+        }
+
+        public override void LoadWorldData(TagCompound tag)
+        {
+            if (tag.ContainsKey("invasionUp"))
+            {
+                customInvasionUp = true;
+                Main.invasionSize = tag.GetAsInt("invationSize");
+                Main.invasionSizeStart = tag.GetAsInt("invationInitSize");
+                ThousandHeartlessInvasion.invasionSize = Main.invasionSizeStart;
+            }
         }
 
         //Sync downed data
@@ -51,7 +77,7 @@ namespace KingdomTerrahearts
             {
                 flags[flagNum++] = downedXionPhases[i];
             }
-            flags[flagNum++] = customInvasionUp;
+            //flags[flagNum++] = customInvasionUp;
             writer.Write(flags);
         }
 
@@ -64,28 +90,13 @@ namespace KingdomTerrahearts
             for (int i = 0; i < downedXionPhases.Length; i++) {
                 downedXionPhases[i] =flags[2+i];
             }
-            customInvasionUp = flags[3];
+            //customInvasionUp = flags[3];
         }
 
         //bool createdDonald;
 
         public override void PreUpdateWorld()
         {
-            /*
-            if (!createdDonald)
-            {
-                Mod crowdMod = ModLoader.GetMod("MobNPCs");
-                if (crowdMod != null)
-                {
-                    crowdMod.Call("CreateCrowdSpace", ("NPCs/TownNPCs/donald"), 36, 1456 / 26, 0, 0, 500, 1, 1, 1f, 1f);
-                }
-                else
-                {
-                    Main.NewText("No crowd");
-                }
-                createdDonald = true;
-            }
-            */
 
             if (customInvasionUp)
             {

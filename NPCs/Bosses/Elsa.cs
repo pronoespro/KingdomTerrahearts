@@ -10,6 +10,7 @@ using Terraria.DataStructures;
 using Terraria.Audio;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.GameContent.Creative;
+using Terraria.GameContent.Bestiary;
 
 namespace KingdomTerrahearts.NPCs.Bosses
 {
@@ -46,6 +47,20 @@ namespace KingdomTerrahearts.NPCs.Bosses
             Music = MusicLoader.GetMusicSlot("KingdomTerrahearts/Sounds/Music/The 13th Struggle");
         }
 
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            // We can use AddRange instead of calling Add multiple times in order to add multiple items at once
+            bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[] {
+				// Sets the preferred biomes of this town NPC listed in the bestiary.
+				// With Town NPCs, you usually set this to what biome it likes the most in regards to NPC happiness.
+				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Snow,
+
+				// Sets your NPC's flavor text in the bestiary.
+				new FlavorTextBestiaryInfoElement("The darkness in Elsa's heart given shape" +
+                "\nWatch out for it's icy attacks, they will freeze you")
+            });
+        }
+
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
             NPC.lifeMax = (int)(NPC.lifeMax * 0.625f * bossLifeScale);
@@ -56,7 +71,7 @@ namespace KingdomTerrahearts.NPCs.Bosses
 
         public override void AI()
         {
-            ProjectileSource_NPC s = new ProjectileSource_NPC(NPC);
+            EntitySource_Parent s = new EntitySource_Parent(NPC);
 
             NPC.TargetClosest();
             DespawnHandler();
@@ -295,7 +310,7 @@ namespace KingdomTerrahearts.NPCs.Bosses
         {
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<elsasHeart>(), 1, 2, 5));
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Weapons.Keyblade_ice>()));
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.frostCrystal>(), 1, 1, 15));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.frostGem>(), 1, 1, 15));
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.frostStone>(), 1, 15, 50));
         }
 

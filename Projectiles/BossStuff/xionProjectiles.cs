@@ -90,8 +90,13 @@ namespace KingdomTerrahearts.Projectiles.BossStuff
 
         public override void AI()
         {
+            foreach (Cloud c in Main.cloud)
+            {
+                c.position += new Vector2(MathF.Sign(c.position.X - (Projectile.Center.X - Main.screenPosition.X)) * 50f, 0);
+            }
+            KingdomTerrahearts.instance.SetCameraForAllPlayers(Vector2.Zero, shakeForce: 2,shakeSpeed:2);
 
-            for(int i = 0; i < 50; i++)
+            for (int i = 0; i < 50; i++)
             {
                 Dust.NewDust(Projectile.position, Projectile.width, Projectile.height * 100, DustID.GoldCoin);
             }

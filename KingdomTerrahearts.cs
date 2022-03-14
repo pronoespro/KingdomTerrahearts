@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System;
 using KingdomTerrahearts.Extra;
+using Terraria.Localization;
 
 namespace KingdomTerrahearts
 {
@@ -43,6 +44,9 @@ namespace KingdomTerrahearts
 		internal KeybladeLeveling levelUpUI;
 
 		public static KingdomTerrahearts instance;
+
+		public static float screenShakeStrength = 1;
+		public static bool canDoCutscenes;
 
 		private GameTime _LastUIUpdateGameTime;
 
@@ -107,10 +111,13 @@ namespace KingdomTerrahearts
 
 			if (!Main.dedServ)
 			{
-				orgCoatSlots = new int[3];
+				orgCoatSlots = new int[5];
 				orgCoatSlots[0] = AddEquipTexture(new Items.Armor.orgCoat(), EquipType.Body, "KingdomTerrahearts/Items/Armor/orgCoat_Body");
 				orgCoatSlots[1] = AddEquipTexture(new Items.Armor.orgCoat(), EquipType.Legs, "KingdomTerrahearts/Items/Armor/orgCoat_Legs");
 				orgCoatSlots[2] = AddEquipTexture(new Items.Armor.orgCoat(), EquipType.Head, "KingdomTerrahearts/Items/Armor/orgCoat_Head");
+
+				orgCoatSlots[3] = AddEquipTexture(new Items.Armor.orgCoat(), EquipType.Body, "KingdomTerrahearts/Items/Armor/soraJacket_Body");
+				orgCoatSlots[4] = AddEquipTexture(new Items.Armor.orgCoat(), EquipType.Legs, "KingdomTerrahearts/Items/Armor/soraClothes_Legs");
 
 
 
@@ -181,9 +188,9 @@ namespace KingdomTerrahearts
 
 					self.velocity.Y = 0;
 					self.fallStart = (int)(self.position.Y / 16f);
-					self.position.Y = sp.collisionPoints.Y;
+					self.position.Y = sp.collisionPoints.Y-self.height/2;
+					self.legFrame.Y = 0;
 					//self.position.Y = npc.position.Y - self.height + 4;
-					// orig(self);
 				}
 
 			}
@@ -194,10 +201,9 @@ namespace KingdomTerrahearts
 				{
 					//self.gfxOffY = npc.gfxOffY;
 					self.velocity.Y = 0;
-					self.fallStart = (int)(self.position.Y / 16f);
+					self.fallStart = (int)((self.Center.Y) / 16f);
 					self.position.Y = sp.collisionPoints.Y - self.height/2;
 					//self.position.Y = npc.position.Y - self.height + 4;
-					// orig(self);
 				}
 
 			}
@@ -211,7 +217,6 @@ namespace KingdomTerrahearts
 					//self.fallStart = (int)(self.position.Y / 16f);
 					self.position.X = sp.collisionPoints.X - self.width/2;
 					//self.position.Y = npc.position.Y - self.height + 4; - self.width -
-					// orig(self);
 				}
 
 			}
@@ -225,11 +230,9 @@ namespace KingdomTerrahearts
 					//self.fallStart = (int)(self.position.Y / 16f);
 					self.position.X = sp.collisionPoints.X;
 					//self.position.Y = npc.position.Y - self.height + 4; - self.width -
-					// orig(self);
 				}
 
 			}
-
 			orig(self);
 		}
 
@@ -270,6 +273,7 @@ namespace KingdomTerrahearts
 			{
 				levelUpInterface.Update(gameTime);
 			}
+
 		}
 
         public void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
@@ -605,6 +609,39 @@ namespace KingdomTerrahearts
 			.AddIngredient(ModContent.ItemType<Items.Weapons.Joke.Keyblade_woodenStick>())
 			.Register();
 
+
+			CreateRecipe(ItemID.TissueSample)
+			.AddIngredient(ModContent.ItemType<Items.Materials.writhingShard>(),5)
+			.AddIngredient(ItemID.ShadowScale)
+			.AddTile(TileID.MythrilAnvil)
+			.Register();
+
+			CreateRecipe(ItemID.ShadowScale)
+			.AddIngredient(ModContent.ItemType<Items.Materials.writhingShard>(),5)
+			.AddIngredient(ItemID.TissueSample)
+			.AddTile(TileID.MythrilAnvil)
+			.Register();
+
+			CreateRecipe(ItemID.DemoniteOre)
+			.AddIngredient(ModContent.ItemType<Items.Materials.writhingShard>(), 2)
+			.AddIngredient(ItemID.CrimtaneOre)
+			.AddTile(TileID.MythrilAnvil)
+			.Register();
+
+			CreateRecipe(ItemID.CrimtaneOre)
+			.AddIngredient(ModContent.ItemType<Items.Materials.writhingShard>(), 2)
+			.AddIngredient(ItemID.DemoniteOre)
+			.AddTile(TileID.MythrilAnvil)
+			.Register();
+
+			CreateRecipe(ItemID.InfernoFork)
+			//.AddCondition(new Recipe.Condition(NetworkText.FromLiteral("Journey Mode only"), (Recipe r) => Main.hardMode))
+			.AddIngredient(ModContent.ItemType<Items.Materials.blazingStone>(), 2)
+			.AddIngredient(ItemID.HellstoneBar)
+			.AddIngredient(ItemID.DemonScythe)
+			.AddTile(TileID.MythrilAnvil)
+			.Register();
+
 		}
 
 		public bool AnyProjectile(int type)
@@ -628,6 +665,19 @@ namespace KingdomTerrahearts
             }
 
 			return false;
+        }
+
+		public void SetCameraForAllPlayers(Vector2 pos,float zoom=-1,float shakeForce=0,float shakeSpeed=1,float percentageChange=10)
+        {
+			SoraPlayer sp;
+			for(int i = 0; i < Main.maxPlayers; i++)
+            {
+                if (Main.player[i].active)
+                {
+					sp = Main.player[i].GetModPlayer<SoraPlayer>();
+					sp.ModifyCutsceneCamera(pos, zoom, shakeForce,shakeSpeed,percentageChange);
+                }
+            }
         }
 
 

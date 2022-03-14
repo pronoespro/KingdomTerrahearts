@@ -55,7 +55,7 @@ namespace KingdomTerrahearts
         public bool skipTime = false;
         //Buff/Debuff related
         public bool enlightened = false;
-        public bool fightingInBattleground = false;
+        public bool fightingInBattlegrounds,fightingInArena;
         public Vector2 initPosTrap, endPosTrap;
         //Costume related
         public int curCostume = 0;
@@ -108,6 +108,15 @@ namespace KingdomTerrahearts
         //Extra collision realated
         public bool collisionUp, collisionDown, collisionLeft, collisionRight;
 
+        //Cutscene related
+        public int noControlTime = 0;
+        public Vector2 cameraOffset;
+        public float cameraZoom;
+        public float screenShakeStrength;
+        public float screenShakeSpeed;
+        public float customCameraPercent;
+        public bool midCutscene;
+
         //Personal and not KH related
         public bool invincible;
         public bool hasZafi;
@@ -127,18 +136,18 @@ namespace KingdomTerrahearts
 
         public bool IsInvulnerable()
         {
-            return curInvulnerabilityFrames > 0;
+            return curInvulnerabilityFrames > 0 || noControlTime>0;
         }
 
         public void ResetTimers()
         {
             SCcurReload = 0;
             AHPcurReload = 0;
-            curInvulnerabilityFrames = 0;
         }
 
         public override void ResetEffects()
         {
+            ModifyCutsceneCamera(Vector2.Zero);
 
             curCostume = -1;
 
@@ -174,7 +183,12 @@ namespace KingdomTerrahearts
             hasZafi = false;
             canTPToSavePoints = false;
 
-            collisionRight = collisionLeft = collisionUp = collisionDown = false;
+            collisionRight = false;
+            collisionLeft = false;
+            collisionUp = false;
+            collisionDown = false;
+            
+            midCutscene = false;
 
         }
 
@@ -204,238 +218,248 @@ namespace KingdomTerrahearts
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
-            /*
-            Go To Space
-            KingdomWorld kingdom = mod.GetModWorld("KingdomWorld") as KingdomWorld;
-            Main.NewText(Main.worldName);
-            kingdom.GoToSpace();
-            Go To world
-            KingdomWorld kingdom = mod.GetModWorld("KingdomWorld") as KingdomWorld;
-            Main.NewText(Main.worldName);
-            kingdom.GoToMainDimension();
-            */
-
-            #region music
-            up = down = left = right = false;
-            justPressDown= justPressLeft= justPressRight= justPressUp= false;
-
-            if (KingdomTerrahearts.MusicUpKey.JustPressed)
+            if (noControlTime <= 0)
             {
-                justPressUp = true;
                 /*
-                Main.invasionDelay = 0;
-                Main.invasionProgress = 0;
-                Main.invasionProgressMax = 0;
-                Main.invasionSize = 0;
-                Main.invasionType = -1;
-                ThousandHeartlessInvasion.StartInvasion();
+                Go To Space
+                KingdomWorld kingdom = mod.GetModWorld("KingdomWorld") as KingdomWorld;
+                Main.NewText(Main.worldName);
+                kingdom.GoToSpace();
+                Go To world
+                KingdomWorld kingdom = mod.GetModWorld("KingdomWorld") as KingdomWorld;
+                Main.NewText(Main.worldName);
+                kingdom.GoToMainDimension();
                 */
 
-            } else if (KingdomTerrahearts.MusicLeftKey.JustPressed)
-            {
-                justPressLeft = true;
-            }
-            else if (KingdomTerrahearts.MusicDownKey.JustPressed)
-            {
-                justPressDown = true;
-            }
-            else if (KingdomTerrahearts.MusicRightKey.JustPressed)
-            {
-                justPressRight = true;
-            }
+                #region music
+                up = down = left = right = false;
+                justPressDown = justPressLeft = justPressRight = justPressUp = false;
 
-            if (KingdomTerrahearts.MusicUpKey.Current)
-            {
-                up = true;
-            }
-            else if (KingdomTerrahearts.MusicLeftKey.Current)
-            {
-                left= true;
-            }
-            else if (KingdomTerrahearts.MusicDownKey.Current)
-            {
-                down= true;
-            }
-            else if (KingdomTerrahearts.MusicRightKey.Current)
-            {
-                right= true;
-            }
-
-            #endregion
-
-            #region party
-            if (KingdomTerrahearts.PartySelectHotkey.JustPressed)
-            {
-                KingdomTerrahearts.instance.TogglePartyUI();
-            }
-            #endregion
-
-            #region movement
-
-            if (Player.mount.Type == -1)
-            {
-                if(KingdomTerrahearts.GuardHotKey.JustPressed && guardTime < -30 && lastHeldKeyblade>0 && !invincible && curInvulnerabilityFrames<=0)
+                if (KingdomTerrahearts.MusicUpKey.JustPressed)
                 {
-                    PlayGuardSound();
-                    guardTime = 30;
+                    justPressUp = true;
+                    /*
+                    Main.invasionDelay = 0;
+                    Main.invasionProgress = 0;
+                    Main.invasionProgressMax = 0;
+                    Main.invasionSize = 0;
+                    Main.invasionType = -1;
+                    ThousandHeartlessInvasion.StartInvasion();
+                    */
+
                 }
-                if (canCastHeal && castHealAmount > 0 && Player.statLife < (Player.statLifeMax / 4 * 3) && !Player.HasBuff(BuffID.ManaSickness))
+                else if (KingdomTerrahearts.MusicLeftKey.JustPressed)
                 {
+                    justPressLeft = true;
+                }
+                else if (KingdomTerrahearts.MusicDownKey.JustPressed)
+                {
+                    justPressDown = true;
+                }
+                else if (KingdomTerrahearts.MusicRightKey.JustPressed)
+                {
+                    justPressRight = true;
+                }
 
-                    if (triggersSet.QuickHeal && (Player.HasBuff(BuffID.PotionSickness)|| hasHealingPotion()) && (((Player.statManaMax > 0) ? Player.statMana / Player.statManaMax * 100 : 1) > castHealCost/ Player.statManaMax || (Player.statMana>= Player.statManaMax/2 && castHealCost> Player.statManaMax/2)))
+                if (KingdomTerrahearts.MusicUpKey.Current)
+                {
+                    up = true;
+                }
+                else if (KingdomTerrahearts.MusicLeftKey.Current)
+                {
+                    left = true;
+                }
+                else if (KingdomTerrahearts.MusicDownKey.Current)
+                {
+                    down = true;
+                }
+                else if (KingdomTerrahearts.MusicRightKey.Current)
+                {
+                    right = true;
+                }
+
+                #endregion
+
+                #region party
+                if (KingdomTerrahearts.PartySelectHotkey.JustPressed)
+                {
+                    KingdomTerrahearts.instance.TogglePartyUI();
+                }
+                #endregion
+
+                #region movement
+
+                if (Player.mount.Type == -1)
+                {
+                    if (KingdomTerrahearts.GuardHotKey.JustPressed && guardTime < -30 && lastHeldKeyblade > 0 && !invincible && curInvulnerabilityFrames <= 0)
                     {
-
-                        Player.statMana = 0;
-                        Player.HealEffect((int)((float)castHealAmount / 100f * (float)Player.statLifeMax));
-                        Player.statLife += (int)((float)castHealAmount / 100f * (float)Player.statLifeMax);
-                        curInvulnerabilityFrames = (curInvulnerabilityFrames < castHealInvulnerabilityTime) ? castHealInvulnerabilityTime : curInvulnerabilityFrames;
-                        Player.AddBuff(BuffID.ManaSickness, 500);
-
+                        PlayGuardSound();
+                        guardTime = 30;
                     }
-
-                }
-
-                if (canGlide)
-                {
-                    if (triggersSet.Jump && curGlideTime > 0 && Player.velocity.Y > glideFallSpeed)
+                    if (canCastHeal && castHealAmount > 0 && Player.statLife < (Player.statLifeMax / 4 * 3) && !Player.HasBuff(BuffID.ManaSickness) )
                     {
-                        curGlideTime--;
-                        Player.velocity.Y = (Player.velocity.Y > glideFallSpeed) ? glideFallSpeed : Player.velocity.Y;
-                        Player.slowFall = true;
-                        Player.noFallDmg = true;
-                    }
-                }
 
-                curDashReload--;
-                curDashReload = (curDashReload > dashReloadSpeed) ? dashReloadSpeed : curDashReload;
-
-                if (canDash && Player.dash <= 0 && curDashReload <= 0)
-                {
-                    if (triggersSet.Left || triggersSet.Right)
-                    {
-                        int curPress = (triggersSet.Left) ? -1 : 1;
-                        tapTime++;
-                        if (tapped)
+                        if (triggersSet.QuickHeal && ((Player.HasBuff(BuffID.PotionSickness)  && hasHealingPotion())|| 
+                            !hasHealingPotion()) && (((Player.statManaMax > 0) ? Player.statMana / Player.statManaMax * 100 : 1) > castHealCost / Player.statManaMax || (Player.statMana >= Player.statManaMax / 2 && castHealCost > Player.statManaMax / 2)))
                         {
-                            if (lastPress == curPress && (canDashMidAir || Math.Abs(Player.velocity.Y) < 0.15f))
+
+                            Player.statMana = 0;
+                            Player.HealEffect((int)((float)castHealAmount / 100f * (float)Player.statLifeMax));
+                            Player.statLife += (int)((float)castHealAmount / 100f * (float)Player.statLifeMax);
+                            curInvulnerabilityFrames = (curInvulnerabilityFrames < castHealInvulnerabilityTime) ? castHealInvulnerabilityTime : curInvulnerabilityFrames;
+                            Player.AddBuff(BuffID.ManaSickness, 500);
+
+                        }
+
+                    }
+
+                    if (canGlide)
+                    {
+                        if (triggersSet.Jump && curGlideTime > 0 && Player.velocity.Y > glideFallSpeed)
+                        {
+                            curGlideTime--;
+                            Player.velocity.Y = (Player.velocity.Y > glideFallSpeed) ? glideFallSpeed : Player.velocity.Y;
+                            Player.slowFall = true;
+                            Player.noFallDmg = true;
+                        }
+                    }
+
+                    curDashReload--;
+                    curDashReload = (curDashReload > dashReloadSpeed) ? dashReloadSpeed : curDashReload;
+
+                    if (canDash && Player.dash <= 0 && curDashReload <= 0)
+                    {
+                        if (triggersSet.Left || triggersSet.Right)
+                        {
+                            int curPress = (triggersSet.Left) ? -1 : 1;
+                            tapTime++;
+                            if (tapped)
                             {
-                                if (Math.Abs(Player.velocity.X) < dashSpeed + Player.maxRunSpeed)
+                                if (lastPress == curPress && (canDashMidAir || Math.Abs(Player.velocity.Y) < 0.15f))
                                 {
-                                    Player.velocity.X += (triggersSet.Left) ? -dashSpeed : dashSpeed;
-                                    curDashReload = dashReloadSpeed;
-                                    AddInvulnerability(dashInvulnerability);
+                                    if (Math.Abs(Player.velocity.X) < dashSpeed + Player.maxRunSpeed)
+                                    {
+                                        Player.velocity.X += (triggersSet.Left) ? -dashSpeed : dashSpeed;
+                                        curDashReload = dashReloadSpeed;
+                                        AddInvulnerability(dashInvulnerability);
+                                    }
                                 }
+                                tapped = false;
                             }
-                            tapped = false;
-                        }
-                        if (tapTime < 30)
-                        {
-                            lastPress = curPress;
-                        }
-                        else
-                        {
-                            lastPress = 0;
-                        }
-                    }
-                    else
-                    {
-                        if (lastPress != 0)
-                        {
-                            tapTime = 0;
-                            reTapTime++;
-                            tapped = (reTapTime < 15);
+                            if (tapTime < 30)
+                            {
+                                lastPress = curPress;
+                            }
+                            else
+                            {
+                                lastPress = 0;
+                            }
                         }
                         else
                         {
-                            lastPress = 0;
-                            tapTime = 0;
-                            reTapTime = 0;
+                            if (lastPress != 0)
+                            {
+                                tapTime = 0;
+                                reTapTime++;
+                                tapped = (reTapTime < 15);
+                            }
+                            else
+                            {
+                                lastPress = 0;
+                                tapTime = 0;
+                                reTapTime = 0;
+                            }
                         }
                     }
-                }
 
-                if (canDoubleJump && doubleJumpHeight > 0)
-                {
-
-                    if (Player.velocity.Y == 0)
-                    {
-                        jumped = false;
-                        jumpCount = 0;
-                    }
-                    else
+                    if (canDoubleJump && doubleJumpHeight > 0)
                     {
 
-                        if (triggersSet.Jump && Player.wingTime <= 0)
+                        if (Player.velocity.Y == 0)
                         {
-                            int initJump = 0;
-                            int extradoubleJumps = 0;
-                            if (Player.canJumpAgain_Blizzard)
-                            {
-                                extradoubleJumps++;
-                                initJump++;
-                            }
-                            if (Player.canJumpAgain_Cloud)
-                            {
-                                extradoubleJumps++;
-                                initJump++;
-                            }
-                            if (Player.canJumpAgain_Fart)
-                            {
-                                extradoubleJumps++;
-                                initJump++;
-                            }
-                            if (Player.canJumpAgain_Sail)
-                            {
-                                extradoubleJumps++;
-                                initJump++;
-                            }
-                            if (Player.canJumpAgain_Sandstorm)
-                            {
-                                extradoubleJumps++;
-                                initJump++;
-                            }
-                            if (Player.canJumpAgain_Unicorn)
-                            {
-                                extradoubleJumps++;
-                                initJump++;
-                            }
-                            if (Player.canJumpAgain_WallOfFleshGoat)
-                            {
-                                extradoubleJumps++;
-                                initJump++;
-                            }
-                            if (Player.canJumpAgain_Basilisk)
-                            {
-                                extradoubleJumps++;
-                                initJump++;
-                            }
-
-                            if (jumped && jumpCount < doubleJumpQuantity + extradoubleJumps)
-                            {
-                                Player.velocity.Y = (jumpCount >= initJump) ? -doubleJumpHeight : Player.velocity.Y;
-                                jumpCount++;
-                            }
-
                             jumped = false;
+                            jumpCount = 0;
                         }
                         else
                         {
-                            jumped = true;
+
+                            if (triggersSet.Jump && Player.wingTime <= 0)
+                            {
+                                int initJump = 0;
+                                int extradoubleJumps = 0;
+                                if (Player.canJumpAgain_Blizzard)
+                                {
+                                    extradoubleJumps++;
+                                    initJump++;
+                                }
+                                if (Player.canJumpAgain_Cloud)
+                                {
+                                    extradoubleJumps++;
+                                    initJump++;
+                                }
+                                if (Player.canJumpAgain_Fart)
+                                {
+                                    extradoubleJumps++;
+                                    initJump++;
+                                }
+                                if (Player.canJumpAgain_Sail)
+                                {
+                                    extradoubleJumps++;
+                                    initJump++;
+                                }
+                                if (Player.canJumpAgain_Sandstorm)
+                                {
+                                    extradoubleJumps++;
+                                    initJump++;
+                                }
+                                if (Player.canJumpAgain_Unicorn)
+                                {
+                                    extradoubleJumps++;
+                                    initJump++;
+                                }
+                                if (Player.canJumpAgain_WallOfFleshGoat)
+                                {
+                                    extradoubleJumps++;
+                                    initJump++;
+                                }
+                                if (Player.canJumpAgain_Basilisk)
+                                {
+                                    extradoubleJumps++;
+                                    initJump++;
+                                }
+
+                                if (jumped && jumpCount < doubleJumpQuantity + extradoubleJumps)
+                                {
+                                    Player.velocity.Y = (jumpCount >= initJump) ? -doubleJumpHeight : Player.velocity.Y;
+                                    jumpCount++;
+                                }
+
+                                jumped = false;
+                            }
+                            else
+                            {
+                                jumped = true;
+                            }
                         }
+
                     }
-
                 }
+                #endregion
             }
-            #endregion
-
         }
 
         public void PlayGuardSound()
         {
-            if (guardType == blockingType.reflect)
-            SoundEngine.PlaySound(SoundLoader.GetLegacySoundSlot(Mod, "Sounds/keybladeBlocking"));
-            else if (guardType == blockingType.normal || guardType == blockingType.reversal)
+            switch (guardType)
+            {
+                case blockingType.reflect:
+                SoundEngine.PlaySound(SoundLoader.GetLegacySoundSlot(Mod, "Sounds/keybladeBlocking"));
+                    break;
+                case blockingType.normal:
+                case blockingType.reversal:
                 SoundEngine.PlaySound(SoundID.Item1.SoundId, x: (int)Player.Center.X, y: (int)Player.Center.Y, volumeScale: 3);
+                    break;
+            }
         }
 
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
@@ -475,7 +499,6 @@ namespace KingdomTerrahearts
                 Player.ConsumeItem(ModContent.ItemType<KupoCoin>());
                 Player.statLife = Player.statLifeMax2;
                 Player.HealEffect(Player.statLifeMax2);
-                Player.immune = true;
                 Player.immuneTime = Player.longInvince ? 180 : 120;
                 for (int k = 0; k < Player.hurtCooldowns.Length; k++)
                 {
@@ -494,13 +517,12 @@ namespace KingdomTerrahearts
 
         public override void ModifyStartingInventory(IReadOnlyDictionary<string, List<Item>> itemsByMod, bool mediumCoreDeath)
         {
-            base.ModifyStartingInventory(itemsByMod, mediumCoreDeath);
             for(int i = 0; i < itemsByMod["Terraria"].Count; i++)
             {
-                if (itemsByMod["Terraria"][i].type == ItemID.WoodenSword)
+                if (itemsByMod["Terraria"][i].type == ItemID.CopperShortsword)
                 {
                     itemsByMod["Terraria"].RemoveAt(i);
-                    itemsByMod["Terraria"].Add(new Item(ModContent.ItemType<Items.Weapons.Joke.woodenSword>()));
+                    itemsByMod["Terraria"].Add(new Item(ModContent.ItemType<Items.Weapons.Joke.Keyblade_wood>()));
                 }
             }
 
@@ -508,6 +530,14 @@ namespace KingdomTerrahearts
 
         public override void PreUpdate()
         {
+
+            if (noControlTime > 0)
+            {
+                return;
+            }
+
+            midCutscene = (midCutscene)?midCutscene : noControlTime > 0;
+
             inTwilightTown = KingdomWorld.twilightBiome > 75 && !Main.gameMenu;
 
             if (levelUpShowingTime > 0)
@@ -528,13 +558,12 @@ namespace KingdomTerrahearts
                 skipTime = false;
             }
 
-            if (curInvulnerabilityFrames > 0)
+            if (curInvulnerabilityFrames > -1)
             {
-                Player.immune = true;
                 curInvulnerabilityFrames--;
             }
 
-            if (Player.velocity.Y == 0)
+            if (Grounded())
             {
                 curGlideTime = glideTime;
             }
@@ -574,7 +603,7 @@ namespace KingdomTerrahearts
                 */
             }
 
-            if (fightingInBattleground)
+            if (fightingInBattlegrounds || fightingInArena)
             {
                 //check if really trapped
                 bool newTrapped = false;
@@ -582,7 +611,8 @@ namespace KingdomTerrahearts
                 {
                     newTrapped = (isBoss(i) && Main.npc[i].life > 0 && Main.npc[i].active) ? true : newTrapped;
                 }
-                fightingInBattleground = newTrapped;
+                fightingInBattlegrounds =(fightingInBattlegrounds)?newTrapped:false;
+                fightingInArena =(fightingInArena)? newTrapped:false;
 
                 //effects
                 Vector2 nextPos = Player.Center + Player.velocity;
@@ -590,14 +620,22 @@ namespace KingdomTerrahearts
                 collisionPoints.X = Math.Clamp(nextPos.X,initPosTrap.X,endPosTrap.X);
                 collisionPoints.Y = Math.Clamp(nextPos.Y, initPosTrap.Y, endPosTrap.Y);
 
-                collisionRight = nextPos.X > endPosTrap.X;
-                collisionLeft = nextPos.X < initPosTrap.X;
-                collisionDown = nextPos.Y > endPosTrap.Y;
-                collisionUp = nextPos.Y < initPosTrap.Y;
+                collisionRight = nextPos.X >= endPosTrap.X;
+                collisionLeft = nextPos.X <= initPosTrap.X;
+                collisionDown = nextPos.Y >= endPosTrap.Y;
+                collisionUp = nextPos.Y <= initPosTrap.Y;
+
+                Player.Update_NPCCollision();
 
                 Vector2 clampedPos = Player.Center;
-                clampedPos.X = Math.Min(endPosTrap.X, Math.Max(initPosTrap.X, clampedPos.X));
-                clampedPos.Y = Math.Min(endPosTrap.Y, Math.Max(initPosTrap.Y, clampedPos.Y));
+                clampedPos.X = Math.Min(endPosTrap.X+Player.width*2, Math.Max(initPosTrap.X-Player.width*2, clampedPos.X));
+                clampedPos.Y = Math.Min(endPosTrap.Y+Player.height*2, Math.Max(initPosTrap.Y-Player.height*2, clampedPos.Y));
+
+                while (!Collision.EmptyTile(clampedPos.ToTileCoordinates().Y,clampedPos.ToTileCoordinates().X) && Math.Abs(clampedPos.Y-(initPosTrap.Y+endPosTrap.Y)/2)>Player.height*6)
+                {
+                    clampedPos.Y += Math.Sign(clampedPos.Y- (initPosTrap.Y + endPosTrap.Y) / 2f) * 16f;
+                }
+
                 Player.Center = clampedPos;
             }
             else
@@ -609,8 +647,6 @@ namespace KingdomTerrahearts
             }
 
             tpFallImmunity -= (tpFallImmunity>0)?1:0;
-
-            base.PreUpdate();
 
 
             guardTime = (guardTime > -100) ? guardTime - 1 : -100;
@@ -643,12 +679,14 @@ namespace KingdomTerrahearts
 
                 if (guardProj == -1 || !Main.projectile[guardProj].active)
                 {
-                    ProjectileSource_Item source = new ProjectileSource_Item(Player,Player.HeldItem);
+                    EntitySource_ItemUse source = new EntitySource_ItemUse(Player,Player.HeldItem);
                     guardProj = Projectile.NewProjectile(source, Player.Center, Player.velocity, projType, 0, 0,Owner: Player.whoAmI);
                 }
                 Main.projectile[guardProj].scale = projScale;
                 Main.projectile[guardProj].timeLeft = guardTime;
             }
+
+            base.PreUpdate();
 
         }
 
@@ -671,16 +709,37 @@ namespace KingdomTerrahearts
 
         public override void PostUpdate()
         {
+            CommandLogic.instance.Update();
+            DialogSystem.Update();
+
+            if (noControlTime >= 0)
+            {
+                KingdomTerrahearts.instance.HideCommandUI();
+                Main.playerInventory = false;
+                Main.gamePaused = false;
+                Main.hideUI = true;
+                noControlTime--;
+                return;
+            }
+            else
+            {
+                if (noControlTime == -1)
+                {
+                    Main.hideUI = false;
+                }
+                midCutscene = false;
+            }
+            
             noContactDamageTime--;
 
-            DialogSystem.Update();
 
             NPC.MoonLordCountdown = (NPC.MoonLordCountdown > 250) ? 250 : NPC.MoonLordCountdown;
 
             if (invincible)
+            {
                 Player.ghost = false;
+            }
 
-            CommandLogic.instance.Update();
             if (Main.playerInventory)
             {
                 KingdomTerrahearts.instance.HideCommandUI();
@@ -692,10 +751,14 @@ namespace KingdomTerrahearts
                 else
                     KingdomTerrahearts.instance.HideCommandUI();
             }
-            if(lastHeldKeyblade<0)
+            if (lastHeldKeyblade < 0)
+            {
                 guardType = blockingType.none;
+            }
             if (guardTime == 30)
+            {
                 PlayGuardSound();
+            }
 
             lastHeldKeyblade--;
 
@@ -825,8 +888,8 @@ namespace KingdomTerrahearts
         {
             for(int i = 0; i < Main.maxNPCTypes; i++)
             {
-                if (Main.npc[i].active && Main.npc[i].type.ToString() == name) { 
-                    return Main.npc[i]; 
+                if (Main.npc[i].active && Main.npc[i].type.ToString() == name) {
+                    return Main.npc[i];
                 }
             }
             return null;
@@ -855,10 +918,9 @@ namespace KingdomTerrahearts
 
         public override void ModifyWeaponDamage(Item item, ref StatModifier damage, ref float flat)
         {
-            base.ModifyWeaponDamage(item, ref damage, ref flat);
             if (invincible)
             {
-                damage *= 1000000;
+                damage*= 15;
             }
         }
 
@@ -884,6 +946,7 @@ namespace KingdomTerrahearts
 
         public override void OnEnterWorld(Player player)
         {
+            CutsceneLogic.instance.CutsceneReset();
             PartyMemberLogic.Reset();
 
             if (!playerCreated)
@@ -915,21 +978,21 @@ namespace KingdomTerrahearts
             }
         }
 
-        public override bool Shoot(Item item, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        public override bool Shoot(Item item, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             if (invincible)
             {
                 Vector2 offset = new Vector2(10, 0);
 
-                Projectile.NewProjectile(source,position + offset, velocity, type, damage, knockback, Player.whoAmI);
-                Projectile.NewProjectile(source,position - offset, velocity, type, damage, knockback, Player.whoAmI);
-                                                                                                   
-                offset = new Vector2(0, 10);                                                       
-                Projectile.NewProjectile(source,position + offset, velocity, type, damage, knockback, Player.whoAmI);
-                Projectile.NewProjectile(source,position - offset, velocity, type, damage, knockback, Player.whoAmI);
+                Projectile.NewProjectile(source, position + offset, velocity, type, damage, knockback, Player.whoAmI);
+                Projectile.NewProjectile(source, position - offset, velocity, type, damage, knockback, Player.whoAmI);
+
+                offset = new Vector2(0, 10);
+                Projectile.NewProjectile(source, position + offset, velocity, type, damage, knockback, Player.whoAmI);
+                Projectile.NewProjectile(source, position - offset, velocity, type, damage, knockback, Player.whoAmI);
             }
 
-            return base.Shoot(item, source,position,velocity,type, damage, knockback);
+            return base.Shoot(item, source, position, velocity, type, damage, knockback);
         }
 
         public override float UseTimeMultiplier(Item item)
@@ -939,6 +1002,10 @@ namespace KingdomTerrahearts
 
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
+            if (noControlTime > 0)
+            {
+                return false;
+            }
             if (noContactDamageTime > 0 && damageSource.SourceNPCIndex>=0 && damageSource.SourceProjectileIndex<0)
             {
                 return false;
@@ -957,7 +1024,7 @@ namespace KingdomTerrahearts
                 }
                 return false;
             }
-            return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
+            return true;
         }
 
         public override void OnHitAnything(float x, float y, Entity victim)
@@ -973,7 +1040,7 @@ namespace KingdomTerrahearts
             int closest=-1;
             for(int i = 0; i <Main.maxNPCs;i++)
             {
-                if(Main.npc[i].active && ((!Main.npc[i].friendly && Main.npc[i].damage>0) || Main.npc[i].boss) && Vector2.Distance(Main.npc[i].Center,Player.Center)<radius)
+                if(Main.npc[i].active && ((!Main.npc[i].friendly && !Main.npc[i].townNPC && !Main.npc[i].CountsAsACritter) || Main.npc[i].boss) && Vector2.Distance(Main.npc[i].Center,Player.Center)<radius)
                 {
                     if(closest==-1 || Vector2.Distance(Main.npc[i].Center,Player.Center)< Vector2.Distance(Main.npc[closest].Center, Player.Center))
                     {
@@ -1176,11 +1243,20 @@ namespace KingdomTerrahearts
                     Player.body = KingdomTerrahearts.orgCoatSlots[0];
                     Player.legs = KingdomTerrahearts.orgCoatSlots[1];
                     break;
+                case 2:
+                    Player.body = KingdomTerrahearts.orgCoatSlots[3];
+                    Player.legs = KingdomTerrahearts.orgCoatSlots[4];
+                    break;
             }
         }
 
         public bool Grounded()
         {
+
+            if(Collision.SolidCollision(Player.position, Player.width, Player.height+5, true))
+            {
+                return true;
+            }
 
             Vector2 feetpos = Player.position+new Vector2(0,Player.height+5);
 
@@ -1198,6 +1274,79 @@ namespace KingdomTerrahearts
 
             return false;
         }
+
+        public void ModifyCutsceneCamera(Vector2 offset, float zoom = -1, float shakeForce = 0, float shakeSpeed = 1,float camPercentChange=10)
+        {
+            if (offset == Vector2.Zero && zoom == -1 && shakeForce == 0 && shakeSpeed == 1)
+            {
+                customCameraPercent = Math.Clamp(customCameraPercent - camPercentChange, 0, 100);
+                
+                if (customCameraPercent == 0 && cameraZoom>-2) {
+                    cameraOffset = Vector2.Zero;
+                    cameraZoom = -1;
+                    screenShakeStrength = 0;
+                    screenShakeSpeed = 1;
+                }
+            }
+            else
+            {
+                cameraOffset =(offset==Vector2.Zero)?cameraOffset:offset;
+                cameraZoom = (cameraZoom==-1)?cameraZoom:zoom;
+                screenShakeStrength = (shakeForce==0)?screenShakeStrength:shakeForce;
+                screenShakeSpeed =(shakeSpeed==1)?screenShakeSpeed:shakeSpeed;
+
+                customCameraPercent = Math.Clamp(customCameraPercent+camPercentChange,0,100);
+            }
+        }
+
+        public override void ModifyScreenPosition()
+        {
+            float customCamPower = customCameraPercent / 100f;
+
+            if (cameraZoom > -2)
+            {
+                Main.GameZoomTarget = (cameraZoom > -1) ? cameraZoom * customCamPower : Main.ForcedMinimumZoom;
+                cameraZoom = (cameraZoom==-1)?-2:cameraZoom;
+            }
+
+            Main.screenPosition += cameraOffset*customCamPower;
+            Main.screenPosition += new Vector2((float)Math.Sin(Main.time*screenShakeSpeed),0f)*screenShakeStrength*KingdomTerrahearts.screenShakeStrength*customCamPower;
+
+        }
+
+        public override bool CanUseItem(Item item)
+        {
+            if (noControlTime > 0)
+            {
+                return false;
+            }
+            return base.CanUseItem(item);
+        }
+
+        public override void SetControls()
+        {
+            if (noControlTime > 0)
+            {
+                Player.controlDown =
+                    Player.controlInv =
+                    Player.controlJump =
+                    Player.controlLeft =
+                    Player.controlRight =
+                    Player.controlSmart =
+                    Player.controlThrow =
+                    Player.controlTorch =
+                    Player.controlUp =
+                    Player.controlUseItem =
+                    Player.controlUseTile=
+                    Player.controlHook=
+                     false;
+            }
+        }
+
+        public void ControlDuringCutscene()
+        {
+            noControlTime = 5;
+        }
     }
-    
+
 }

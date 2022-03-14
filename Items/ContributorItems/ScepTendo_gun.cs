@@ -157,12 +157,10 @@ namespace KingdomTerrahearts.Items.ContributorItems
             return false;
         }
 
-        public override bool Shoot(Player player, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             int proj = 0;
             Vector2 dir = velocity;
-
-            ProjectileSource_Item s = new ProjectileSource_Item(player, Item);
 
             switch (shellType)
             {
@@ -173,8 +171,8 @@ namespace KingdomTerrahearts.Items.ContributorItems
                     break;
 
                 case 1:
-                    proj = Projectile.NewProjectile(s,position, dir + new Vector2(2, 0), ModContent.ProjectileType<Projectiles.ScepTend.Persona_projectile>(), damage, knockback);
-                    proj = Projectile.NewProjectile(s,position, dir + new Vector2(-2, 0), ModContent.ProjectileType<Projectiles.ScepTend.Persona_projectile>(), damage, knockback);
+                    proj = Projectile.NewProjectile(source, position, dir + new Vector2(2, 0), ModContent.ProjectileType<Projectiles.ScepTend.Persona_projectile>(), damage, knockback);
+                    proj = Projectile.NewProjectile(source, position, dir + new Vector2(-2, 0), ModContent.ProjectileType<Projectiles.ScepTend.Persona_projectile>(), damage, knockback);
                     Main.projectile[proj].owner = Item.playerIndexTheItemIsReservedFor;
                     break;
 
@@ -187,22 +185,22 @@ namespace KingdomTerrahearts.Items.ContributorItems
                     for (int i = 0; i < 5; i++)
                     {
                         offset = new Vector2(Main.rand.Next(-1, 1), Main.rand.Next(-1, 1));
-                        Projectile.NewProjectile(s,position, dir + offset, ModContent.ProjectileType<Projectiles.ScepTend.Escuregot_explosion>(), 0, 0);
+                        Projectile.NewProjectile(source, position, dir + offset, ModContent.ProjectileType<Projectiles.ScepTend.Escuregot_explosion>(), 0, 0);
                         SoundEngine.PlaySound(SoundID.NPCHit1, position);
                     }
                     break;
 
                 case 5:
-                    proj = Projectile.NewProjectile(s,position, dir + new Vector2(0, -5), ModContent.ProjectileType<Projectiles.ScepTend.halo_projectile>(), damage, knockback);
+                    proj = Projectile.NewProjectile(source, position, dir + new Vector2(0, -5), ModContent.ProjectileType<Projectiles.ScepTend.halo_projectile>(), damage, knockback);
                     Main.projectile[proj].owner = Item.playerIndexTheItemIsReservedFor;
 
-                    proj = Projectile.NewProjectile(s,position, dir + new Vector2(-5, 0), ModContent.ProjectileType<Projectiles.ScepTend.halo_projectile>(), damage, knockback);
+                    proj = Projectile.NewProjectile(source, position, dir + new Vector2(-5, 0), ModContent.ProjectileType<Projectiles.ScepTend.halo_projectile>(), damage, knockback);
                     Main.projectile[proj].owner = Item.playerIndexTheItemIsReservedFor;
 
-                    proj = Projectile.NewProjectile(s,position, dir + new Vector2(5, 0), ModContent.ProjectileType<Projectiles.ScepTend.halo_projectile>(), damage, knockback);
+                    proj = Projectile.NewProjectile(source, position, dir + new Vector2(5, 0), ModContent.ProjectileType<Projectiles.ScepTend.halo_projectile>(), damage, knockback);
                     Main.projectile[proj].owner = Item.playerIndexTheItemIsReservedFor;
 
-                    Projectile.NewProjectile(s,position, dir, ModContent.ProjectileType<Projectiles.ScepTend.halo_dust>(), 0, 0);
+                    Projectile.NewProjectile(source, position, dir, ModContent.ProjectileType<Projectiles.ScepTend.halo_dust>(), 0, 0);
                     break;
 
             }

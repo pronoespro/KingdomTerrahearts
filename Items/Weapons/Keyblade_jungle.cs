@@ -48,7 +48,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			keyTransformations = new keyTransformation[] {keyTransformation.spear, keyTransformation.drill };
 			transSprites = new string[] { "Items/Weapons/Transformations/Jungle_Drill", "Items/Weapons/Transformations/Jungle_Drill" };
 			formChanges = new keyDriveForm[] { keyDriveForm.blitz };
-			animationTimes = new int[] { 20,20, 15 };
+			animationTimes = new int[] { 20,30, 15 };
 		}
 
 		public override void AddRecipes()

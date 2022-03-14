@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -37,6 +38,20 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
 
         public override void AI()
         {
+            if (Projectile.timeLeft == 30)
+            {
+                SoundEngine.PlaySound(SoundID.Item27, Projectile.Center);
+            }
+
+            foreach(Player p in Main.player)
+            {
+                if (p.active)
+                {
+                    SoraPlayer s = p.GetModPlayer<SoraPlayer>();
+                    s.ModifyCutsceneCamera(Projectile.Center - p.Center, 0.75f, 2, 10, 100);
+                }
+            }
+
             Projectile.alpha = (int)(250 - (Projectile.timeLeft / 30f)*5);
             Projectile.damage = 0;
             Projectile.scale =(3-(1-(Projectile.timeLeft/30f)/5))*Projectile.ai[0];

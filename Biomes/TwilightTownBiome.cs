@@ -18,7 +18,6 @@ namespace KingdomTerrahearts
     public class TwilightTownBiome:ModBiome
     {
 
-		public override bool IsPrimaryBiome => true;
 
         public override int Music => MusicLoader.GetMusicSlot(Mod,"Sounds/Music/Lazy Afternoons");
         public override ModWaterStyle WaterStyle => base.WaterStyle;
