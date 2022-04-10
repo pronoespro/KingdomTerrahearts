@@ -34,7 +34,7 @@ namespace KingdomTerrahearts.Logic
         public int currentCutscene = -1;
         public bool[] doneCutscenes = new bool[50];
         public int[] cutscenesToSave = {0 };
-        public int[] noCheckIfDoneCutscenes = new int[] {4,5 };
+        public int[] noCheckIfDoneCutscenes = new int[] {4,5,6 };
 
         public int cutsceneProgress=0;
 
@@ -93,11 +93,15 @@ namespace KingdomTerrahearts.Logic
 
         public void ChangeCutscene(int cutsceneNum,int damage=0)
         {
+            if (currentCutscene >= 0)
+            {
+                return;
+            }
             if (!IsNoCheck(cutsceneNum))
             {
                 ResizeDoneCutscenes(cutsceneNum);
 
-                if (doneCutscenes[cutsceneNum] || currentCutscene >= 0)
+                if (doneCutscenes[cutsceneNum])
                 {
                     return;
                 }
@@ -149,6 +153,11 @@ namespace KingdomTerrahearts.Logic
             Player p = Main.CurrentPlayer;
             SoraPlayer sora = p.GetModPlayer<SoraPlayer>();
             NPCOverride globNPCBehav;
+
+            if (p.controlHook)
+            {
+                cutsceneProgress = 1000000000;
+            }
 
             switch (currentCutscene)
             {
@@ -389,6 +398,63 @@ namespace KingdomTerrahearts.Logic
                         }
                     }
 
+
+                    break;
+                case 6:
+
+
+                    actors = new NPC[] { GetNPCFromType(NPCID.EyeofCthulhu),GetNPCFromType(ModContent.NPCType<NPCs.TownNPCs.Sora_first>() )};
+                    sora.ControlDuringCutscene();
+
+                    if (actors[0] == null || actors[1] == null)
+                    {
+                        if (actors[0] != null)
+                        {
+                            actors[0].immortal = false;
+                        }else{
+                            actors[1].immortal = false;
+                        }
+                        sora.ModifyCutsceneCamera(Vector2.Zero, zoom: -1, camPercentChange: 100);
+                        EndCutscene();
+                        break;
+                    }
+
+                    for (int i = 0; i < actors.Length; i++)
+                    {
+
+                        globNPCBehav = actors[0].GetGlobalNPC<NPCOverride>();
+                        globNPCBehav.SetCutsceneActor(true);
+
+                        if (cutsceneProgress > 100)
+                        {
+                            globNPCBehav.SetCutsceneActor(false);
+                        }
+                    }
+
+                    if (cutsceneProgress > 100)
+                    {
+                        actors[0].immortal = false;
+                        actors[1].immortal = false;
+                        sora.ModifyCutsceneCamera(Vector2.Zero, zoom: -1, camPercentChange: 100);
+                        EndCutscene();
+                        return;
+                    }
+
+                    if (cutsceneProgress == 2)
+                    {
+                        EntitySource_ItemUse s = new EntitySource_ItemUse(p, p.HeldItem);
+                        Projectile.NewProjectile(s, actors[0].Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.Sora_slash>(), 10, 1, p.whoAmI);
+                    }
+                    sora.ModifyCutsceneCamera(actors[0].Center-p.Center, zoom: -1, camPercentChange: 10);
+
+                    actors[0].immortal = true;
+                    actors[0].aiAction = 0;
+                    actors[0].velocity = Vector2.Zero;
+                    actors[0].ai[0] = actors[0].ai[1] = 0;
+
+                    actors[1].immortal = true;
+                    actors[1].Center = actors[0].Center+new Vector2(0,-25+Math.Clamp(cutsceneProgress,0,50))*5;
+                    actors[1].velocity = Vector2.Zero;
 
                     break;
             }

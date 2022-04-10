@@ -41,7 +41,7 @@ namespace KingdomTerrahearts.Items.Weapons
             transSprites = new string[] { "Items/Weapons/Transformations/Kairi_Staff" };
 			formChanges = new keyDriveForm[] {keyDriveForm.limit };
 			animationTimes = new int[] {20,20};
-			guardType = blockingType.reflect;
+			guardType = keybladeBlockingType.reflect;
 			keySummon = summonType.bambi;
 		}
 
@@ -58,7 +58,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			transSprites = new string[] { "Items/Weapons/Transformations/Kairi_Staff" };
 			formChanges = new keyDriveForm[] { keyDriveForm.limit };
 			animationTimes = new int[] { 20, 20 };
-			guardType = blockingType.reflect;
+			guardType = keybladeBlockingType.reflect;
 			keySummon = summonType.bambi;
 		}
 	}

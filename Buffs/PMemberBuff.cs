@@ -7,10 +7,10 @@ using System.Collections.Generic;
 
 namespace KingdomTerrahearts.Buffs
 {
-    class PMemberBuff:ModBuff
+    public class PMemberBuff:ModBuff
     {
 
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("PartyMember");
             Description.SetDefault("Now you work for the player");
@@ -24,7 +24,7 @@ namespace KingdomTerrahearts.Buffs
         public override void Update(NPC npc, ref int buffIndex)
         {
             npc.color = Color.LightBlue;
-            npc.AddBuff(mod.BuffType("PMemberBuff"), 1000000000);
+            npc.AddBuff(ModContent.BuffType<PMemberBuff>(), 1000000000);
         }
 
         public override void Update(Player player, ref int buffIndex)

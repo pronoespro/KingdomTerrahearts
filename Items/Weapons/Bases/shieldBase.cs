@@ -164,13 +164,13 @@ namespace KingdomTerrahearts.Items.Weapons
 				if (canChainGuards)
 				{
 					sora.guardTime = 5;
-					sora.guardType = blockingType.normal;
+					sora.guardType = keybladeBlockingType.normal;
 					sora.guardProj = Projectile.whoAmI;
 				}
 				else
 				{
 					sora.guardTime = -1;
-					sora.guardType = blockingType.none;
+					sora.guardType = keybladeBlockingType.none;
 					sora.guardProj = -1;
 				}
 				sora.AddInvulnerability(5);
@@ -182,7 +182,7 @@ namespace KingdomTerrahearts.Items.Weapons
 				Projectile.damage = 0;
 
 				sora.guardTime = 5;
-				sora.guardType = blockingType.normal;
+				sora.guardType = keybladeBlockingType.normal;
 				sora.guardProj = Projectile.whoAmI;
 			}
 

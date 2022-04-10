@@ -30,7 +30,7 @@ namespace KingdomTerrahearts.Items.Weapons.Joke
 
 			SaveAtributes();
 			magic = keyMagic.fire;
-			guardType = blockingType.none;
+			guardType = keybladeBlockingType.none;
 			magicCost = 1;
 			keyTransformations = new keyTransformation[] {  };
 			transSprites = new string[] {""};
@@ -45,7 +45,7 @@ namespace KingdomTerrahearts.Items.Weapons.Joke
         public override void ChangeKeybladeValues()
 		{
 			magic = keyMagic.fire;
-			guardType = blockingType.none;
+			guardType = keybladeBlockingType.none;
 			magicCost = 1;
 			keyTransformations = new keyTransformation[] { };
 			transSprites = new string[] { "" };

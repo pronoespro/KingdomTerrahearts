@@ -1015,6 +1015,36 @@ namespace KingdomTerrahearts.NPCs.Bosses
 
         }
 
+        public override void OnHitPlayer(Player target, int damage, bool crit)
+        {
+            if (Main.expertMode)
+            {
+                int buffType;
+                switch (weaponType)
+                {
+                    default:
+                        buffType = -1;
+                        break;
+                    case 0:
+                        buffType = BuffID.OnFire3;
+                        break;
+                    case 1:
+                        buffType = BuffID.Ichor;
+                        break;
+                    case 2:
+                        buffType = BuffID.BrokenArmor;
+                        break;
+                    case 3:
+                        buffType = BuffID.Poisoned;
+                        break;
+                }
+                if (buffType >= 0)
+                {
+                    target.AddBuff(buffType, 60 * 4);
+                }
+            }
+        }
+
         public int GetDustID()
         {
             switch (weaponType)
@@ -1459,7 +1489,5 @@ namespace KingdomTerrahearts.NPCs.Bosses
 
 
     }
-
-
 
 }

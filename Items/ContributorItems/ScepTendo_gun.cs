@@ -255,25 +255,25 @@ namespace KingdomTerrahearts.Items.ContributorItems
 
             foreach(TooltipLine line2 in tooltips)
             {
-                if (line2.mod == Mod.Name && line2.Name== "ShellType")
+                if (line2.Mod == Mod.Name && line2.Name== "ShellType")
                 {
-                    line2.text = shellDesc;
+                    line2.Text= shellDesc;
                 }
             }
 
             TooltipLine tooltip = new TooltipLine(Mod, "SupportItem", "Supporter Item");
-            tooltip.overrideColor = Color.LightBlue;
+            tooltip.OverrideColor = Color.LightBlue;
             if (!tooltips.Contains(tooltip))
             {
                 tooltips.Insert(1, tooltip);
             }
             foreach (TooltipLine line2 in tooltips)
             {
-                if (line2.mod == Mod.Name && line2.Name == "SupportItem")
+                if (line2.Mod== Mod.Name && line2.Name == "SupportItem")
                 {
                     float fade = Main.GameUpdateCount % 60 / 60f;
                     int index = (int)(Main.GameUpdateCount / 60 % 4);
-                    line2.overrideColor = Color.Lerp(ItemNameCycleColors[index], ItemNameCycleColors[(index + 1) % 4], fade);
+                    line2.OverrideColor = Color.Lerp(ItemNameCycleColors[index], ItemNameCycleColors[(index + 1) % 4], fade);
                 }
             }
         }

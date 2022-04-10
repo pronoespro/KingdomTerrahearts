@@ -33,7 +33,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			Item.useAnimation = Item.useTime = 10;
 
 			SaveAtributes();
-			guardType = blockingType.normal;
+			guardType = keybladeBlockingType.reversal;
 			projectileTime = 120;
 			magic = keyMagic.magnet;
 			keyTransformations = new keyTransformation[] { keyTransformation.dual };
@@ -47,7 +47,7 @@ namespace KingdomTerrahearts.Items.Weapons
 		{
 			keybladeElement = keyType.light;
 			comboMax = 6;
-			guardType = blockingType.normal;
+			guardType = keybladeBlockingType.reversal;
 			projectileTime = 120;
 			magic = keyMagic.magnet;
 			keyTransformations = new keyTransformation[] { keyTransformation.dual };

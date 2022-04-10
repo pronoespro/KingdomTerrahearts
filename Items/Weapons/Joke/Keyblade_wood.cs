@@ -36,7 +36,7 @@ namespace KingdomTerrahearts.Items.Weapons.Joke
 
 			SaveAtributes();
 			keyLevel = 0;
-			guardType = blockingType.none;
+			guardType = keybladeBlockingType.none;
 			canShootAgain = true;
 			keyTransformations = new keyTransformation[] { };
 			formChanges = new keyDriveForm[] { };
@@ -64,6 +64,7 @@ namespace KingdomTerrahearts.Items.Weapons.Joke
 			keyTransformations = new keyTransformation[] { };
 			formChanges = new keyDriveForm[] { };
 			animationTimes = new int[] { 30 };
+			guardType = keybladeBlockingType.none;
 		}
 	}
 }

@@ -33,7 +33,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			keyLevel = 6;
 			projectileTime *= 6;
 			magic = keyMagic.ice;
-			guardType = blockingType.reflect;
+			guardType = keybladeBlockingType.reflect;
 			keyTransformations = new keyTransformation[] { keyTransformation.none };
 			formChanges = new keyDriveForm[] { keyDriveForm.rage };
 			transSprites = new string[] { "Items/Weapons/Keyblade_Eye"};
@@ -56,7 +56,7 @@ namespace KingdomTerrahearts.Items.Weapons
 		{
 			keybladeElement = keyType.dark;
 			magic = keyMagic.ice;
-			guardType = blockingType.reflect;
+			guardType = keybladeBlockingType.reflect;
 			keyTransformations = new keyTransformation[] { keyTransformation.none };
 			formChanges = new keyDriveForm[] { keyDriveForm.rage };
 			transSprites = new string[] { "Items/Weapons/Keyblade_Eye" };

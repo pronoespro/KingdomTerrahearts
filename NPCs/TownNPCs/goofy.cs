@@ -35,7 +35,7 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return (spawnInfo.playerInTown && !NPC.AnyNPCs(NPC.type)) ? 10 : 0;
+            return (spawnInfo.PlayerInTown && !NPC.AnyNPCs(NPC.type)) ? 10 : 0;
         }
 
         public override void FindFrame(int frameHeight)

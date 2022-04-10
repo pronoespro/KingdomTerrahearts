@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using SubworldLibrary;
 using System;
 using Terraria;
 using Terraria.GameContent.Creative;
@@ -30,6 +31,12 @@ namespace KingdomTerrahearts.Items
             Item.useTime = 45;
             Item.useStyle = ItemUseStyleID.HoldUp;
 
+        }
+
+        public override bool? UseItem(Player player)
+        {
+            SubworldSystem.Enter<Subworlds.Olympus>();
+            return base.UseItem(player);
         }
 
     }

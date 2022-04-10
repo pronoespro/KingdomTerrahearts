@@ -1,19 +1,23 @@
-Kingdom Terrahearts introduces the world of Kingdom Hearts to Terraria.
+Kingdom Terrahearts is a mod that introduces the world of Kingdom Hearts to Terraria. It is currently 1 year old!
+Requires the Subworld mod to work.
 
 ---Mod Contents---
 
 -A special menu style (with custom music composed for this mod)
--7 brand new normal bosses, a multi-stage boss (gets more phases as you go along on your adventure), an event (the 1000 heartless battle), and 3 town npcs
+-7 brand new normal bosses, a multi-stage boss (gets more phases as you go along on your adventure), an event (the 1000 heartless battle), and 4 town npcs
 -7 abilities, a "grappling hook" (athletic flow), a set of "wings" (faity dust)
--2 new weapon types and 1 new class (Keyblade master)
+-2 new weapon types and a new class (Keyblade master)
+-1 Subworld (currently accessed by using Kairi's heart, just for testing)
 -A furniture set (twilight town based, block, walls, crafting table and poster), a huge tile (dive to heart) and a custom bed based on save spots in the KH franchise that fast forwards time.
 -A party member system for all vanilla Terraria town npcs
 -Fighting bosses on the dive to heart battleground unlocks harder versions of themselves that drop special loot (not really that much harder, but enough to be a nuisance)
 
-DISCLAIMER: This mod is currently being developed for single player only. If you wish to play with other people do not use the npcs as party members unles you are ready for crazyness.
+DISCLAIMER: This mod is currently being developed for single player only, so expect bugs if you play in multiplayer.
 
+Link to the Discord: https://discord.gg/n5QWG9p4wp
 Link to the wiki (for terraria 1.4): https://terrariamods.gamepedia.com/Kingdom_Terrahearts
 Link to the forum: https://forums.terraria.org/index.php?threads/kingdom-terraheart-mod-for-tmodloader.87391/#post-1935075
 
 Mods that I got help from (some I just took part of the code):
 -Collision Library from Seraph: thank you so much for the extra player collision script, it was really usefull for the Battling Heart fights.
+-Subworld Library (for subworlds, they are really cool).

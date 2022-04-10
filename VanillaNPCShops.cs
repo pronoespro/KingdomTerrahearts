@@ -1,6 +1,7 @@
 ﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.GameContent.ItemDropRules;
 
 namespace KingdomTerrahearts
 {
@@ -12,27 +13,17 @@ namespace KingdomTerrahearts
             switch (type)
             {
                 case NPCID.Dryad:
-                    shop.item[nextSlot].SetDefaults(mod.ItemType("Keyblade_destiny"));
+                    shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.Weapons.Keyblade_destiny>());
                     nextSlot++;
                     break;
                 case NPCID.WitchDoctor:
 
-                    shop.item[nextSlot].SetDefaults(mod.ItemType("Keyblade_witchDoctor"));
+                    shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.Weapons.Keyblade_witchDoctor>());
                     nextSlot++;
                     break;
                 case NPCID.Merchant:
-                    shop.item[nextSlot].SetDefaults(mod.ItemType("KupoCoin"));
+                    shop.item[nextSlot].SetDefaults(ModContent.ItemType<Items.KupoCoin>());
                     nextSlot++;
-                    break;
-            }
-        }
-
-        public override void NPCLoot(NPC npc)
-        {
-            switch (npc.type)
-            {
-                case NPCID.QueenBee:
-                    Item.NewItem(npc.frame, ItemID.HoneyBalloon);
                     break;
             }
         }

@@ -55,18 +55,18 @@ namespace KingdomTerrahearts.Items
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			TooltipLine tooltip = new TooltipLine(Mod, "ModderItem", "Modder Item");
-			tooltip.overrideColor = Color.LightBlue;
+			tooltip.OverrideColor = Color.LightBlue;
 			if (!tooltips.Contains(tooltip))
 			{
 				tooltips.Insert(1,tooltip);
 			}
 			foreach (TooltipLine line2 in tooltips)
 			{
-				if (line2.mod == Mod.Name && line2.Name == "ModderItem")
+				if (line2.Mod == Mod.Name && line2.Name == "ModderItem")
 				{
 					float fade = Main.GameUpdateCount % 60 / 60f;
 					int index = (int)(Main.GameUpdateCount / 60 % 4);
-					line2.overrideColor = Color.Lerp(ItemNameCycleColors[index], ItemNameCycleColors[(index + 1) % 4], fade);
+					line2.OverrideColor = Color.Lerp(ItemNameCycleColors[index], ItemNameCycleColors[(index + 1) % 4], fade);
 				}
 			}
 		}

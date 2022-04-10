@@ -11,6 +11,7 @@ using Terraria.ObjectData;
 using Microsoft.Xna.Framework.Graphics;
 using static Terraria.ModLoader.ModContent;
 using Terraria.UI;
+using Terraria.GameContent.ObjectInteractions;
 
 namespace KingdomTerrahearts.Tiles
 {
@@ -108,7 +109,7 @@ namespace KingdomTerrahearts.Tiles
 			return base.PreDraw(i, j, spriteBatch);
         }
 
-        public override bool HasSmartInteract()
+		public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
 		{
 			return true;
 		}
