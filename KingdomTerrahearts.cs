@@ -46,6 +46,7 @@ namespace KingdomTerrahearts
 		public static KingdomTerrahearts instance;
 
 		public static float screenShakeStrength = 1;
+		public static bool keybladeThrustingEnabled;
 		public static bool canDoCutscenes;
 
 		private GameTime _LastUIUpdateGameTime;

@@ -28,10 +28,10 @@ namespace KingdomTerrahearts.Items.Weapons.Joke
 
             projectiles = new int[] { ProjectileID.MagicMissile, ProjectileID.MagicMissile,ProjectileID.MagicMissile, ProjectileID.Meteor2};
             projectilCombos = new int[] { 3,1,1,1};
-            projectileAmmount = new int[] {1,4,6,10 };
+            projectileAmmount = new int[] {1,2,3,4 };
             shootType = new projShootType[] { projShootType.normal,projShootType.enix,projShootType.circular,projShootType.rand};
             projectileDistanceWhenShot = new float[] {0,50,100,150 };
-            damages = new int[] {10,7,5,50 };
+            damages = new int[] {10,7,5,10 };
             shootSpeeds = new float[] { 5f, 7f, 15f, 150f };
         }
 

@@ -916,11 +916,11 @@ namespace KingdomTerrahearts
             AddInvulnerability(15);
         }
 
-        public override void ModifyWeaponDamage(Item item, ref StatModifier damage, ref float flat)
+        public override void ModifyWeaponDamage(Item item, ref StatModifier damage)
         {
             if (invincible)
             {
-                damage*= 15;
+                damage *= 15;
             }
         }
 

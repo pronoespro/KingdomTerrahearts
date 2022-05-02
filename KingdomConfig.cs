@@ -28,10 +28,14 @@ namespace KingdomTerrahearts
         [DefaultValue(true), Label("Play cutscenes")]
         public bool showCutscenes;
 
+        [DefaultValue(true), Label("Keyblade Thrusting (gets you closer to enemies, but is risky)")]
+        public bool keybladeThrusting;
+
         public override void OnChanged()
         {
             KingdomTerrahearts.screenShakeStrength = screenShakeAmmount;
             KingdomTerrahearts.canDoCutscenes = showCutscenes;
+            KingdomTerrahearts.keybladeThrustingEnabled = keybladeThrusting;
         }
 
     }

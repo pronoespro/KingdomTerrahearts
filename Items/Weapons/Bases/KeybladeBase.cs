@@ -421,7 +421,10 @@ namespace KingdomTerrahearts.Items.Weapons
 
 			if (curTransformation == -1 || (keyTransformations.Length>0 && keyTransformations[curTransformation]==keyTransformation.none))
 			{
-				GetCloserToEnemy(player);
+				if (KingdomTerrahearts.keybladeThrustingEnabled)
+				{
+					GetCloserToEnemy(player);
+				}
 				switch (combo)
 				{
 					case 0:

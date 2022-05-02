@@ -92,14 +92,14 @@ namespace KingdomTerrahearts
             return !player.GetModPlayer<SoraPlayer>().invincible && base.CanBeConsumedAsAmmo(ammo, player);
         }
 
-        public override void ModifyWeaponCrit(Item Item, Player player, ref int crit)
+        public override void ModifyWeaponCrit(Item item, Player player, ref float crit)
         {
             crit = player.GetModPlayer<SoraPlayer>().invincible ? 10000 : crit;
         }
 
-        public override void ModifyWeaponKnockback(Item Item, Player player, ref StatModifier knockback, ref float flat)
+        public override void ModifyWeaponKnockback(Item item, Player player, ref StatModifier knockback)
         {
-            StatModifier knock = new StatModifier(10000000);
+            StatModifier knock = new StatModifier(0,10000000);
             knockback = player.GetModPlayer<SoraPlayer>().invincible ? knock : knockback;
         }
 

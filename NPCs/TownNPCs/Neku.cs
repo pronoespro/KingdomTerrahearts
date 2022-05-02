@@ -48,9 +48,11 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
 
         }
 
-        public override string TownNPCName()
+        public override List<string> SetNPCNameList()
         {
-            return "Neku Sakuraba";
+            List<string> possibleNames = new List<string>();
+            possibleNames.Add("Neku Sakuraba");
+            return possibleNames;
         }
 
         public override string GetChat()

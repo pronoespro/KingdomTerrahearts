@@ -277,7 +277,6 @@ namespace KingdomTerrahearts.Items
                 player.buffImmune[i] = true;
             }
 
-            player.armorPenetration = int.MaxValue;
             player.GetDamage(DamageClass.Generic)+=1000000;
             
             player.pickSpeed = int.MaxValue;

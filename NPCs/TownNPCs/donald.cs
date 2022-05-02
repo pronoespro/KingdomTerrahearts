@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System;
 using Terraria.Localization;
+using Terraria.GameContent;
 
 namespace KingdomTerrahearts.NPCs.TownNPCs
 {
@@ -48,9 +49,11 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
 
         }
 
-        public override string TownNPCName()
+        public override List<string> SetNPCNameList()
         {
-            return "Donald";
+            List<string> possibleNames = new List<string>();
+            possibleNames.Add("Donald");
+            return possibleNames;
         }
 
         public override string GetChat()

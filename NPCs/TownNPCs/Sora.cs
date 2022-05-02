@@ -889,13 +889,15 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
             NPC.lifeRegen = 50;
         }
 
-        public override string TownNPCName()
+        public override List<string> SetNPCNameList()
         {
-            if (!NPC.downedBoss1)
-            {
-                return "Raxo Sack Of Rocks";
+            List<string> possibleNames = new List<string>();
+            if (NPC.downedBoss1){
+                possibleNames.Add("Sora");
+            }else{
+                possibleNames.Add("Raxo Sack Of Rocks");
             }
-            return "Sora";
+            return possibleNames;
         }
 
         public override string GetChat()

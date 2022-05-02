@@ -48,9 +48,11 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
 
         }
 
-        public override string TownNPCName()
+        public override List<string> SetNPCNameList()
         {
-            return "Goofy";
+            List<string> possibleNames = new List<string>();
+            possibleNames.Add("Goofy");
+            return possibleNames;
         }
 
         public override string GetChat()
