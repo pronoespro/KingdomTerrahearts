@@ -1,4 +1,4 @@
 displayName = Kingdom Terrahearts
 author = Pronoespro
-version = 1.5.1
+version = 1.5.2
 modReferences = SubworldLibrary
