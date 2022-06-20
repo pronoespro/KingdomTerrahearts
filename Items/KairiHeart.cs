@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using SubworldLibrary;
 using System;
 using Terraria;
 using Terraria.GameContent.Creative;
@@ -32,9 +33,9 @@ namespace KingdomTerrahearts.Items
 
         }
 
-        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
+        public override bool? UseItem(Player player)
         {
-            //SubworldSystem.Enter<Subworlds.Olympus>();
+            SubworldSystem.Enter<Subworlds.Olympus>();
             return base.UseItem(player);
         }
 
