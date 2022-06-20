@@ -453,11 +453,11 @@ namespace KingdomTerrahearts
             switch (guardType)
             {
                 case keybladeBlockingType.reflect:
-                SoundEngine.PlaySound(SoundLoader.GetLegacySoundSlot(Mod, "Sounds/keybladeBlocking"));
+                SoundEngine.PlaySound(new SoundStyle("KingdomTerrahearts/Sounds/keybladeBlocking"));
                     break;
                 case keybladeBlockingType.normal:
                 case keybladeBlockingType.reversal:
-                SoundEngine.PlaySound(SoundID.Item1.SoundId, x: (int)Player.Center.X, y: (int)Player.Center.Y, volumeScale: 3);
+                SoundEngine.PlaySound(SoundID.Item1,new Vector2(Player.Center.X, Player.Center.Y));
                     break;
             }
         }
