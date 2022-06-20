@@ -80,7 +80,7 @@ namespace KingdomTerrahearts.Mounts
                 {
                     if (Math.Abs(player.velocity.X) > 0.1f)
                     {
-                        SoundEngine.PlaySound(new LegacySoundStyle(2, 16), x: (int)player.Center.X, y: (int)player.Center.Y);
+                        SoundEngine.PlaySound(SoundID.Item16, new Vector2(player.Center.X, player.Center.Y));
                         timeOnGround++;
                         if (timeOnGround > 2)
                         {
@@ -98,7 +98,7 @@ namespace KingdomTerrahearts.Mounts
                     if (attacking)
                     {
                         dustAmmount *= 5;
-                        SoundEngine.PlaySound(new LegacySoundStyle(2, 14), x: (int)player.Center.X, y: (int)player.Center.Y);
+                        SoundEngine.PlaySound(SoundID.Item14, new Vector2(player.Center.X, player.Center.Y));
                         for (int i = 0; i < Main.npc.Length; i++)
                         {
                             if (Main.npc[i] == null)

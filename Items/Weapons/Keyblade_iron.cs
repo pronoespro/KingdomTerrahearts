@@ -31,7 +31,6 @@ namespace KingdomTerrahearts.Items.Weapons
 			Item.useTime = Item.useAnimation = 20;
 
 			SaveAtributes();
-			guardType = blockingType.reflect;
 			keyLevel = 1;
 			keyTransformations = new keyTransformation[0];
 			transSprites = new string[] { };
@@ -44,7 +43,6 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public override void ChangeKeybladeValues()
 		{
-			guardType = blockingType.reflect;
 			keyTransformations = new keyTransformation[0];
 			transSprites = new string[] { };
 			formChanges = new keyDriveForm[] { keyDriveForm.second };

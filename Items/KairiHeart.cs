@@ -32,5 +32,11 @@ namespace KingdomTerrahearts.Items
 
         }
 
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
+        {
+            //SubworldSystem.Enter<Subworlds.Olympus>();
+            return base.UseItem(player);
+        }
+
     }
 }

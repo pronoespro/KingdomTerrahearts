@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -58,11 +59,11 @@ namespace KingdomTerrahearts.Tiles
 				}
 			}
 		}
-
-		public override bool HasSmartInteract()
+        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
 		{
 			return true;
 		}
+
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
 		{
 			Tile tile = Main.tile[i, j];

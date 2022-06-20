@@ -28,7 +28,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			Item.holdStyle = 4;
 			Item.knockBack = 3;
 			Item.value = 100;
-			Item.rare = 2;
+			Item.rare = ItemRarityID.Green;
 			Item.UseSound = SoundID.Item1;
 			Item.autoReuse = true;
 

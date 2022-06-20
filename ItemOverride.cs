@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using System;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
@@ -10,7 +11,7 @@ namespace KingdomTerrahearts
     class ItemOverride : GlobalItem
     {
 
-        public override bool? UseItem(Item Item, Player player)
+        public override Nullable<bool> UseItem(Item Item, Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             switch (Item.type)
             {
@@ -87,19 +88,19 @@ namespace KingdomTerrahearts
             return !player.GetModPlayer<SoraPlayer>().invincible && base.ConsumeItem(Item, player);
         }
 
-        public override bool CanBeConsumedAsAmmo(Item ammo, Player player)
+        public override bool CanBeConsumedAsAmmo(Item ammo, Item weapon, Player player)
         {
-            return !player.GetModPlayer<SoraPlayer>().invincible && base.CanBeConsumedAsAmmo(ammo, player);
+            return !player.GetModPlayer<SoraPlayer>().invincible && base.CanBeConsumedAsAmmo(ammo,weapon, player);
         }
 
-        public override void ModifyWeaponCrit(Item Item, Player player, ref int crit)
+        public override void ModifyWeaponCrit(Item item, Player player, ref float crit)
         {
             crit = player.GetModPlayer<SoraPlayer>().invincible ? 10000 : crit;
         }
 
-        public override void ModifyWeaponKnockback(Item Item, Player player, ref StatModifier knockback, ref float flat)
+        public override void ModifyWeaponKnockback(Item item, Player player, ref StatModifier knockback)
         {
-            StatModifier knock = new StatModifier(10000000);
+            StatModifier knock = new StatModifier(0,10000000);
             knockback = player.GetModPlayer<SoraPlayer>().invincible ? knock : knockback;
         }
 

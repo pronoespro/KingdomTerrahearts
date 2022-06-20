@@ -64,7 +64,7 @@ namespace KingdomTerrahearts.Projectiles.Weapons
             overPlayers.Add(index);
         }
 
-        public override bool? CanDamage()
+        public override Nullable<bool> CanDamage()/* tModPorter Suggestion: Return null instead of false */
         {
             return Projectile.ai[0] > 0;
         }

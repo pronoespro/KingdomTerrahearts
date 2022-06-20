@@ -458,6 +458,14 @@ namespace KingdomTerrahearts
                             }
 
                         }
+
+                        if (npc.life < npc.lifeMax / 4 && !NPC.AnyNPCs(ModContent.NPCType<NPCs.TownNPCs.Sora_first>()))
+                        {
+
+                            NPC.NewNPC(s, (int)npc.Center.X, (int)npc.Center.Y, ModContent.NPCType<NPCs.TownNPCs.Sora_first>());
+                            CutsceneLogic.instance.ChangeCutscene(6);
+                        }
+
                         break;
 
                     case NPCID.ServantofCthulhu:
@@ -1157,6 +1165,7 @@ namespace KingdomTerrahearts
                 case NPCID.QueenBee:
 
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Weapons.Keyblade_Honey>(), 5));
+                    npcLoot.Add(ItemDropRule.Common(ItemID.HoneyBalloon));
                     npcLoot.Add(ItemDropRule.Common(ItemID.Abeemination, 1, 15, 15));
                     npcLoot.Add(ItemDropRule.Common(ItemID.Stinger, 1, 15, 45));
 

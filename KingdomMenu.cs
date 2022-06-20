@@ -25,7 +25,7 @@ namespace KingdomTerrahearts
 
 		public override void OnSelected()
 		{
-			SoundEngine.PlaySound(SoundLoader.GetLegacySoundSlot(Mod, "Sounds/keybladeBlocking")); // Plays a thunder sound when this ModMenu is selected
+			SoundEngine.PlaySound(new SoundStyle("KingdomTerrahearts/Sounds/keybladeBlocking", SoundType.Sound)); // Plays a thunder sound when this ModMenu is selected
 		}
 
 		public override bool PreDrawLogo(SpriteBatch spriteBatch, ref Vector2 logoDrawCenter, ref float logoRotation, ref float logoScale, ref Color drawColor)

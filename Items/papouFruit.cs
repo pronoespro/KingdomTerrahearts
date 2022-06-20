@@ -39,7 +39,7 @@ namespace KingdomTerrahearts.Items
             player.itemLocation.Y +=10;
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             player.AddBuff(BuffID.WellFed3,1000000000,foodHack:true);
             return base.UseItem(player);

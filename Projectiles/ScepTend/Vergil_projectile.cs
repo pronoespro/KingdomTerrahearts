@@ -42,7 +42,7 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
             int proj = Projectile.NewProjectile(s,Projectile.Center, Vector2.Zero, ModContent.ProjectileType<VergilSlice>(), Projectile.damage, 1);
             Main.projectile[proj].owner = Projectile.owner;
             Main.projectile[proj].rotation = rot;
-            SoundEngine.PlaySound(SoundID.Item7.SoundId, x: (int)Main.projectile[proj].Center.X, y: (int)Main.projectile[proj].Center.Y, volumeScale: 3);
+            SoundEngine.PlaySound(SoundID.Item7,new Vector2(Main.projectile[proj].Center.X,  Main.projectile[proj].Center.Y));
         }
 
         public override void AI()

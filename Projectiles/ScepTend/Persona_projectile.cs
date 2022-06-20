@@ -42,7 +42,7 @@ namespace KingdomTerrahearts.Projectiles.ScepTend
             EntitySource_Parent s = new EntitySource_Parent(Projectile);
 
             int proj = Projectile.NewProjectile(s,Projectile.Center, Vector2.Zero, ModContent.ProjectileType<persona_fire>(), Projectile.damage * 4, Projectile.knockBack + 1,Projectile.owner);
-            SoundEngine.PlaySound(SoundID.Item7.SoundId, x: (int)Projectile.Center.X, y: (int)Projectile.Center.Y, volumeScale: 3);
+            SoundEngine.PlaySound(SoundID.Item7,new Vector2( Projectile.Center.X, Projectile.Center.Y));
         }
 
     }

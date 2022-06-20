@@ -1129,7 +1129,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
                             }
                         }else if (NPC.ai[0] >200f && NPC.ai[0]<200f+attackSpeed*attackSpeedMult*2)
                         {
-                            proj = Projectile.NewProjectile(s,player.Center, new Vector2(0, 0), ModContent.ProjectileType<Projectiles.Lightning_Spell>(), attacksDamage[curAttack], 1);
+                            proj = Projectile.NewProjectile(s,player.Center, new Vector2(0, 0), ModContent.ProjectileType<Projectiles.Magic.Lightning_Spell>(), attacksDamage[curAttack], 1);
                             Main.projectile[proj].hostile = true;
                             Main.projectile[proj].friendly = false;
                         }
@@ -1154,7 +1154,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
                         if (NPC.ai[0] % 20f==0 && NPC.ai[0]>=100 && NPC.ai[0]<200)
                         {
                             Vector2 newPos = new Vector2(NPC.Center.X + Main.rand.NextFloat(-350f, 350f), NPC.Center.Y);
-                            proj = Projectile.NewProjectile(s,newPos, new Vector2(0, 0), ModContent.ProjectileType<Projectiles.Lightning_Spell>(), attacksDamage[curAttack], 1);
+                            proj = Projectile.NewProjectile(s,newPos, new Vector2(0, 0), ModContent.ProjectileType<Projectiles.Magic.Lightning_Spell>(), attacksDamage[curAttack], 1);
                             Main.projectile[proj].hostile = true;
                             Main.projectile[proj].friendly = false;
                         }

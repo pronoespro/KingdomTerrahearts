@@ -38,7 +38,7 @@ namespace KingdomTerrahearts.Items
             Item.noMelee = true;
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             if (Main.rand.Next(2) <= 1)
             {

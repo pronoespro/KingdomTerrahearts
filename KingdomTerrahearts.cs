@@ -16,9 +16,9 @@ namespace KingdomTerrahearts
 {
 	public class KingdomTerrahearts : Mod
 	{
-
-		//Fighting gameplay
-		public static ModKeybind PartySelectHotkey;
+        
+        //Fighting gameplay
+        public static ModKeybind PartySelectHotkey;
 		public static ModKeybind GuardHotKey;
 
 		//Music gameplay
@@ -46,6 +46,7 @@ namespace KingdomTerrahearts
 		public static KingdomTerrahearts instance;
 
 		public static float screenShakeStrength = 1;
+		public static bool keybladeThrustingEnabled;
 		public static bool canDoCutscenes;
 
 		private GameTime _LastUIUpdateGameTime;
@@ -54,13 +55,6 @@ namespace KingdomTerrahearts
 		{
 			void Load();
 			void Unload();
-		}
-
-		public KingdomTerrahearts()
-		{
-
-
-
 		}
 
 		public override void Unload()
@@ -85,6 +79,7 @@ namespace KingdomTerrahearts
 				commandUI.Destroy();
 				dialogUI.Destroy();
 			}
+
 			partyUI = null;
 			commandUI = null;
 			dialogUI = null;
@@ -112,12 +107,12 @@ namespace KingdomTerrahearts
 			if (!Main.dedServ)
 			{
 				orgCoatSlots = new int[5];
-				orgCoatSlots[0] = AddEquipTexture(new Items.Armor.orgCoat(), EquipType.Body, "KingdomTerrahearts/Items/Armor/orgCoat_Body");
-				orgCoatSlots[1] = AddEquipTexture(new Items.Armor.orgCoat(), EquipType.Legs, "KingdomTerrahearts/Items/Armor/orgCoat_Legs");
-				orgCoatSlots[2] = AddEquipTexture(new Items.Armor.orgCoat(), EquipType.Head, "KingdomTerrahearts/Items/Armor/orgCoat_Head");
+                orgCoatSlots[0] = EquipLoader.AddEquipTexture(this, "KingdomTerrahearts/Items/Armor/orgCoat_Body", EquipType.Body,name:"orgCoatBody");
+                orgCoatSlots[1] = EquipLoader.AddEquipTexture(this,  "KingdomTerrahearts/Items/Armor/orgCoat_Legs",EquipType.Legs, name: "orgCoatLegs");
+				orgCoatSlots[2] = EquipLoader.AddEquipTexture(this, "KingdomTerrahearts/Items/Armor/orgCoat_Head", EquipType.Head, name: "orgCoatHood");
 
-				orgCoatSlots[3] = AddEquipTexture(new Items.Armor.orgCoat(), EquipType.Body, "KingdomTerrahearts/Items/Armor/soraJacket_Body");
-				orgCoatSlots[4] = AddEquipTexture(new Items.Armor.orgCoat(), EquipType.Legs, "KingdomTerrahearts/Items/Armor/soraClothes_Legs");
+				orgCoatSlots[3] = EquipLoader.AddEquipTexture(this, "KingdomTerrahearts/Items/Armor/soraJacket_Body", EquipType.Body, name: "soraJacket");
+				orgCoatSlots[4] = EquipLoader.AddEquipTexture(this, "KingdomTerrahearts/Items/Armor/soraClothes_Legs", EquipType.Legs, name: "soraPants");
 
 
 
@@ -234,23 +229,6 @@ namespace KingdomTerrahearts
 
 			}
 			orig(self);
-		}
-
-        public override void PostSetupContent()
-        {
-            base.PostSetupContent();
-			/*
-			Mod BossChecklist = ModLoader.GetMod("BossChecklist");
-
-			if (BossChecklist != null)
-			{
-				BossChecklist.Call("AddBossWithInfo", "Darkside", 0.5f, (Func<bool>)(() => KingdomWorld.downedDarkside), "Use a [i:" + ModContent.ItemType<Items.DarkenedHeart>() + "]");
-				BossChecklist.Call("AddBossWithInfo", "1000 heartless battle", 0.5f, (Func<bool>)(() => KingdomWorld.downedCustomInvasion), "Use a [i:" + ModContent.ItemType<NPCs.Invasions.ThousandHearlessBattleSpawner>() + "]");
-				BossChecklist.Call("AddBossWithInfo", "Xion Phase 1", 0.5f, (Func<bool>)(() => KingdomWorld.downedXionPhases[0]), "Use a [i:" + ModContent.ItemType<Items.seasaltIcecream>() + "]");
-				BossChecklist.Call("AddBossWithInfo", "Xion Phase 2", 6.5f, (Func<bool>)(() => KingdomWorld.downedXionPhases[1]), "Use a [i:" + ModContent.ItemType<Items.seasaltIcecream>() + "] in Hardmode");
-				BossChecklist.Call("AddBossWithInfo", "Xion Phase 3", 15f, (Func<bool>)(() => KingdomWorld.downedXionPhases[2]), "Use a [i:" + ModContent.ItemType<Items.seasaltIcecream>() + "] after beating the Moonlord");
-			}
-			*/
 		}
 
 

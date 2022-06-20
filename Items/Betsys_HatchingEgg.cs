@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Terraria.ModLoader;
 using Terraria.ID;
 using Terraria;
+using Terraria.Audio;
 
 namespace KingdomTerrahearts.Items
 {
@@ -34,9 +35,10 @@ namespace KingdomTerrahearts.Items
             return !NPC.AnyNPCs(NPCID.DD2Betsy) || base.CanUseItem(player);
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
 
+            SoundEngine.PlaySound(SoundID.Roar, player.position);
             NPC.SpawnBoss((int)player.Center.X, (int)Main.screenPosition.Y, NPCID.DD2Betsy, player.whoAmI);
 
             return base.UseItem(player);

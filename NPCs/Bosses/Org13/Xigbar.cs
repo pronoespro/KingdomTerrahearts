@@ -503,7 +503,7 @@ namespace KingdomTerrahearts.NPCs.Bosses.Org13
             return !NPC.AnyNPCs(ModContent.NPCType<xigbar_FirstPhase>());
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             NPC.SpawnBoss((int)player.Center.X, (int)Main.screenPosition.Y, ModContent.NPCType<xigbar_FirstPhase>(), player.whoAmI);
 

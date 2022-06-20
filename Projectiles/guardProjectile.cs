@@ -37,7 +37,7 @@ namespace KingdomTerrahearts.Projectiles
             SoraPlayer sp = Main.player[Projectile.owner].GetModPlayer<SoraPlayer>();
             sp.guardTime = Projectile.timeLeft;
             sp.guardProj = Projectile.whoAmI;
-            sp.guardType = blockingType.reflect;
+            sp.guardType = keybladeBlockingType.reflect;
 
             Projectile.position = Main.player[Projectile.owner].position - new Vector2(Projectile.width / 4.6f, 0);
 
@@ -90,7 +90,7 @@ namespace KingdomTerrahearts.Projectiles
                 sp.PlayGuardSound();
                 sp.guardTime = 50;
                 sp.guardProj = Projectile.whoAmI;
-                sp.guardType = blockingType.special;
+                sp.guardType = keybladeBlockingType.special;
             }
 
             if (Projectile.timeLeft > lastTimeLeft)

@@ -12,26 +12,24 @@ namespace KingdomTerrahearts.Extra
 		}
 
 
-		protected override float GetBenefitFrom(DamageClass damageClass)
+        public override bool GetEffectInheritance(DamageClass damageClass)
 		{
-			// Make this damage class not benefit from any otherclass stat bonuses by default, but still benefit from universal/all-class bonuses.
-			if (damageClass == Generic)
-				return 1f;
-
-
-			if (damageClass == Melee)
-				return 0.25f;
-
-			return 0f;
-
-		}
-
-		public override bool CountsAs(DamageClass damageClass)
-		{
-			// Make this damage class not benefit from any otherclass effects (e.g. Spectre bolts, Magma Stone) by default.
-			// Note that unlike GetBenefitFrom, you do not need to account for universal bonuses in this method.
 			return false;
 		}
 
-	}
+        public override StatInheritanceData GetModifierInheritance(DamageClass damageClass)
+        {
+			StatInheritanceData data = new StatInheritanceData(0.25f, 0.25f, 0.5f, 1f, 1f);
+
+			if (damageClass == Generic)
+				return StatInheritanceData.Full;
+
+
+			if (damageClass == Melee)
+				return data;
+
+			return StatInheritanceData.None;
+		}
+
+    }
 }

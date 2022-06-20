@@ -16,7 +16,7 @@ namespace KingdomTerrahearts.structures
 {
     public class StructureGenerator: ModSystem
     {
-
+		/*
 		public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
 		{
 			int structureIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Disney Worlds"));
@@ -239,6 +239,6 @@ namespace KingdomTerrahearts.structures
 		}
 
         #endregion
+		*/
     }
-
 }

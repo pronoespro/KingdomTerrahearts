@@ -35,7 +35,7 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return (spawnInfo.playerInTown && !NPC.AnyNPCs(NPC.type)) ? 10 : 0;
+            return (spawnInfo.PlayerInTown && !NPC.AnyNPCs(NPC.type)) ? 10 : 0;
         }
 
         public override void FindFrame(int frameHeight)
@@ -48,9 +48,11 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
 
         }
 
-        public override string TownNPCName()
+        public override List<string> SetNPCNameList()
         {
-            return "Neku Sakuraba";
+            List<string> possibleNames = new List<string>();
+            possibleNames.Add("Neku Sakuraba");
+            return possibleNames;
         }
 
         public override string GetChat()

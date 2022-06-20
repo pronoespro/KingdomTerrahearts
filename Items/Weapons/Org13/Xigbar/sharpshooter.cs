@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using System;
+using Terraria;
 using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -34,7 +35,7 @@ namespace KingdomTerrahearts.Items.Weapons.Org13.Xigbar
             Item.knockBack = 3;
             Item.value = 10000;
             Item.rare = ItemRarityID.Cyan;
-            Item.UseSound = SoundID.Item5.WithVolume(0.25f).WithPitchVariance(0.5f);
+            Item.UseSound = SoundID.Item5;
             Item.autoReuse = true;
             Item.shoot = ProjectileID.JestersArrow;
             Item.shootSpeed = 25;
@@ -46,7 +47,7 @@ namespace KingdomTerrahearts.Items.Weapons.Org13.Xigbar
             return true;
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             if (player.altFunctionUse == 2)
             {

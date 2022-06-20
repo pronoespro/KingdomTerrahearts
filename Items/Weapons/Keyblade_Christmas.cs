@@ -64,7 +64,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			comboMax = 5;
 			transProj = new int[] { ProjectileID.Flames, ProjectileID.Present };
 			transShootSpeed = new float[] { 7 };
-			transSounds = new Terraria.Audio.LegacySoundStyle[] { SoundID.Item1, SoundID.Item19,SoundID.Item19 };
+			transSounds = new Terraria.Audio.SoundStyle[] { SoundID.Item1, SoundID.Item19,SoundID.Item19 };
 		}
 		
 	}

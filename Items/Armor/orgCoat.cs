@@ -87,7 +87,7 @@ namespace KingdomTerrahearts.Items.Armor
 			{
 				displayCoatLine = new TooltipLine(Mod, "DisplayCoat", (showHood ? "The hood is visible" : "The hood is invisible") + "\nRight click to toogle visibility");
 			}
-			displayCoatLine.overrideColor = Color.LightBlue;
+			displayCoatLine.OverrideColor = Color.LightBlue;
 			if (!tooltips.Contains(displayCoatLine))
             {
 				tooltips.Add(displayCoatLine);

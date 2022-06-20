@@ -81,7 +81,7 @@ namespace KingdomTerrahearts
         //keyblade related
         public int guardTime = -45;
         public int guardProj;
-        public blockingType guardType=blockingType.none;
+        public keybladeBlockingType guardType = keybladeBlockingType.none;
         public bool blockedAttack=false;
         public int levelUpShowingTime = 0;
         public static Projectile[] summonProjectiles = new Projectile[0];
@@ -452,12 +452,12 @@ namespace KingdomTerrahearts
         {
             switch (guardType)
             {
-                case blockingType.reflect:
-                SoundEngine.PlaySound(SoundLoader.GetLegacySoundSlot(Mod, "Sounds/keybladeBlocking"));
+                case keybladeBlockingType.reflect:
+                SoundEngine.PlaySound(new SoundStyle("KingdomTerrahearts/Sounds/keybladeBlocking"));
                     break;
-                case blockingType.normal:
-                case blockingType.reversal:
-                SoundEngine.PlaySound(SoundID.Item1.SoundId, x: (int)Player.Center.X, y: (int)Player.Center.Y, volumeScale: 3);
+                case keybladeBlockingType.normal:
+                case keybladeBlockingType.reversal:
+                SoundEngine.PlaySound(SoundID.Item1,new Vector2(Player.Center.X, Player.Center.Y));
                     break;
             }
         }
@@ -654,11 +654,11 @@ namespace KingdomTerrahearts
             if (guardTime <= 0)
             {
                 guardProj = -1;
-                guardType = blockingType.none;
+                guardType = keybladeBlockingType.none;
                 blockedAttack = false;
             }
 
-            if (guardType != blockingType.none)
+            if (guardType != keybladeBlockingType.none)
             {
                 Player.velocity = Vector2.Zero;
                 int projType = ModContent.ProjectileType<Projectiles.ScepTend.Vergil_Bubble>();
@@ -666,13 +666,13 @@ namespace KingdomTerrahearts
                 float projScale = 1;
                 switch (guardType)
                 {
-                    case blockingType.normal:
+                    case keybladeBlockingType.normal:
                         projType = ProjectileID.Typhoon;
                         break;
-                    case blockingType.reflect:
+                    case keybladeBlockingType.reflect:
                         projType = ModContent.ProjectileType<Projectiles.guardProjectile>();
                         break;
-                    case blockingType.reversal:
+                    case keybladeBlockingType.reversal:
                         projScale = 5;
                         break;
                 }
@@ -753,7 +753,7 @@ namespace KingdomTerrahearts
             }
             if (lastHeldKeyblade < 0)
             {
-                guardType = blockingType.none;
+                guardType = keybladeBlockingType.none;
             }
             if (guardTime == 30)
             {
@@ -916,11 +916,11 @@ namespace KingdomTerrahearts
             AddInvulnerability(15);
         }
 
-        public override void ModifyWeaponDamage(Item item, ref StatModifier damage, ref float flat)
+        public override void ModifyWeaponDamage(Item item, ref StatModifier damage)
         {
             if (invincible)
             {
-                damage*= 15;
+                damage *= 15;
             }
         }
 

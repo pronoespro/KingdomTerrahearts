@@ -12,7 +12,7 @@ namespace KingdomTerrahearts.Items.Weapons
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Kingdom key D");
-			Tooltip.SetDefault("A keyblade made from your heart");
+			Tooltip.SetDefault("A keyblade made from darkness");
 			base.SetStaticDefaults();
 		}
 

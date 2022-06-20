@@ -37,10 +37,10 @@ namespace KingdomTerrahearts.Items
             return !alreadySpawned && Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3;
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             NPC.SpawnOnPlayer(player.whoAmI, NPCID.Plantera);
-            SoundEngine.PlaySound(SoundID.Roar, player.position, 0);
+            SoundEngine.PlaySound(SoundID.Roar, player.position);
             return true;
         }
 

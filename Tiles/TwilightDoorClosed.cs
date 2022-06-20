@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -47,10 +48,10 @@ namespace KingdomTerrahearts.Tiles
 			OpenDoorID = ModContent.TileType<TwilightDoorOpen>();
 		}
 
-		public override bool HasSmartInteract()
-		{
+        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
+        {
 			return true;
-		}
+        }
 
 		public override void NumDust(int i, int j, bool fail, ref int num)
 		{

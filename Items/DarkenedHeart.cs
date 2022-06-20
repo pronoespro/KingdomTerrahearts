@@ -37,10 +37,10 @@ namespace KingdomTerrahearts.Items
             return !alreadySpawned;
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<NPCs.Bosses.Darkside>());
-            SoundEngine.PlaySound(SoundID.Roar, player.position, 0);
+            SoundEngine.PlaySound(SoundID.Roar, player.position);
             return true;
         }
 

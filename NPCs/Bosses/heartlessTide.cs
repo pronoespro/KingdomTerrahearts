@@ -428,10 +428,10 @@ namespace KingdomTerrahearts.NPCs.Bosses
             return !alreadySpawned;
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<heartlessTower>());
-            SoundEngine.PlaySound(SoundID.Roar, player.position, 0);
+            SoundEngine.PlaySound(SoundID.Roar, player.position);
             return true;
         }
 
@@ -776,10 +776,10 @@ namespace KingdomTerrahearts.NPCs.Bosses
             return !alreadySpawned;
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<heartlessTide>());
-            SoundEngine.PlaySound(SoundID.Roar, player.position, 0);
+            SoundEngine.PlaySound(SoundID.Roar, player.position);
             return true;
         }
 
@@ -833,10 +833,10 @@ namespace KingdomTerrahearts.NPCs.Bosses
             return !alreadySpawned;
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<heartlessXeanorth>());
-            SoundEngine.PlaySound(SoundID.Roar, player.position, 0);
+            SoundEngine.PlaySound(SoundID.Roar, player.position);
             return true;
         }
     }
@@ -986,7 +986,7 @@ namespace KingdomTerrahearts.NPCs.Bosses
                         {
                             if (Projectile.velocity == Vector2.Zero)
                             {
-                                SoundEngine.PlaySound(SoundID.Item20.SoundId, x: (int)Projectile.Center.X, y: (int)Projectile.Center.Y, volumeScale: 1.5f, pitchOffset: 1f);
+                                SoundEngine.PlaySound(SoundID.Item20,new Vector2(Projectile.Center.X, Projectile.Center.Y));
                             }
                             Projectile.velocity = MathHelp.Normalize(desvel) * 25;
                         }
@@ -1013,6 +1013,36 @@ namespace KingdomTerrahearts.NPCs.Bosses
                 Projectile.frame = weaponType;
             }
 
+        }
+
+        public override void OnHitPlayer(Player target, int damage, bool crit)
+        {
+            if (Main.expertMode)
+            {
+                int buffType;
+                switch (weaponType)
+                {
+                    default:
+                        buffType = -1;
+                        break;
+                    case 0:
+                        buffType = BuffID.OnFire3;
+                        break;
+                    case 1:
+                        buffType = BuffID.Ichor;
+                        break;
+                    case 2:
+                        buffType = BuffID.BrokenArmor;
+                        break;
+                    case 3:
+                        buffType = BuffID.Poisoned;
+                        break;
+                }
+                if (buffType >= 0)
+                {
+                    target.AddBuff(buffType, 60 * 4);
+                }
+            }
         }
 
         public int GetDustID()
@@ -1459,7 +1489,5 @@ namespace KingdomTerrahearts.NPCs.Bosses
 
 
     }
-
-
 
 }

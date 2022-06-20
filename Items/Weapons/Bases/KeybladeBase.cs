@@ -15,7 +15,7 @@ using Terraria.Audio;
 using System.IO;
 using KingdomTerrahearts.Logic;
 
-public enum blockingType
+public enum keybladeBlockingType
 {
 	none,
 	normal,
@@ -160,7 +160,7 @@ namespace KingdomTerrahearts.Items.Weapons
 
 		public int[] transProj = { };
 		public float[] transShootSpeed = { };
-		public LegacySoundStyle[] transSounds = { SoundID.Item1 };
+		public SoundStyle[] transSounds = { SoundID.Item1 };
 
 		public int curTransformation=-1;
 		public int curForm = -1;
@@ -178,7 +178,7 @@ namespace KingdomTerrahearts.Items.Weapons
 		public bool curSummoning;
 
 		//Blocking attributes
-		public blockingType guardType=blockingType.normal;
+		public keybladeBlockingType guardType = keybladeBlockingType.normal;
 
 		//Level atributes
 		//0:Damage   1:knockback   2:Max combo   3:???   4:???   5:???
@@ -379,12 +379,12 @@ namespace KingdomTerrahearts.Items.Weapons
 
 			switch (sp.guardType)
             {
-				case blockingType.normal:
+				case keybladeBlockingType.normal:
 					Item.shoot = ProjectileID.None;
 					Item.useStyle = ItemUseStyleID.Swing;
 					GetCloserToEnemy(sp.Player);
 					break;
-				case blockingType.reflect:
+				case keybladeBlockingType.reflect:
 					int guardProj=Projectile.NewProjectile(source, sp.Player.Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.guardExpandProjectile>(), Item.damage*2, Item.knockBack*10);
 					Main.projectile[guardProj].owner = Item.playerIndexTheItemIsReservedFor;
 
@@ -392,7 +392,7 @@ namespace KingdomTerrahearts.Items.Weapons
 					Item.noMelee = true;
 					sp.AddInvulnerability(15);
 					break;
-				case blockingType.reversal:
+				case keybladeBlockingType.reversal:
 					Projectile.NewProjectile(source,sp.Player.Center, Vector2.Zero, projType, Item.damage, Item.knockBack);
 					break;
             }
@@ -421,7 +421,10 @@ namespace KingdomTerrahearts.Items.Weapons
 
 			if (curTransformation == -1 || (keyTransformations.Length>0 && keyTransformations[curTransformation]==keyTransformation.none))
 			{
-				GetCloserToEnemy(player);
+				if (KingdomTerrahearts.keybladeThrustingEnabled)
+				{
+					GetCloserToEnemy(player);
+				}
 				switch (combo)
 				{
 					case 0:
@@ -836,7 +839,7 @@ namespace KingdomTerrahearts.Items.Weapons
 				case keyMagic.lightning:
 					Item.useStyle = 100;
 					Item.channel = true;
-					Item.shoot = ModContent.ProjectileType<Projectiles.Lightning_Spell>();
+					Item.shoot = ModContent.ProjectileType<Projectiles.Magic.Lightning_Spell>();
 					break;
 				case keyMagic.water:
 					Item.shoot = ProjectileID.WaterBolt;
@@ -914,7 +917,7 @@ namespace KingdomTerrahearts.Items.Weapons
 						Main.dust[newDust].noGravity = true;
 					}
 
-					SoundEngine.PlaySound(SoundLoader.GetLegacySoundSlot(Mod, "Sounds/keybladeTransform"));
+					SoundEngine.PlaySound(new SoundStyle("KingdomTerrahearts/Sounds/keybladeTransform",SoundType.Sound));
 
 					if (curForm >= 0 && curForm < formchangeCutscenes.Length && formchangeCutscenes[curForm] >= 0)
 					{
@@ -1251,7 +1254,7 @@ namespace KingdomTerrahearts.Items.Weapons
             }
         }
 
-        public override bool? UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
 		{
 			if (player.whoAmI == Main.myPlayer)
 			{
@@ -1387,7 +1390,7 @@ namespace KingdomTerrahearts.Items.Weapons
 			{
 				transTooltip = new TooltipLine(Mod, "Transformations", GetTransformationsText());
 			}
-			transTooltip.overrideColor = Color.LightBlue;
+			transTooltip.OverrideColor = Color.LightBlue;
 			if (!tooltips.Contains(transTooltip))
 			{
 				tooltips.Add(transTooltip);
@@ -1397,7 +1400,7 @@ namespace KingdomTerrahearts.Items.Weapons
             {
 				levelTooltip = new TooltipLine(Mod, "Level", "Level of keyblade: "+keyLevel);
 			}
-			levelTooltip.overrideColor = Color.Yellow;
+			levelTooltip.OverrideColor = Color.Yellow;
 			if (!tooltips.Contains(levelTooltip))
 			{
 				tooltips.Add(levelTooltip);
@@ -1498,13 +1501,13 @@ namespace KingdomTerrahearts.Items.Weapons
 				{
 					transTooltip = new TooltipLine(Mod, "Transformations", GetTransformationsText());
 				}
-				transTooltip.text = GetTransformationsText();
+				transTooltip.Text = GetTransformationsText();
 
 				if (levelTooltip == null)
 				{
 					levelTooltip = new TooltipLine(Mod, "Level", "Level of keyblade: " + keyLevel);
 				}
-				levelTooltip.text = "Level of keyblade: " + keyLevel;
+				levelTooltip.Text = "Level of keyblade: " + keyLevel;
 
 				Item.prefix = 0;
 

@@ -135,7 +135,7 @@ namespace KingdomTerrahearts.Interface
                 {
                     if (!tickPlayed)
                     {
-                        SoundEngine.PlaySound(SoundID.MenuTick, -1, -1, 1, 1f, 0f);
+                        //SoundEngine.PlaySound(SoundID.MenuTick, -1, -1, 1, 1f, 0f);
                     }
                     tickPlayed = true;
 
@@ -146,7 +146,7 @@ namespace KingdomTerrahearts.Interface
                         if (keyblade.keyLevel < 10000)
                         {
                             keyblade.keyLevel++;
-                            SoundEngine.PlaySound(SoundID.Item37, -1, -1);
+                            //SoundEngine.PlaySound(SoundID.Item37, -1, -1);
                         }
                     }
                 }
