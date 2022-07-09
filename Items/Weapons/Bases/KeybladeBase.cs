@@ -382,7 +382,7 @@ namespace KingdomTerrahearts.Items.Weapons
 				case keybladeBlockingType.normal:
 					Item.shoot = ProjectileID.None;
 					Item.useStyle = ItemUseStyleID.Swing;
-					GetCloserToEnemy(sp.Player);
+					sp.GetCloserToEnemy(targetDistance,forwardMovement);
 					break;
 				case keybladeBlockingType.reflect:
 					int guardProj=Projectile.NewProjectile(source, sp.Player.Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.guardExpandProjectile>(), Item.damage*2, Item.knockBack*10);
@@ -417,13 +417,15 @@ namespace KingdomTerrahearts.Items.Weapons
 				AttackDisplay(false);
 			}
 
+			player.GetModPlayer<SoraPlayer>().SetContactinvulnerability((int)(Item.useTime));
+
 			Item.mana = 0;
 
 			if (curTransformation == -1 || (keyTransformations.Length>0 && keyTransformations[curTransformation]==keyTransformation.none))
 			{
 				if (KingdomTerrahearts.keybladeThrustingEnabled)
 				{
-					GetCloserToEnemy(player);
+					player.GetModPlayer<SoraPlayer>().GetCloserToEnemy(targetDistance,forwardMovement);
 				}
 				switch (combo)
 				{
@@ -475,17 +477,6 @@ namespace KingdomTerrahearts.Items.Weapons
 			return true;
 		}
 
-		public void GetCloserToEnemy(Player player)
-		{
-			SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
-			int closest = sp.GetClosestEnemy(targetDistance);
-			if (closest != -1 && Vector2.Distance(Main.npc[closest].Center, player.Center) > forwardMovement + (Main.npc[closest].width / 2 + Main.npc[closest].height / 2) / 2)
-			{
-				player.velocity = MathHelp.Normalize(Main.npc[closest].Center - player.Center) * forwardMovement;
-				player.direction = (int)MathHelp.Sign((Main.npc[closest].Center - player.Center).X);
-				sp.SetContactinvulnerability(Item.useTime / 5);
-			}
-		}
 
 		void ComboPlus(int comboMoment)
 		{
@@ -576,36 +567,36 @@ namespace KingdomTerrahearts.Items.Weapons
 					Item.noUseGraphic = true;
 					break;
 				case keyTransformation.swords:
-					GetCloserToEnemy(player);
+					player.GetModPlayer<SoraPlayer>().GetCloserToEnemy(targetDistance, forwardMovement);
 					UltimateSwordsCombo();
 					break;
 				case keyTransformation.skates:
-					GetCloserToEnemy(player);
+					player.GetModPlayer<SoraPlayer>().GetCloserToEnemy(targetDistance, forwardMovement);
 					break;
 				case keyTransformation.shield:
 					Item.channel = true;
 					TransformedShoot(ModContent.ProjectileType<shieldGuardProjectile>(),Item.shootSpeed);
-					GetCloserToEnemy(player);
+					player.GetModPlayer<SoraPlayer>().GetCloserToEnemy(targetDistance, forwardMovement);
 					Item.useStyle = ItemUseStyleID.Swing;
 					break;
 				case keyTransformation.nanoArms:
-					GetCloserToEnemy(player);
+					player.GetModPlayer<SoraPlayer>().GetCloserToEnemy(targetDistance, forwardMovement);
 					break;
 				case keyTransformation.hammer:
-					GetCloserToEnemy(player);
+					player.GetModPlayer<SoraPlayer>().GetCloserToEnemy(targetDistance, forwardMovement);
 					Item.useStyle = ItemUseStyleID.Swing;
 					break;
 				case keyTransformation.flag:
 					FlagCombo();
-					GetCloserToEnemy(player);
+					player.GetModPlayer<SoraPlayer>().GetCloserToEnemy(targetDistance, forwardMovement);
 					Item.useStyle = ItemUseStyleID.Rapier;
 					break;
 				case keyTransformation.dual:
-					GetCloserToEnemy(player);
+					player.GetModPlayer<SoraPlayer>().GetCloserToEnemy(targetDistance, forwardMovement);
 					DualSwordsCombo();
 					break;
 				case keyTransformation.drill:
-					GetCloserToEnemy(player);
+					player.GetModPlayer<SoraPlayer>().GetCloserToEnemy(targetDistance, forwardMovement);
 					Item.pick = 100;
 					Item.useStyle = ItemUseStyleID.Rapier;
 					break;

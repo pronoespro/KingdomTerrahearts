@@ -362,75 +362,76 @@ namespace KingdomTerrahearts
         public override void AddRecipes()
 		{
 
-			Recipe recipe = CreateRecipe(ItemID.FallenStar);
+			Recipe recipe = Recipe.Create(ItemID.FallenStar);
 			recipe.AddIngredient(ModContent.ItemType<Items.Materials.twilightShard>(),10);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.ShinyRedBalloon);
+			recipe = Recipe.Create(ItemID.ShinyRedBalloon);
 			recipe.AddIngredient(ModContent.ItemType<Items.Materials.lightningShard>(), 20);
 			recipe.AddIngredient(ItemID.PinkGel, 10);
 			recipe.AddTile(TileID.SkyMill);
 			recipe.Register();
 
-			CreateRecipe(ItemID.CloudinaBottle)
+
+			Recipe.Create(ItemID.CloudinaBottle)
 				.AddIngredient(ItemID.Cloud, 10)
 				.AddIngredient(ItemID.Bottle)
 				.AddTile(TileID.SkyMill)
 				.Register();
 
-			CreateRecipe(ItemID.SandstorminaBottle)
+			Recipe.Create(ItemID.SandstorminaBottle)
 				.AddIngredient(ItemID.CloudinaBottle)
 				.AddIngredient(ItemID.SandBlock,50)
 				.AddTile(TileID.SkyMill)
 				.Register();
 
-			CreateRecipe(ItemID.BlizzardinaBottle)
+			Recipe.Create(ItemID.BlizzardinaBottle)
 				.AddIngredient(ItemID.CloudinaBottle)
 				.AddIngredient(ItemID.IceBlock, 25)
 				.AddIngredient(ItemID.SnowBlock, 25)
 				.AddTile(TileID.SkyMill)
 				.Register();
 
-			recipe = CreateRecipe(ItemID.LavaCharm);
+			recipe = Recipe.Create(ItemID.LavaCharm);
 			recipe.AddIngredient(ModContent.ItemType<Items.Materials.blazingShard>(), 25);
 			recipe.AddIngredient(ItemID.Obsidian, 50);
 			recipe.AddTile(TileID.MythrilAnvil);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.WaterWalkingBoots);
+			recipe = Recipe.Create(ItemID.WaterWalkingBoots);
 			recipe.AddIngredient(ModContent.ItemType<Items.Materials.frostShard>(), 25);
 			recipe.AddTile(TileID.TinkerersWorkbench);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.Starfury);
+			recipe = Recipe.Create(ItemID.Starfury);
 			recipe.AddIngredient(ModContent.ItemType<Items.Materials.mythrilShard>(), 20);
 			recipe.AddIngredient(ItemID.FallenStar, 50);
 			recipe.AddTile(TileID.MythrilAnvil);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.Aglet);
+			recipe = Recipe.Create(ItemID.Aglet);
 			recipe.AddIngredient(ModContent.ItemType <Items.Materials.lightningShard>(), 10);
 			recipe.AddIngredient(ItemID.IronBar, 1);
 			recipe.AddTile(TileID.MythrilAnvil);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.AnkletoftheWind);
+			recipe = Recipe.Create(ItemID.AnkletoftheWind);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.lightningShard>(), 20);
 			recipe.AddIngredient(ItemID.Silk, 20);
 			recipe.AddTile(TileID.MythrilAnvil);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.WaterWalkingBoots);
+			recipe = Recipe.Create(ItemID.WaterWalkingBoots);
 			recipe.AddIngredient(ItemID.LavaCharm);
 			recipe.AddTile(TileID.TinkerersWorkbench);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.LavaCharm);
+			recipe = Recipe.Create(ItemID.LavaCharm);
 			recipe.AddIngredient(ItemID.WaterWalkingBoots);
 			recipe.AddTile(TileID.TinkerersWorkbench);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.TitaniumOre, 5);
+			recipe = Recipe.Create(ItemID.TitaniumOre, 5);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.blazingShard>(), 10);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.betwixtShard>(), 10);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.frostShard>(), 10);
@@ -442,53 +443,53 @@ namespace KingdomTerrahearts
 			recipe.AddTile(TileID.AdamantiteForge);
 			recipe.Register();
 
-			recipe = CreateRecipe(ModContent.ItemType<Items.Materials.twilightShard>(), 5);
+			recipe = Recipe.Create(ModContent.ItemType<Items.Materials.twilightShard>(), 5);
 			recipe.AddIngredient(ItemID.FallenStar);
 			recipe.AddTile(TileID.Furnaces);
 			recipe.Register();
 
-			recipe = CreateRecipe(ModContent.ItemType<Items.Materials.betwixtShard>(), 5);
+			recipe = Recipe.Create(ModContent.ItemType<Items.Materials.betwixtShard>(), 5);
 			recipe.AddIngredient(ItemID.IronOre);
 			recipe.AddTile(TileID.Furnaces);
 			recipe.Register();
 
-			recipe = CreateRecipe(ModContent.ItemType<Items.Materials.betwixtShard>(), 5);
+			recipe = Recipe.Create(ModContent.ItemType<Items.Materials.betwixtShard>(), 5);
 			recipe.AddIngredient(ItemID.LeadOre);
 			recipe.AddTile(TileID.Furnaces);
 			recipe.Register();
 
-			recipe = CreateRecipe(ModContent.ItemType<Items.Materials.frostShard>(), 5);
+			recipe = Recipe.Create(ModContent.ItemType<Items.Materials.frostShard>(), 5);
 			recipe.AddIngredient(ItemID.IceBlock);
 			recipe.AddTile(TileID.Furnaces);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.Lens, 6);
+			recipe = Recipe.Create(ItemID.Lens, 6);
 			recipe.AddIngredient(ItemID.Glass);
 			recipe.AddTile(TileID.Furnaces);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.MarbleBlock, 99);
+			recipe = Recipe.Create(ItemID.MarbleBlock, 99);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.twilightShard>(), 10);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.GraniteBlock, 99);
+			recipe = Recipe.Create(ItemID.GraniteBlock, 99);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.lucidShard>(), 10);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.RainCloud, 99);
+			recipe = Recipe.Create(ItemID.RainCloud, 99);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.lightningShard>(), 10);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.twilightShard>(), 10);
 			recipe.AddTile(TileID.SkyMill);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.Cloud, 99);
+			recipe = Recipe.Create(ItemID.Cloud, 99);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.twilightShard>(), 10);
 			recipe.AddTile(TileID.SkyMill);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.SkyMill);
+			recipe = Recipe.Create(ItemID.SkyMill);
 			recipe.AddIngredient(ModContent.ItemType <Items.Materials.lightningShard>(), 20);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.twilightShard>(), 20);
 			recipe.AddIngredient(ItemID.GoldBar, 5);
@@ -496,123 +497,123 @@ namespace KingdomTerrahearts
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.Umbrella);
+			recipe = Recipe.Create(ItemID.Umbrella);
 			recipe.AddIngredient(ItemID.Silk, 10);
 			recipe.AddIngredient(ItemID.IronBar, 2);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.StaffofRegrowth);
+			recipe = Recipe.Create(ItemID.StaffofRegrowth);
 			recipe.AddIngredient(ItemID.Daybloom, 10);
 			recipe.AddIngredient(ItemID.Waterleaf, 10);
 			recipe.Register();
 
-			recipe = CreateRecipe(ModContent.ItemType<Items.Materials.frostShard>(), 2);
+			recipe = Recipe.Create(ModContent.ItemType<Items.Materials.frostShard>(), 2);
 			recipe.AddIngredient(ItemID.Penguin);
 			recipe.AddTile(TileID.WorkBenches);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.WoodenBoomerang);
+			recipe = Recipe.Create(ItemID.WoodenBoomerang);
 			recipe.AddIngredient(ItemID.Wood,7);
 			recipe.AddIngredient(ItemID.IronBar);
 			recipe.AddTile(TileID.Anvils);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.WoodenBoomerang);
+			recipe = Recipe.Create(ItemID.WoodenBoomerang);
 			recipe.AddIngredient(ItemID.Wood, 7);
 			recipe.AddIngredient(ItemID.LeadBar);
 			recipe.AddTile(TileID.Anvils);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.IronBar);
+			recipe = Recipe.Create(ItemID.IronBar);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.betwixtShard>(),10);
 			recipe.AddTile(TileID.Anvils);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.SnowBlock);
+			recipe = Recipe.Create(ItemID.SnowBlock);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.frostShard>(), 2);
 			recipe.AddTile(TileID.Anvils);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.IceBlock);
+			recipe = Recipe.Create(ItemID.IceBlock);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.frostShard>(), 2);
 			recipe.AddTile(TileID.Anvils);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.PurpleIceBlock);
+			recipe = Recipe.Create(ItemID.PurpleIceBlock);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.frostShard>(), 2); 
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.pulsingShard>(), 1);
 			recipe.AddTile(TileID.Anvils);
 			recipe.Register();
 
-			recipe = CreateRecipe(ItemID.PinkIceBlock);
+			recipe = Recipe.Create(ItemID.PinkIceBlock);
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.frostShard>(), 2); 
 			recipe.AddIngredient(ModContent.ItemType < Items.Materials.twilightShard>(), 1);
 			recipe.AddTile(TileID.Anvils);
 			recipe.Register();
 
-			CreateRecipe(ItemID.EnchantedBoomerang, 2)
+			Recipe.Create(ItemID.EnchantedBoomerang, 2)
 			.AddIngredient(ItemID.EnchantedBoomerang)
 			.AddTile(TileID.Anvils)
 			.Register();
 
-			CreateRecipe(ItemID.DarkShard)
+			Recipe.Create(ItemID.DarkShard)
 			.AddIngredient(ModContent.ItemType<Items.Materials.betwixtShard>(),13)
 			.AddIngredient(ItemID.SoulofNight, 7)
 			.AddIngredient(ItemID.DemoniteBar)
 			.AddTile(TileID.MythrilAnvil)
 			.Register();
 
-			CreateRecipe(ItemID.LightShard)
+			Recipe.Create(ItemID.LightShard)
 			.AddIngredient(ModContent.ItemType<Items.Materials.twilightShard>(), 13)
 			.AddIngredient(ItemID.SoulofLight, 7)
 			.AddIngredient(ItemID.OrichalcumBar)
 			.AddTile(TileID.MythrilAnvil)
 			.Register();
 
-			CreateRecipe(ItemID.LightShard)
+			Recipe.Create(ItemID.LightShard)
 			.AddIngredient(ModContent.ItemType<Items.Materials.twilightShard>(), 13)
 			.AddIngredient(ItemID.SoulofLight, 7)
 			.AddIngredient(ItemID.MythrilBar)
 			.AddTile(TileID.MythrilAnvil)
 			.Register();
 
-			CreateRecipe(ItemID.PinkGel,10)
+			Recipe.Create(ItemID.PinkGel,10)
 			.AddIngredient(ModContent.ItemType<Items.Materials.twilightShard>(), 20)
 			.AddIngredient(ItemID.Gel, 50)
 			.AddTile(TileID.TinkerersWorkbench)
 			.Register();
 
-			CreateRecipe(ItemID.Wood)
+			Recipe.Create(ItemID.Wood)
 			.AddIngredient(ModContent.ItemType<Items.Weapons.Joke.Keyblade_woodenStick>())
 			.Register();
 
 
-			CreateRecipe(ItemID.TissueSample)
+			Recipe.Create(ItemID.TissueSample)
 			.AddIngredient(ModContent.ItemType<Items.Materials.writhingShard>(),5)
 			.AddIngredient(ItemID.ShadowScale)
 			.AddTile(TileID.MythrilAnvil)
 			.Register();
 
-			CreateRecipe(ItemID.ShadowScale)
+			Recipe.Create(ItemID.ShadowScale)
 			.AddIngredient(ModContent.ItemType<Items.Materials.writhingShard>(),5)
 			.AddIngredient(ItemID.TissueSample)
 			.AddTile(TileID.MythrilAnvil)
 			.Register();
 
-			CreateRecipe(ItemID.DemoniteOre)
+			Recipe.Create(ItemID.DemoniteOre)
 			.AddIngredient(ModContent.ItemType<Items.Materials.writhingShard>(), 2)
 			.AddIngredient(ItemID.CrimtaneOre)
 			.AddTile(TileID.MythrilAnvil)
 			.Register();
 
-			CreateRecipe(ItemID.CrimtaneOre)
+			Recipe.Create(ItemID.CrimtaneOre)
 			.AddIngredient(ModContent.ItemType<Items.Materials.writhingShard>(), 2)
 			.AddIngredient(ItemID.DemoniteOre)
 			.AddTile(TileID.MythrilAnvil)
 			.Register();
 
-			CreateRecipe(ItemID.InfernoFork)
+			Recipe.Create(ItemID.InfernoFork)
 			//.AddCondition(new Recipe.Condition(NetworkText.FromLiteral("Journey Mode only"), (Recipe r) => Main.hardMode))
 			.AddIngredient(ModContent.ItemType<Items.Materials.blazingStone>(), 2)
 			.AddIngredient(ItemID.HellstoneBar)

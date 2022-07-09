@@ -1347,6 +1347,19 @@ namespace KingdomTerrahearts
         {
             noControlTime = 5;
         }
+
+
+        public void GetCloserToEnemy(int targetDistance,float forwardMovement)
+        {
+            SoraPlayer sp = Player.GetModPlayer<SoraPlayer>();
+            int closest = sp.GetClosestEnemy(targetDistance);
+            if (closest != -1 && Vector2.Distance(Main.npc[closest].Center, Player.Center) > forwardMovement + (Main.npc[closest].width / 2 + Main.npc[closest].height / 2) / 2)
+            {
+                Player.velocity = MathHelp.Normalize(Main.npc[closest].Center - Player.Center) * forwardMovement;
+                Player.direction = (int)MathHelp.Sign((Main.npc[closest].Center - Player.Center).X);
+            }
+        }
+
     }
 
 }

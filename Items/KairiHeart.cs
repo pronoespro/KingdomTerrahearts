@@ -10,8 +10,6 @@ namespace KingdomTerrahearts.Items
     public class KairiHeart:ModItem
     {
 
-        Mod fargoDLC;
-
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Kairi's heart");
