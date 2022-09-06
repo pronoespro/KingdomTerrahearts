@@ -50,7 +50,13 @@ namespace KingdomTerrahearts.Items.Weapons.Bases
 
         public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
         {
-            player.statMana += (player.statMana < player.statManaMax - manaSteal) ? manaSteal : 0;
+            int manaRecoverAmmount = (player.statMana < player.statManaMax - manaSteal) ? manaSteal : player.statManaMax - player.statMana;
+            if (manaRecoverAmmount > 0)
+            {
+                player.statMana += manaRecoverAmmount;
+                player.ManaEffect(manaRecoverAmmount);
+            }
+
             getInvencibilityAmmount = 3;
 
             base.OnHitNPC(player, target, damage, knockBack, crit);
@@ -65,6 +71,7 @@ namespace KingdomTerrahearts.Items.Weapons.Bases
             Item.noMelee = false;
             Item.channel = false;
             Item.noUseGraphic = false;
+            Item.reuseDelay = 0;
         }
 
         public override bool AltFunctionUse(Player player)
