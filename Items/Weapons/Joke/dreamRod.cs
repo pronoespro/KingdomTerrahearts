@@ -33,6 +33,8 @@ namespace KingdomTerrahearts.Items.Weapons.Joke
             projectileDistanceWhenShot = new float[] {0,50,100,150 };
             damages = new int[] {10,7,5,10 };
             shootSpeeds = new float[] { 5f, 7f, 15f, 150f };
+
+            Item.autoReuse = true;
         }
 
         public override void AddRecipes()

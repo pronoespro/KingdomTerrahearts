@@ -76,6 +76,11 @@ namespace KingdomTerrahearts.Items.Weapons.Bases
 
         }
 
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
+        {
+            return true;
+        }
+
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             if (shootType[curProjectile] != projShootType.normal)

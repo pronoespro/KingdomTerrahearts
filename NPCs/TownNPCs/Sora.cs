@@ -889,7 +889,7 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
             NPC.lifeRegen = 50;
         }
 
-        public override List<string> SetNPCNameList()
+        public override List<string> SetNPCNameList()/* tModPorter Suggestion: Return a list of names */
         {
             List<string> possibleNames = new List<string>();
             if (NPC.downedBoss1){

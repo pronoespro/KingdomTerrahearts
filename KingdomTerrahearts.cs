@@ -49,6 +49,8 @@ namespace KingdomTerrahearts
 		public static bool keybladeThrustingEnabled;
 		public static bool canDoCutscenes;
 
+		public static SubworldLibrary.SubworldLibrary subworldLibrary;
+
 		private GameTime _LastUIUpdateGameTime;
 
 		internal interface ILoadable
@@ -84,6 +86,8 @@ namespace KingdomTerrahearts
 			commandUI = null;
 			dialogUI = null;
 			instance = null;
+
+			subworldLibrary = null;
 
 		}
 
@@ -168,6 +172,11 @@ namespace KingdomTerrahearts
 			//Collision extra
 
 			On.Terraria.Player.Update_NPCCollision += CollisionDetour;
+
+			Mod subworldMod = ModLoader.GetMod("SubworldLibrary");
+			if (subworldMod != null) {
+				subworldLibrary = (SubworldLibrary.SubworldLibrary)subworldMod;
+			}
 
 		}
 
@@ -359,7 +368,7 @@ namespace KingdomTerrahearts
 			partyInterface?.SetState((!setUI) ? null : partyUI);
 		}
 
-        public override void AddRecipes()
+        public override void AddRecipes()/* tModPorter Note: Removed. Use ModSystem.AddRecipes */
 		{
 
 			Recipe recipe = Recipe.Create(ItemID.FallenStar);
@@ -619,6 +628,12 @@ namespace KingdomTerrahearts
 			.AddIngredient(ItemID.HellstoneBar)
 			.AddIngredient(ItemID.DemonScythe)
 			.AddTile(TileID.MythrilAnvil)
+			.Register();
+
+			Recipe.Create(ItemID.ThrowingKnife)
+			//.AddCondition(new Recipe.Condition(NetworkText.FromLiteral("Journey Mode only"), (Recipe r) => Main.hardMode))
+			.AddIngredient(ModContent.ItemType<Items.Materials.betwixtShard>(), 2)
+			.AddTile(TileID.Anvils)
 			.Register();
 
 		}

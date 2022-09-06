@@ -434,15 +434,12 @@ namespace KingdomTerrahearts.Items.Weapons
 						Item.useStyle = ItemUseStyleID.Swing;
 						break;
 					case 1:
+					case 3:
 						Item.shoot = ProjectileID.None;
 						Item.useStyle = ItemUseStyleID.Thrust;
 						break;
 					case 2:
 						ShootMagicProjectile();
-						break;
-					case 3:
-						Item.shoot = ProjectileID.None;
-						Item.useStyle = ItemUseStyleID.Thrust;
 						break;
 					default:
 					case 4:

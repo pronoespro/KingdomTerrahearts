@@ -87,6 +87,12 @@ namespace KingdomTerrahearts
         public static Projectile[] summonProjectiles = new Projectile[0];
         public int noContactDamageTime = 0;
 
+        //Weapon attacks related
+        public Vector2 weaponAttackVel;
+        public int attackVelTime;
+        public bool rotateToAttackVel = false;
+        public bool attackVelIgnoreGround;
+
         //form related
         public bool usingForm;
 
@@ -766,6 +772,26 @@ namespace KingdomTerrahearts
 
             lastHeldItem = Player.HeldItem;
 
+            if(attackVelTime>0 && (Collision.CanHitLine(Player.Center, Player.width, Player.height, Player.Center+weaponAttackVel, Player.width, Player.height)||attackVelIgnoreGround))
+            {
+                Player.Center += weaponAttackVel/2;
+                Player.velocity = weaponAttackVel/2;
+
+                if (rotateToAttackVel){
+                    Player.fullRotation = MathHelp.Lerp(0, MathF.Atan2(weaponAttackVel.Y, weaponAttackVel.X),MathF.Min(1,attackVelTime/3f));
+                }
+            }
+            attackVelTime--;
+
+        }
+
+        public void AttackMovement(Vector2 vel, int time,bool ignoreGround=false)
+        {
+            attackVelIgnoreGround = ignoreGround;
+            attackVelTime = time;
+            weaponAttackVel = vel;
+
+            Player.velocity = weaponAttackVel;
         }
 
         public void ChangeGlideFallSpeed(float fallspeed)
@@ -1000,13 +1026,13 @@ namespace KingdomTerrahearts
             return (invincible)?0.1f:base.UseTimeMultiplier(item);
         }
 
-        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
         {
             if (noControlTime > 0)
             {
                 return false;
             }
-            if (noContactDamageTime > 0 && damageSource.SourceNPCIndex>=0 && damageSource.SourceProjectileIndex<0)
+            if (noContactDamageTime > 0 && damageSource.SourceNPCIndex >= 0 && damageSource.SourceProjectileIndex < 0)
             {
                 return false;
             }
@@ -1019,12 +1045,12 @@ namespace KingdomTerrahearts
                 blockedAttack = true;
                 if (guardTime <= 30)
                 {
-                    guardTime += 25; 
+                    guardTime += 25;
                     PlayGuardSound();
                 }
                 return false;
             }
-            return true;
+            return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource, ref cooldownCounter);
         }
 
         public override void OnHitAnything(float x, float y, Entity victim)

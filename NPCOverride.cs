@@ -116,6 +116,12 @@ namespace KingdomTerrahearts
         //Change the spawn pool
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
         {
+
+            /*if((bool)(KingdomTerrahearts.subworldLibrary.Call("AnyActive",Mod)as bool?))
+            {
+                pool.Clear();
+            }*/
+
             //If the custom invasion is up and the invasion has reached the spawn pos
             if (KingdomWorld.customInvasionUp && (Main.invasionX == (double)Main.spawnTileX))
             {

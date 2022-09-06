@@ -25,22 +25,32 @@ namespace KingdomTerrahearts.Subworlds
 			Main.time = 27000;
         }
 
-        public override int Width => 550;
-        public override int Height => 200;
-
         public override bool NoPlayerSaving => true;
-        public override bool ShouldSave => false;
+        public override bool ShouldSave =>false;
+
+
+        public override int Width => 550;
+
+        public override int Height => 200;
 
         public override List<GenPass> Tasks => OlympusGenerate();
 
-		public List<GenPass> OlympusGenerate()
+        public List<GenPass> OlympusGenerate()
         {
 			List<GenPass> pass=new List<GenPass>();
+
+			pass.Add(new PassLegacy("Adjust world level", AdjustWorldLevel));
 
 			pass.Add(new PassLegacy("Olympus", GenerateDisneyWorlds));
 
 			return pass;
         }
+
+		public void AdjustWorldLevel(GenerationProgress p, GameConfiguration conf)
+		{
+			Main.worldSurface = Main.maxTilesY + 42; //Hides the underground layer just out of bounds
+			Main.rockLayer = Main.maxTilesY+42; //Hides the cavern layer way out of bounds
+		}
 
 		public void GenerateDisneyWorlds(GenerationProgress p, GameConfiguration conf)
 		{

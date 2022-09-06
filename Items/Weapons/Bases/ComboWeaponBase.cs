@@ -1,5 +1,6 @@
 ﻿using KingdomTerrahearts.Extra;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,7 +14,12 @@ namespace KingdomTerrahearts.Items.Weapons
 		public int timeNotUsed = 0;
 		public bool canKill = false;
 
-		public override bool CanUseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
+        {
+			return true;
+        }
+
+        public override bool CanUseItem(Player player)
 		{
 			Item.useTime = Item.useAnimation;
 			Item.reuseDelay = 0;

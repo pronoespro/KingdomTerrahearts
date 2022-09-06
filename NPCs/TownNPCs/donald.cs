@@ -49,7 +49,7 @@ namespace KingdomTerrahearts.NPCs.TownNPCs
 
         }
 
-        public override List<string> SetNPCNameList()
+        public override List<string> SetNPCNameList()/* tModPorter Suggestion: Return a list of names */
         {
             List<string> possibleNames = new List<string>();
             possibleNames.Add("Donald");
