@@ -30,7 +30,6 @@ namespace KingdomTerrahearts.Items
             Item.useStyle = ItemUseStyleID.HoldUp;
 
         }
-
         public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             if(Main.netMode != NetmodeID.MultiplayerClient)

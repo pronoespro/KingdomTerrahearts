@@ -26,7 +26,7 @@ namespace KingdomTerrahearts.Items.Weapons.Org13.Larxene
             base.SetDefaults();
 
             Item.autoReuse = true;
-            Item.damage = 35;
+            Item.damage = 45;
             Item.useTime = Item.useAnimation = 25;
             Item.knockBack = 0.1f;
             Item.maxStack = 1;

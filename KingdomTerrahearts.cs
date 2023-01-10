@@ -125,6 +125,9 @@ namespace KingdomTerrahearts
 
 				MusicLoader.AddMusicBox(this,
 					MusicLoader.GetMusicSlot(this, "Sounds/Music/Vector to the Heaven"), ModContent.ItemType<Items.Placeable.VectorToHeaven_Item>(), ModContent.TileType<Tiles.MusicBoxes.VectorToHeaven_MusicBox>());
+				
+				//MusicLoader.AddMusicBox(this,
+				//	MusicLoader.GetMusicSlot(this, "Sounds/Music/Traverse Town"), ModContent.ItemType<Items.Placeable.TraverseTown_Item>(), ModContent.TileType<Tiles.MusicBoxes.TraverseTown_MusicBox>());
 
 			}
 

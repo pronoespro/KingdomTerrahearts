@@ -105,11 +105,15 @@ namespace KingdomTerrahearts
 
         //Biome related
         public bool inTwilightTown = false;
+        public bool inTraverseTown = false;
 
-        //Music related
+        //Minigame related
+            //Music
         public bool up, down, left, right;
         public bool justPressUp, justPressDown, justPressLeft, justPressRight;
         public Vector2 collisionPoints;
+            //Mailbox
+        public int rewardsRecieved = 0;
 
         //Extra collision realated
         public bool collisionUp, collisionDown, collisionLeft, collisionRight;
@@ -201,10 +205,20 @@ namespace KingdomTerrahearts
         public override void PlayerDisconnect(Player player)
         {
             inTwilightTown = false;
+            inTraverseTown = false;
 
             if (player == Main.LocalPlayer)
             {
                 DialogSystem.RemoveConversations(10000000);
+            }
+
+            foreach(string key in PartyMemberLogic.partyMembers.Keys)
+            {
+
+                for(int i = 0; i < PartyMemberLogic.partyMembers[key].Count; i++)
+                {
+                    PartyMemberLogic.RemovePartyMember(PartyMemberLogic.partyMembers[key][i]);
+                }
             }
         }
 
@@ -523,13 +537,19 @@ namespace KingdomTerrahearts
 
         public override void ModifyStartingInventory(IReadOnlyDictionary<string, List<Item>> itemsByMod, bool mediumCoreDeath)
         {
+            bool addedWoodKeyblade = false;
             for(int i = 0; i < itemsByMod["Terraria"].Count; i++)
             {
                 if (itemsByMod["Terraria"][i].type == ItemID.CopperShortsword)
                 {
+                    addedWoodKeyblade = true;
                     itemsByMod["Terraria"].RemoveAt(i);
-                    itemsByMod["Terraria"].Add(new Item(ModContent.ItemType<Items.Weapons.Joke.Keyblade_wood>()));
+                    itemsByMod["Terraria"].Insert(i,new Item(ModContent.ItemType<Items.Weapons.Joke.Keyblade_wood>()));
                 }
+            }
+            if (!addedWoodKeyblade)
+            {
+                itemsByMod["Terraria"].Add(new Item(ModContent.ItemType<Items.Weapons.Joke.Keyblade_wood>()));
             }
 
         }
@@ -545,6 +565,7 @@ namespace KingdomTerrahearts
             midCutscene = (midCutscene)?midCutscene : noControlTime > 0;
 
             inTwilightTown = KingdomWorld.twilightBiome > 75 && !Main.gameMenu;
+            inTraverseTown = KingdomWorld.traverseBiome > 75 && !Main.gameMenu;
 
             if (levelUpShowingTime > 0)
             {
@@ -816,6 +837,7 @@ namespace KingdomTerrahearts
                 tag["playerDied"] = playerDied;
             }
             tag["playerSpawn"] = originalSpawnPoint;
+            tag["mailRewards"] = rewardsRecieved;
         }
 
         public override void LoadData(TagCompound tag)
@@ -828,6 +850,10 @@ namespace KingdomTerrahearts
                 originalSpawnPoint = tag.Get<Vector2>("playerSpawn");
             }
             KingdomTerrahearts.instance.ShowDialogUI();
+            if (tag.ContainsKey("mailRewards"))
+            {
+                rewardsRecieved = tag.GetAsInt("mailRewards");
+            }
         }
 
         public void GetPartyMember(int npcNum)
@@ -981,7 +1007,7 @@ namespace KingdomTerrahearts
                 Conversation[] conv = new Conversation[] { new Conversation("", Color.Blue, DialogSystem.NPC_DIALOGTIME, ""), new Conversation("I need your help, we'll talk soon", Color.Blue, DialogSystem.NPC_DIALOGTIME, "Sora"), new Conversation("I've given you the power to use a Keyblade", Color.Blue, DialogSystem.NPC_DIALOGTIME, "Sora"), new Conversation("I hope to meet you soon", Color.Blue, DialogSystem.NPC_DIALOGTIME, "Sora") };
                 DialogSystem.AddConversation(conv);
             }
-            else
+            else if(!NPC.AnyNPCs(ModContent.NPCType<NPCs.TownNPCs.Sora_first>()))
             {
                 Conversation[] conv = new Conversation[] { new Conversation("I trully hope to meet you soon", Color.Blue, DialogSystem.NPC_DIALOGTIME, "Sora") };
                 DialogSystem.AddConversation(conv);

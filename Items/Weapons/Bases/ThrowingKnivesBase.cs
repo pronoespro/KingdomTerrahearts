@@ -29,6 +29,8 @@ namespace KingdomTerrahearts.Items.Weapons.Bases
         public int manaSteal=3;
         public int lastUsedTime;
 
+        public float normalSize=0.5f, dashSize=1f;
+
         public int tpProjectile = ProjectileID.None;
         public bool tpProjUsesProjTimeLeft = false;
         public bool tpProjIgnoresGround = false;
@@ -41,6 +43,7 @@ namespace KingdomTerrahearts.Items.Weapons.Bases
         protected int curCombo;
 
         private int getInvencibilityAmmount;
+        private int target;
 
         public override void SetStaticDefaults()
         {
@@ -86,6 +89,7 @@ namespace KingdomTerrahearts.Items.Weapons.Bases
                 lastUsedTime = 0;
                 if (player.altFunctionUse == 2)
                 {
+                    target = -1;
                     Item.damage = thrownDamage;
                     Item.useAnimation = Item.useTime = thrownSpeed;
                     Item.DamageType = DamageClass.Throwing;
@@ -126,16 +130,30 @@ namespace KingdomTerrahearts.Items.Weapons.Bases
         public override bool? UseItem(Player player)
         {
             lastUsedTime = 0;
+
+            if (target>=0 && Main.npc[target].active)
+            {
+                SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
+                sp.ModifyCutsceneCamera(Main.npc[target].Center-player.Center,camPercentChange:100);
+            }
+            else
+            {
+                target = -1;
+            }
+
             return true;
         }
 
         public void GetComboAnimation(Player player)
         {
             SoraPlayer sp = player.GetModPlayer<SoraPlayer>();
+            Item.reuseDelay = 0;
+            Item.scale = normalSize;
             switch (curCombo)
             {
                 default:
                 case 0:
+                    target = -1;
                     Item.useStyle = ItemUseStyleID.Swing;
                     sp.GetCloserToEnemy(300, 10);
                     break;
@@ -146,11 +164,13 @@ namespace KingdomTerrahearts.Items.Weapons.Bases
                 case 2:
                     Item.useStyle = ItemUseStyleID.Thrust;
 
-                    int target =sp.GetClosestEnemy(300);
+                    target =sp.GetClosestEnemy(300);
 
 
                     if (target >=0)
                     {
+                        Item.scale = dashSize;
+                        Item.reuseDelay = Item.useAnimation;
                         Vector2 realDashDir = new Vector2(dashDir.X * player.direction, dashDir.Y);
                         if (CanTPToEnemy(target, player,realDashDir)) {
                             player.Center = Main.npc[target].Center - realDashDir * (dashTime / 2);
@@ -241,11 +261,13 @@ namespace KingdomTerrahearts.Items.Weapons.Bases
                     curCombo = 0;
                     lastUsedTime = 0;
                     getInvencibilityAmmount = 3;
+                    target = -1;
                 }
 
             }
             else
             {
+                target = -1;
                 curCombo = 0;
                 lastUsedTime = 0;
                 getInvencibilityAmmount = 3;

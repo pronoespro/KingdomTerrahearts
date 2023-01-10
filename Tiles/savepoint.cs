@@ -36,15 +36,10 @@ namespace KingdomTerrahearts.Tiles
 			AnimationFrameHeight = 38;
 		}
 
-		public override void SetSpriteEffects(int i, int j, ref SpriteEffects spriteEffects)
+		public override bool AutoSelect(int i, int j, Item item)
 		{
-			// Flips the sprite if x coord is odd. Makes the tile more interesting.
-			if (j % 4 > 2)
-			{
-				spriteEffects = SpriteEffects.FlipHorizontally;
-			}
+			return true;
 		}
-
 
 		public override void AnimateTile(ref int frame, ref int frameCounter)
 		{

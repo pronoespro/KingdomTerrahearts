@@ -40,7 +40,7 @@ namespace KingdomTerrahearts.Tiles
 			TileObjectData.addTile(Type);
 			AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
 			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Example Door");
+			name.SetDefault("Twilight Door");
 			AddMapEntry(new Color(200, 200, 200), name);
 			DustType = DustID.t_Honey;
 			TileID.Sets.DisableSmartCursor[Type] = true;

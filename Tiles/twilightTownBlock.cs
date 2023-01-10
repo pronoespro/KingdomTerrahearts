@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace KingdomTerrahearts.Tiles
 {
-    class twilightTownBlock:ModTile
+    public class twilightTownBlock:ModTile
 	{
 		public override void SetStaticDefaults()
 		{

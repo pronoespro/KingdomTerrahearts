@@ -24,10 +24,9 @@ namespace KingdomTerrahearts.Subworlds
 			Main.dayTime = true;
 			Main.time = 27000;
         }
-
+		
         public override bool NoPlayerSaving => true;
-        public override bool ShouldSave =>false;
-
+        public override bool ShouldSave => false;
 
         public override int Width => 550;
 
@@ -48,8 +47,8 @@ namespace KingdomTerrahearts.Subworlds
 
 		public void AdjustWorldLevel(GenerationProgress p, GameConfiguration conf)
 		{
-			Main.worldSurface = Main.maxTilesY + 42; //Hides the underground layer just out of bounds
-			Main.rockLayer = Main.maxTilesY+42; //Hides the cavern layer way out of bounds
+			Main.worldSurface = Main.maxTilesY + 420; //Hides the underground layer just out of bounds
+			Main.rockLayer = Main.maxTilesY+420; //Hides the cavern layer way out of bounds
 		}
 
 		public void GenerateDisneyWorlds(GenerationProgress p, GameConfiguration conf)
@@ -201,6 +200,47 @@ namespace KingdomTerrahearts.Subworlds
 							tile.ClearTile();
 						}
 
+						//Actuate blocks
+						if (structure.hasActuatedBlocks &&
+							structure.actuatedBlocks.GetLength(0) >= flippedY && structure.actuatedBlocks.GetLength(1) >= structX)
+						{
+							tile.IsActuated = structure.actuatedBlocks[flippedY, structX];
+						}
+
+						if (structure.walls.types[structure.walls.element[flippedY, structX]] != WallID.None)
+						{
+							ushort wall = (ushort)structure.walls.types[structure.walls.element[flippedY, structX]];
+							tile.WallType = (ushort)(wall == 0 ? WallID.None : wall);
+
+							if (structure.hasWallPaint && structure.wallColors.element.GetLength(0) > flippedY && structure.wallColors.element.GetLength(1) > structX)
+							{
+								tile.WallColor = (byte)structure.wallColors.types[structure.wallColors.element[flippedY, structX]];
+							}
+						}
+						else
+						{
+							WorldUtils.ClearWall(k, l);
+						}
+
+						if (structure.containsLiquids && structure.liquids.types[structure.liquids.element[flippedY, structX]] > 0)
+						{
+							tile.LiquidAmount = (byte)structure.liquids.types[structure.liquids.element[flippedY, structX]];
+						}
+					}
+				}
+			}
+			for (int structY = 0; structY < structure.ReturnLength(1); structY++)
+			{
+				for (int structX = 0; structX < structure.ReturnLength(0); structX++)
+				{
+					int k = i - (structure.ReturnLength(0) / 2) + structX;
+					int l = j - (structure.ReturnLength(1) / 2) + structY;
+
+					int flippedY = (structure.ReturnLength(1)) - structY - 1;
+					if (WorldGen.InWorld(k, l, 30))
+					{
+						Tile tile = Framing.GetTileSafely(k, l);
+
 						//Place furniture
 						if (structure.containsFurniture &&
 							flippedY < structure.furnitureTiles.element.GetLength(0) && structX < structure.furnitureTiles.element.GetLength(1))
@@ -229,33 +269,6 @@ namespace KingdomTerrahearts.Subworlds
 									}
 								}
 							}
-						}
-
-						//Actuate blocks
-						if (structure.hasActuatedBlocks &&
-							structure.actuatedBlocks.GetLength(0) >= flippedY && structure.actuatedBlocks.GetLength(1) >= structX)
-						{
-							tile.IsActuated = structure.actuatedBlocks[flippedY, structX];
-						}
-
-						if (structure.walls.types[structure.walls.element[flippedY, structX]] != WallID.None)
-						{
-							ushort wall = (ushort)structure.walls.types[structure.walls.element[flippedY, structX]];
-							tile.WallType = (ushort)(wall == 0 ? WallID.None : wall);
-
-							if (structure.hasWallPaint && structure.wallColors.element.GetLength(0) > flippedY && structure.wallColors.element.GetLength(1) > structX)
-							{
-								tile.WallColor = (byte)structure.wallColors.types[structure.wallColors.element[flippedY, structX]];
-							}
-						}
-						else
-						{
-							WorldUtils.ClearWall(k, l);
-						}
-
-						if (structure.containsLiquids && structure.liquids.types[structure.liquids.element[flippedY, structX]] > 0)
-						{
-							tile.LiquidAmount = (byte)structure.liquids.types[structure.liquids.element[flippedY, structX]];
 						}
 					}
 				}

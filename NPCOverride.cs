@@ -29,7 +29,7 @@ namespace KingdomTerrahearts
         int[] initTownNPCStats = new int[]{-1,-1,0,0,-1,-1,0,0,0};
 
         //boss stuff
-        bool heartlessVerActive=false;
+        public bool heartlessVerActive=false;
         bool spawnConversationDone = false;
         int proj;
 
@@ -1005,9 +1005,6 @@ namespace KingdomTerrahearts
             SoraPlayer sp= Main.player[Main.myPlayer].GetModPlayer<SoraPlayer>();
             DeathConversation(npc);
 
-            if (sp.isBoss(npc.whoAmI)){
-                CheckBattlegroundDrops(npc.whoAmI, sp);
-            }
             if (npc.type == NPCID.EaterofWorldsHead)
             {
                 if (NPC.CountNPCS(NPCID.EaterofWorldsHead) <= 1 && !NPC.AnyNPCs(NPCID.EaterofWorldsBody))
@@ -1159,6 +1156,7 @@ namespace KingdomTerrahearts
         {
 
             SoraPlayer sp = Main.player[npc.target].GetModPlayer<SoraPlayer>();
+            IItemDropRule _battlegroundDrop = new LeadingConditionRule(new BattlegroundDropConditions());
 
             switch (npc.type)
             {
@@ -1167,6 +1165,9 @@ namespace KingdomTerrahearts
 
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Weapons.Custom.Keyblade_Slime>(), 3));
                     npcLoot.Add(ItemDropRule.Common(ItemID.SlimeCrown, 1, 15, 15));
+
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ItemID.ShinyRedBalloon));
+                    npcLoot.Add(_battlegroundDrop);
                     break;
                 case NPCID.QueenBee:
 
@@ -1174,11 +1175,18 @@ namespace KingdomTerrahearts
                     npcLoot.Add(ItemDropRule.Common(ItemID.HoneyBalloon));
                     npcLoot.Add(ItemDropRule.Common(ItemID.Abeemination, 1, 15, 15));
                     npcLoot.Add(ItemDropRule.Common(ItemID.Stinger, 1, 15, 45));
+                    
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ItemID.HoneyBucket,minimumDropped:15,maximumDropped:30));
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ItemID.HoneyRocket, minimumDropped: 15, maximumDropped: 30));
 
                     break;
                 case NPCID.EyeofCthulhu:
 
                     npcLoot.Add(ItemDropRule.Common(ItemID.SuspiciousLookingEye, 1, 15, 15));
+                    npcLoot.Add(_battlegroundDrop);
+
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ItemID.TheEyeOfCthulhu));
+                    npcLoot.Add(_battlegroundDrop);
                     break;
 
                 case NPCID.Deerclops:
@@ -1189,6 +1197,11 @@ namespace KingdomTerrahearts
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingShard>(),1,2,5));
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingStone>(),3,1,3));
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingShard>(),7));
+
+                    //_battlegroundDrop.OnSuccess(ItemDropRule.)
+                    //No more heads
+                    //Item.NewItem(ItemID.WormholePotion, Stack: 10);
+
                     break;
                 case NPCID.BrainofCthulhu:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingShard>(), 1, 2, 5));
@@ -1200,6 +1213,8 @@ namespace KingdomTerrahearts
                     npcLoot.Add(ItemDropRule.Common(ItemID.ClothierVoodooDoll));
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.twilightShard>(), 1, 10, 15));
                     npcLoot.Add(ItemDropRule.Common(ItemID.Bone, 1, 10, 15));
+
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ItemID.RedHat));
                     break;
                 case NPCID.SkeletronHand:
                     npcLoot.Add(ItemDropRule.Common(ItemID.Bone, 1, 5, 10));
@@ -1212,6 +1227,10 @@ namespace KingdomTerrahearts
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.blazingGem>(), 5, 1, 3));
 
                     npcLoot.Add(ItemDropRule.Common(ItemID.GuideVoodooDoll));
+
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ItemID.TitaniumBar, minimumDropped: 100, maximumDropped: 150));
+                    npcLoot.Add(_battlegroundDrop);
+
                     break;
                 case NPCID.Retinazer:
                 case NPCID.Spazmatism:
@@ -1221,6 +1240,11 @@ namespace KingdomTerrahearts
                     npcLoot.Add(ItemDropRule.ByCondition(new Conditions.MissingTwin(), ModContent.ItemType<Items.Materials.betwixtGem>(), 5, 1, 3));
 
                     npcLoot.Add(ItemDropRule.ByCondition(new Conditions.MissingTwin(), ItemID.MechanicalEye, 1, 10, 15));
+
+                    //_battlegroundDrop.OnSuccess(
+                    //No other Twin
+                    //Item.NewItem(ItemID.LaserMachinegun);
+
                     break;
                 case NPCID.TheDestroyer:
 
@@ -1228,6 +1252,12 @@ namespace KingdomTerrahearts
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningShard>(), 1, 10, 15));
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.betwixtCrystal>(), 3));
                     npcLoot.Add(ItemDropRule.Common(ItemID.MechanicalWorm, 1, 10, 15));
+
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ItemID.ActuationRod));
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ItemID.Actuator,minimumDropped:20,maximumDropped:100));
+
+                    npcLoot.Add(_battlegroundDrop);
+
                     break;
                 case NPCID.Probe:
                     npcLoot.Add(ItemDropRule.Common(ItemID.IronBar, 1, 1, 2));
@@ -1237,12 +1267,21 @@ namespace KingdomTerrahearts
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.mythrilShard>(), 1, 10, 15));
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningShard>(), 1, 10, 15));
                     npcLoot.Add(ItemDropRule.Common(ItemID.MechanicalSkull, 1, 10, 15));
+
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ItemID.RocketLauncher));
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ItemID.RocketIII, minimumDropped: 20, maximumDropped: 50));
+
+                    npcLoot.Add(_battlegroundDrop);
                     break;
                 case NPCID.Plantera:
 
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingStone>(), 1, 5, 7));
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingGem>(), 5, 1, 3));
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.PlanteraFlower>(), 1, 10, 15));
+
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ModContent.ItemType<Items.KairiHeart>()));
+
+                    npcLoot.Add(_battlegroundDrop);
                     break;
                 case NPCID.PlanterasTentacle:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingShard>(), 1, 1, 2));
@@ -1254,6 +1293,10 @@ namespace KingdomTerrahearts
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.mythrilGem>(), 2, 1, 3));
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.mythrilCrystal>(), 5));
                     npcLoot.Add(ItemDropRule.Common(ItemID.LihzahrdPowerCell, 1, 10, 15));
+
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ItemID.CellPhone));
+
+                    npcLoot.Add(_battlegroundDrop);
                     break;
                 case NPCID.CultistBoss:
 
@@ -1267,6 +1310,10 @@ namespace KingdomTerrahearts
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.frostGem>(), 5, 1, 3));
 
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.blazingGem>(), 5, 1, 3));
+
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ItemID.SolarTablet, minimumDropped:3,maximumDropped:5));
+
+                    npcLoot.Add(_battlegroundDrop);
                     break;
 
                 case NPCID.DukeFishron:
@@ -1276,6 +1323,13 @@ namespace KingdomTerrahearts
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningGem>(), 1, 5, 10));
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.lightningCrystal>(), 2));
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.writhingGem>(), 1, 5, 10));
+
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ItemID.BottomlessBucket));
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ItemID.SuperAbsorbantSponge));
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ItemID.BottomlessLavaBucket));
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ItemID.LavaAbsorbantSponge));
+
+                    npcLoot.Add(_battlegroundDrop);
                     break;
 
                 case NPCID.QueenSlimeBoss:
@@ -1305,6 +1359,9 @@ namespace KingdomTerrahearts
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.pulsingCrystal>(), 1, 2, 5));
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.frostCrystal>(), 1, 2, 5));
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.blazingCrystal>(), 1, 2, 5));
+
+                    _battlegroundDrop.OnSuccess(ItemDropRule.Common(ModContent.ItemType<Items.ContributorItems.ScepTendo_gun>()));
+                    npcLoot.Add(_battlegroundDrop);
 
                     break;
                 case NPCID.MoonLordHead:
@@ -1460,6 +1517,7 @@ namespace KingdomTerrahearts
                 //twilight
                 case NPCID.IlluminantSlime:
                 case NPCID.Pixie:
+                case NPCID.Gastropod:
                 case NPCID.Unicorn:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.twilightShard>(), 2, 1, 3));
                     break;
@@ -1483,80 +1541,6 @@ namespace KingdomTerrahearts
                 case NPCID.HellArmoredBones:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.Materials.blazingShard>(), 2, 1, 3));
                     break;
-            }
-        }
-
-        public void CheckBattlegroundDrops(int NPC, SoraPlayer sp)
-        {
-            NPC npc = Main.npc[NPC];
-            EntitySource_Parent s = new EntitySource_Parent(npc);
-            if (sp.fightingInBattlegrounds)
-            {
-
-                switch (npc.type)
-                {
-                    case NPCID.MoonLordCore:
-                        Item.NewItem(s,npc.Center, npc.width, npc.height, ModContent.ItemType<Items.ContributorItems.ScepTendo_gun>(), noGrabDelay: true);
-                        break;
-                    case NPCID.DukeFishron:
-                        Item.NewItem(s,npc.Center, npc.width, npc.height, ItemID.BottomlessBucket, noGrabDelay: true);
-                        Item.NewItem(s,npc.Center, npc.width, npc.height, ItemID.SuperAbsorbantSponge, noGrabDelay: true);
-                        Item.NewItem(s,npc.Center, npc.width, npc.height, ItemID.BottomlessLavaBucket, noGrabDelay: true);
-                        Item.NewItem(s,npc.Center, npc.width, npc.height, ItemID.LavaAbsorbantSponge, noGrabDelay: true);
-                        break;
-                    case NPCID.CultistBoss:
-                        Item.NewItem(s,npc.Center, npc.width, npc.height, ItemID.SolarTablet, Stack: 5, noGrabDelay: true);
-                        break;
-                    case NPCID.Golem:
-                        Item.NewItem(s,npc.Center, npc.width, npc.height, ItemID.CellPhone, noGrabDelay: true);
-                        break;
-                    case NPCID.Plantera:
-                        Item.NewItem(s,npc.Center, npc.width, npc.height, ModContent.ItemType<Items.KairiHeart>(), noGrabDelay: true);
-                        break;
-                    case NPCID.SkeletronPrime:
-                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.RocketLauncher, noGrabDelay: true);
-                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.RocketIII, Stack: Main.rand.Next(20, 50), noGrabDelay: true);
-                        break;
-                    case NPCID.TheDestroyer:
-                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.ActuationRod, noGrabDelay: true);
-                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.Actuator, Stack: Main.rand.Next(20, 100), noGrabDelay: true);
-                        break;
-                    case NPCID.Retinazer:
-                        if (!Terraria.NPC.AnyNPCs(NPCID.Spazmatism))
-                        {
-                            Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.LaserMachinegun, noGrabDelay: true);
-                        }
-                        break;
-                    case NPCID.Spazmatism:
-                        if (!Terraria.NPC.AnyNPCs(NPCID.Retinazer))
-                        {
-                            Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.LaserMachinegun, noGrabDelay: true);
-                        }
-                        break;
-                    case NPCID.WallofFlesh:
-                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.TitaniumBar, Stack: Main.rand.Next(80, 120), noGrabDelay: true);
-                        break;
-                    case NPCID.SkeletronHead:
-                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.RedHat, noGrabDelay: true);
-                        break;
-                    case NPCID.EaterofWorldsHead:
-                        if (Terraria.NPC.CountNPCS(NPCID.EaterofWorldsHead) <= 1 && !Terraria.NPC.AnyNPCs(NPCID.EaterofWorldsBody))
-                        {
-                            Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.WormholePotion, Stack: 10, noGrabDelay: true);
-                        }
-                        break;
-                    case NPCID.EyeofCthulhu:
-                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.TheEyeOfCthulhu, noGrabDelay: true);
-                        break;
-                    case NPCID.QueenBee:
-                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.HoneyBucket, noGrabDelay: true);
-                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.HoneyRocket, Stack: 66, noGrabDelay: true);
-                        break;
-                    case NPCID.KingSlime:
-                        Item.NewItem(s, npc.Center, npc.width, npc.height, ItemID.ShinyRedBalloon, noGrabDelay: true);
-                        break;
-                }
-
             }
         }
 
